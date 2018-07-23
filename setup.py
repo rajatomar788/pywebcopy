@@ -26,7 +26,7 @@ setup(
         'Topic :: Data Scraping :: Web Assets',
       ],
     keywords='pywebcopy website copy mirror downloader offline',
-    url='https://github.com/chemicallocha/chemicallocha/',
+    url='https://github.com/rajatomar788/pywebcopy/',
     author='Raja Tomar',
     author_email='rajatomar788@gmail.com',
     license='MIT',
