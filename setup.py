@@ -23,7 +23,7 @@ setup(
         'Programming Language :: Python :: 2.7',
         'Programming Language :: Python :: 3.6',
         'Programming Language :: Python :: 3.7',
-        'Topic :: Data Scraping :: Web Assets',
+        'Topic :: Internet',
       ],
     keywords='pywebcopy website copy mirror downloader offline',
     url='https://github.com/rajatomar788/pywebcopy/',
