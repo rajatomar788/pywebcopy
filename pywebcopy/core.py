@@ -367,11 +367,11 @@ def watermark(file_path):
     # return a bytes converted whitespace stripped down comment
     # Compatibility issues due to byes type
     if py2:
-        return bytes(re.sub(r'[\n]+', '\n', comment_style.replace('#', mark)))
+        return bytes(comment_style.replace('#', mark))
     elif py3:
-        return bytes(re.sub(r'[\n]+', '\n', comment_style.replace('#', mark)), 'utf-8')
+        return bytes(comment_style.replace('#', mark), 'utf-8')
     else:
-        return re.sub(r'[\n]+', '\n', comment_style.replace('#', mark))
+        return comment_style.replace('#', mark)
 
 
 # ----------------------------------------------------------------------
@@ -397,6 +397,17 @@ def now(string, level=0, unbuffered=False, to_console=False, compressed=cfg.conf
     :param compressed: reduces the string length to 80 characters
     """
 
+    _event_level_strings = ["info", "warning", "error", "success"]
+
+    if level == 4:
+        _event_level = _event_level_strings[2]
+    elif level == 1 or level == 2:
+        _event_level = _event_level_strings[3]
+    elif level == 3:
+        _event_level = _event_level_strings[1]
+    else:
+        _event_level = _event_level_strings[0]
+
     # shorten the string
     if compressed:
         if len(string) > 80:
@@ -415,10 +426,10 @@ def now(string, level=0, unbuffered=False, to_console=False, compressed=cfg.conf
     # standardisation of the input string
     if compressed:
         _formatted_string = "{} - [Level: {}] - {}".format(
-            _caller, level, string)
+            _caller, _event_level, string)
     else:
         _formatted_string = "[{}] - {} - [Level: {}] - {}".format(
-            datetime.datetime.utcnow(), _caller, level, string)
+            datetime.datetime.utcnow(), _caller, _event_level, string)
 
     # if _debug switch is true than this will write now() instances to console
     if cfg.config['DEBUG']:
@@ -482,7 +493,7 @@ def save_webpage(url):
     if py2:
         content = bytes(str(final_soup))
     elif py3:
-        content = bytes(str(final_soup), encoding='utf-8')
+        content = bytes(str(final_soup), "utf-8")
     else:
         content = str(final_soup)
 

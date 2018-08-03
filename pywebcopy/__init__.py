@@ -28,4 +28,3 @@ __all__ = [
     '__version__', '__author__', '__copyright__', '__license__', '__email__',
     'core', 'structures', 'config', 'utils', 'generators'
 ]
-

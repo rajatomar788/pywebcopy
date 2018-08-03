@@ -147,7 +147,7 @@ below is the list of `config` keys with their `default` values :
 'BYPASS_ROBOTS' : False
 ```
 
-told your there were plenty of `config` available!
+told you there were plenty of `config` available!
 
 ## Undocumented Features
 
