@@ -28,3 +28,7 @@ __all__ = [
     '__version__', '__author__', '__copyright__', '__license__', '__email__',
     'core', 'structures', 'config', 'utils', 'generators'
 ]
+
+if __name__ == "__main__":
+    import os
+    core.init("https://google.com", mirrors_dir=os.path.join("E:\Programming\Projects\WebsiteCopier\\", "Mirrors_dir"), bypass_robots=True, over_write=True)

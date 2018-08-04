@@ -25,6 +25,7 @@ from generators import *
 from utils import *
 import config as cfg
 
+import zipfile
 import os
 import re
 
@@ -51,7 +52,22 @@ def init(url, **kwargs):
     # if external configuration is provided then use it
     cfg.config.update(kwargs)
     # set required configurations
-    cfg.config['URL'] = cfg.config['URL'] or url
+    
+    headers = {
+        "Accept-Language": "en-US,en;q=0.5",
+        'User-Agent': cfg.config['USER_AGENT']
+    }
+    # check if the provided url works
+    _dummy_request = requests.get(url, headers=headers)
+
+    if not _dummy_request.ok:
+        print("error :: Provided URL %s didn't work!" % url)
+        sys.exit()
+
+    # Assign the resolved or found url so that it doesnot generate
+    # error of redirection request
+    cfg.config['URL'] = _dummy_request.url
+    
     cfg.config['PROJECT_NAME'] = cfg.config['PROJECT_NAME'] or netloc_without_port(
         cfg.config['URL'])
     cfg.config['MIRRORS_DIR'] = cfg.config['MIRRORS_DIR'] or os.path.abspath(os.path.join(
@@ -102,27 +118,7 @@ def init(url, **kwargs):
         now(
             'Downloaded Files :: \n%s' % '\n'.join(cfg.config['DOWNLOADED_FILES'])
         )
-
-        if cfg.config['MAKE_ARCHIVE']:
-
-            # make zip archive of all the files
-            _archive = shutil.make_archive(
-                cfg.config['MIRRORS_DIR'], 'zip',
-                root_dir=cfg.config['MIRRORS_DIR']
-            )
-
-            now('Saved the Project as ZIP archive at %s' % _archive,
-                to_console=True
-                )
-
-        if cfg.config['CLEAN_UP']:
-            # clean up the mirrors dir
-            now(
-                'Cleaning up %s' % cfg.config['MIRRORS_DIR'],
-                to_console=True
-            )
-            shutil.rmtree(cfg.config['MIRRORS_DIR'])
-
+        
         # writes the buffered log to external file
         # if buffering was on
         if cfg.config['LOG_BUFFERING']:
@@ -132,8 +128,54 @@ def init(url, **kwargs):
                     '\n\n'.join(cfg.config['LOG_BUFFER_ARRAY'])
                 )
 
+        if cfg.config['MAKE_ARCHIVE']:
+            
+            # NOTE: Old Method, a one-liner
+            '''_archive = shutil.make_archive(
+                os.path.abspath(cfg.config['MIRRORS_DIR']), 'zip',
+                root_dir=os.path.abspath(cfg.config['MIRRORS_DIR'])
+            )'''
+
+            # new method, less error prone
+            # make zip archive of all the files
+            archive = zipfile.ZipFile(
+                os.path.abspath(cfg.config['MIRRORS_DIR']) + '.zip', 'w', zipfile.ZIP_DEFLATED
+            )
+
+            for foldername, subfolders, filenames in os.walk(cfg.config['MIRRORS_DIR']):
+
+                # add current folder to zip file
+                try:
+                    #archive.write(foldername)
+                    pass
+                except:
+                    now("Folder %s generated %s error while adding to archive." % (foldername, e.message), level=3)
+                
+                for filename in filenames:
+                    if filename.endswith('.zip'):
+                        continue
+                    try:
+                        _temp_filename = os.path.join(foldername, filename)
+                        archive.write(_temp_filename, _temp_filename[len(cfg.config['mirrors_dir']):])
+                    except Exception as e:
+                        now("File %s generated %s error while adding to archive." % (foldername, e.message), level=3)
+                    
+            archive.close()
+                        
+            now('Saved the Project as ZIP archive at %s' %  (cfg.config['MIRRORS_DIR'] + '.zip'),
+                to_console=True
+                )
+
+        # delete the temp folder after making archive
+        if cfg.config['CLEAN_UP']:
+            # clean up the mirrors dir
+            
+            print('Cleaning up %s' % cfg.config['MIRRORS_DIR'])
+                
+            shutil.rmtree(cfg.config['MIRRORS_DIR'])
+
         # ALL DONE
-        now('Done!', level=2, to_console=True)
+        print("All Done!")
 
 
 # ---------------------------------------------------------
@@ -179,6 +221,7 @@ def get(url):
 
     # this returns a request object fetched through the module
     try:
+        
         # make request to page
         req = requests.get(url, headers=headers)
         # log downloaded filesize
@@ -357,8 +400,7 @@ def watermark(file_path):
     else:
         comment_style = '<!--!#-->'
 
-    mark = """\n* AerWebCopy [version {}]\n* Copyright Aeroson Systems & Co.\n\n\n\
-    * File mirrored from {} \n* at {}\n""".format(
+    mark = """\n* AerWebCopy [version {}]\n* Copyright Aeroson Systems & Co.\n* File mirrored from {} \n* at {}\n""".format(
         cfg.config['version'],
         os.path.basename(file_path),
         datetime.datetime.utcnow()
@@ -440,7 +482,7 @@ def now(string, level=0, unbuffered=False, to_console=False, compressed=cfg.conf
         cfg.config['LOG_BUFFER_ARRAY'].append(_formatted_string)
         return
 
-    with open(cfg.config['LOG_FILE'], 'ab') as log_file:
+    with open(cfg.config['LOG_FILE'], 'a+') as log_file:
         log_file.write(_formatted_string)
         log_file.write('\n\n')
 

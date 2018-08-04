@@ -20,7 +20,7 @@ __all__ = [
 # --------------------------------------------------
 config = structures.CaseInsensitiveDict({
 
-    'VERSION': '1.9',
+    'VERSION': '1.9.2',
 
     'DEBUG': False,
     # make zip archive of the downloaded content
@@ -38,7 +38,7 @@ config = structures.CaseInsensitiveDict({
     # to overwrite the existing files if found
     'OVER_WRITE': False,
     # allowed file extensions
-    'ALLOWED_FILE_EXT': ['.html', '.css', '.json', '.js', '.xml', '.svg', '.gif', '.ico', '.jpeg',
+    'ALLOWED_FILE_EXT': ['.html', '.php', '.asp', '.htm', '.xhtml', '.css', '.json', '.js', '.xml', '.svg', '.gif', '.ico', '.jpeg',
                          '.jpg', '.png', '.ttf', '.eot', '.otf', '.woff'],
     # file to write all valid links found on pages
     'LINK_INDEX_FILE': None,
