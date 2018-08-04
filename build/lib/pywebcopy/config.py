@@ -20,7 +20,7 @@ __all__ = [
 # --------------------------------------------------
 config = structures.CaseInsensitiveDict({
 
-    'VERSION': '1.10',
+    'VERSION': '1.9.2',
 
     'DEBUG': False,
     # make zip archive of the downloaded content
