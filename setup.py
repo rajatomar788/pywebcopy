@@ -6,7 +6,7 @@ def l_desc():
 
 setup(
     name='pywebcopy',
-    version='1.9',
+    version='1.9.2',
     description='Mirrors online website or assets easily for archiving etc.',
     long_description=l_desc(),
     long_description_content_type="text/markdown",

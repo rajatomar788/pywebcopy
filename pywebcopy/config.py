@@ -65,8 +65,7 @@ config = structures.CaseInsensitiveDict({
 })
 
 # user agent to be shown on requests made to server
-config['USER_AGENT'] = 'Mozilla/4.0 (compatible; WebCopyBot/{}; \
-+Non-Harmful-LightWeight)'.format(config['version'])
+config['USER_AGENT'] = 'Mozilla/4.0 (compatible; WebCopyBot/{};  +Non-Harmful-LightWeight)'.format(config['version'])
 
 # HANDLE WITH CARE
 config['BYPASS_ROBOTS'] = False

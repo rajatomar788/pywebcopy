@@ -4,15 +4,16 @@
 `License : MIT`
 
 Website mirroring and archiving tool written in Python
-Archive any online website and its assets, css, js and images for offilne reading, storage or whatever reasons.
+Archive any online website and its assets, css, js and
+images for offilne reading, storage or whatever reasons.
 It's easy with `pywebcopy`.
 
-Why it's great? because it
+Why it's great? because it -
 
 - respects `robots.txt`
-- have a single function basic usages
-- lots of configuration for your custom need
-- many `utils` and `generator` functions to ease your life
+- have a single-function basic usages
+- lots of configuration for many custom needs
+- many `utils` and `generator` functions to ease extraction of any part of website
 
 Email me at `rajatomar788@gmail.com` of any query :)
 
@@ -33,7 +34,19 @@ from pywebcopy.core import init
 
 init(url='http://example-site.com/index.html')
 ```
-that's it. 
+
+To mirror full website (This could overload the target server, So, be careful)
+
+```Python
+from pywebcopy.core import init
+
+init(
+    url='http://example-site.com/index.html',
+    copy_all = True
+    )
+```
+
+that's it.
 
 You will now have a folder in C: drive
 `C:\WebCopyProjects\example-site.com\example-site.com\`
@@ -52,11 +65,15 @@ Example:
 from pywebcopy.core import init
 
 init(
+
     url='http://some-site.com/', # required
-    # config keys are case insensitive
+
+    # config keys are case-insensitive
     any_config_key='new_value',
     another_config_key='another_new_value',
-    ... 
+
+    ...
+
     # add many as you want :)
 )
 ```
@@ -125,7 +142,7 @@ below is the list of `config` keys with their `default` values :
 'URL': None
 
 # define the base directory to store all copied sites data
-'MIRRORS_DIR': C:\WebCopyProjects\ + Project_Name
+'MIRRORS_DIR': C:/WebCopyProjects/ + Project_Name
 
 # all downloaded file location
 # available after any project completion
@@ -136,7 +153,9 @@ below is the list of `config` keys with their `default` values :
 # CHANGE THESE ON YOUR RESPONSIBILITY
 # NOTE: Do not change unless you know what you're doing
 
-# pattern is used to check file name supported by os FS
+# pattern is used to check file name is supported by os
+# FS, you can also change this to allow files of
+# specific chars
 'FILENAME_VALIDATION_PATTERN': re.compile(r'[*":<>\|\?]+')
 
 # user agent to be shown on requests made to server
@@ -147,18 +166,7 @@ below is the list of `config` keys with their `default` values :
 'BYPASS_ROBOTS' : False
 ```
 
-told you there were plenty of `config` available!
-
-## Undocumented Features
-
-I built many utils and classes in this project to ease 
-the tasks I was trying to do.
-
-But, 
-these task are also suitable for general purpose use.
-
-So, 
-if you want, you can help in generating suitable `documentation` for these undocumented ones, then you can always email me.
+told you there were plenty of `config` vars available!
 
 ## Help
 
@@ -172,3 +180,31 @@ You can help in many ways:
 - in generating the complete documentation of this project
 
 Thanks!
+
+## Undocumented Features
+
+I built many utils and classes in this project to ease 
+the tasks I was trying to do.
+
+But,
+these task are also suitable for general purpose use.
+
+So,
+if you want, you can help in generating suitable `documentation` for these undocumented ones, then you can always email me.
+
+## Changelog
+
+### [version 1.9]
+
+- more redundant code
+- modules are now separated based on type e.g. Core, Generators, Utils etc.
+- new helper functions and class `structures.WebPage`
+- Compatible with Python 2.6, 2.7, 3.6, 3.7
+
+### [version 1.10]
+
+- `url` is checked and resolved of any redirection before starting any work functions.
+- `init` vars : `mirrors_dir` and `clean_up` were fixed which cleaned the dir before the log was completely written.
+- `init` call now takes `url` arg by default and could raise a error when not supplied
+- professional looking log entries
+- rewritten archiving system now uses `zipfile` and `exceptions` handling to prevent errors and eventual archive corruption

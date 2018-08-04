@@ -73,7 +73,7 @@ def init(url, **kwargs):
     cfg.config['MIRRORS_DIR'] = cfg.config['MIRRORS_DIR'] or os.path.abspath(os.path.join(
         'C:\\', 'WebCopyProjects', cfg.config['PROJECT_NAME']))
     cfg.config['LOG_FILE'] = cfg.config['LOG_FILE'] or os.path.join(
-        cfg.config['MIRRORS_DIR'], cfg.config['PROJECT_NAME'] + '_log.txt')
+        cfg.config['MIRRORS_DIR'], cfg.config['PROJECT_NAME'] + '_log.log')
     cfg.config['LINK_INDEX_FILE'] = cfg.config['LINK_INDEX_FILE'] or os.path.join(
         cfg.config['MIRRORS_DIR'], '%s_indexed_links.txt' % cfg.config['PROJECT_NAME'])
     # initialise the robots parser so that we don't overrun websites
@@ -456,9 +456,6 @@ def now(string, level=0, unbuffered=False, to_console=False, compressed=cfg.conf
             string = '%s...%s' % (
                 string[:40], string[len(string) - 36: len(string)])
 
-    # if string is requested to be printed to console also
-    if to_console:
-        print(string)
 
     _caller = sys._getframe().f_back.f_code.co_name
 
@@ -467,14 +464,15 @@ def now(string, level=0, unbuffered=False, to_console=False, compressed=cfg.conf
 
     # standardisation of the input string
     if compressed:
-        _formatted_string = "{} - [Level: {}] - {}".format(
+        _formatted_string = "[{}] [{}] {}".format(
             _caller, _event_level, string)
     else:
-        _formatted_string = "[{}] - {} - [Level: {}] - {}".format(
+        _formatted_string = "[{}] [{}] [{}] {}".format(
             datetime.datetime.utcnow(), _caller, _event_level, string)
 
     # if _debug switch is true than this will write now() instances to console
-    if cfg.config['DEBUG']:
+    # if string is requested to be printed to console also
+    if cfg.config['DEBUG'] or to_console:
         print(_formatted_string)
 
     # append the string to log array
