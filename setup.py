@@ -6,12 +6,12 @@ def l_desc():
 
 setup(
     name='pywebcopy',
-    version='1.10',
-    description='Mirrors online website or assets easily for archiving etc.',
+    version='2.0.0beta',
+    description='Mirrors online webpages and complete websites.',
     long_description=l_desc(),
     long_description_content_type="text/markdown",
     classifiers=[
-        'Development Status :: 5 - Production/Stable',
+    	'Development Status :: 4 - Beta',
         'Environment :: Console',
         'Environment :: Web Environment',
         'Intended Audience :: End Users/Desktop',

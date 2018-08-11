@@ -15,7 +15,8 @@ import structures
 import config
 import utils
 import generators
-
+import exceptions
+import test_generators
 
 __version__ = config.config['version']
 __author__ = 'Raja Tomar'
@@ -26,9 +27,7 @@ __email__ = 'rajatomar788@gmail.com'
 
 __all__ = [
     '__version__', '__author__', '__copyright__', '__license__', '__email__',
-    'core', 'structures', 'config', 'utils', 'generators'
+    'core', 'structures', 'config', 'utils', 'generators', 'exceptions'
 ]
 
-if __name__ == "__main__":
-    import os
-    core.init("https://google.com", mirrors_dir=os.path.join("E:\Programming\Projects\WebsiteCopier\\", "Mirrors_dir"), bypass_robots=True, over_write=True)
+

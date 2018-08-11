@@ -12,16 +12,17 @@ import structures
 
 
 __all__ = [
-    'config'
+    'config', 'update_config', 'reset_config'
 ]
 
 # --------------------------------------------------
-# DO NOT MODIFY, you can change these through init()
+# DO NOT MODIFY, you can change these through update_config()
 # --------------------------------------------------
 config = structures.CaseInsensitiveDict({
-
-    'VERSION': '1.10',
-
+    # version no. of this build
+    'VERSION': '2.0beta',
+    # not so helpful debug switch, it just dumps the log
+    # on the console
     'DEBUG': False,
     # make zip archive of the downloaded content
     'MAKE_ARCHIVE': True,
@@ -38,16 +39,15 @@ config = structures.CaseInsensitiveDict({
     # to overwrite the existing files if found
     'OVER_WRITE': False,
     # allowed file extensions
-    'ALLOWED_FILE_EXT': ['.html', '.php', '.asp', '.htm', '.xhtml', '.css', '.json', '.js', '.xml', '.svg', '.gif', '.ico', '.jpeg',
+    'ALLOWED_FILE_EXT': ['.html', '.php', '.asp', '.htm', '.xhtml', '.css', 
+                        '.json', '.js', '.xml', '.svg', '.gif', '.ico', '.jpeg',
                          '.jpg', '.png', '.ttf', '.eot', '.otf', '.woff'],
-    # file to write all valid links found on pages
-    'LINK_INDEX_FILE': None,
     # log file path
     'LOG_FILE': None,
     # reduce log produced by removing unnecessary info from log file
     'LOG_FILE_COMPRESSION': False,
     # log buffering store log in ram until finished, then write to file
-    'LOG_BUFFERING': True,
+    'LOG_BUFFERING': False,
     # log buffer holder for performance speed up
     'LOG_BUFFER_ARRAY': list(),
     # this pattern is used to validate file names
@@ -64,8 +64,24 @@ config = structures.CaseInsensitiveDict({
     'DOWNLOAD_SIZE': 0
 })
 
-# user agent to be shown on requests made to server
-config['USER_AGENT'] = 'Mozilla/4.0 (compatible; WebCopyBot/{};  +Non-Harmful-LightWeight)'.format(config['version'])
 
 # HANDLE WITH CARE
+config['USER_AGENT'] = 'Mozilla/5.0 (compatible; PywebcopyBot/{})'.format(config['version'])
+config['ROBOTS'] = structures.RobotsTxt()
 config['BYPASS_ROBOTS'] = False
+
+
+""" This is used in to store default config as backup """
+default_config = config
+
+
+def update_config(**kwargs):
+    """ Updates the default `config` dict """
+    config.update(**kwargs)
+
+
+def reset_config():
+    """ Resets all to configuration to default state. """
+    global config
+    config = default_config
+

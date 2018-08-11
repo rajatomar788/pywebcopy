@@ -1,7 +1,9 @@
-# PyWebCopy &copy;
+# PyWebCopy &copy; 2.0(beta)
 
 `Created By : Raja Tomar`
 `License : MIT`
+
+Mirrors Complete webpages with python.
 
 Website mirroring and archiving tool written in Python
 Archive any online website and its assets, css, js and
@@ -17,7 +19,7 @@ Why it's great? because it -
 
 Email me at `rajatomar788@gmail.com` of any query :)
 
-## Installation
+## 1.1 Installation
 
 `pywebcopy` is available on PyPi and is easily installable using `pip`
 
@@ -25,48 +27,81 @@ Email me at `rajatomar788@gmail.com` of any query :)
 pip install pywebcopy
 ```
 
-## Basic Usages
+## 1.2 Basic Usages
 
+### 1.2.1 Direct Function Methods
 To mirror any single page, just type in python console
 
 ```Python
-from pywebcopy.core import init
+from pywebcopy.core import save_webpage
 
-init(url='http://example-site.com/index.html')
+
+save_webpage(
+    url='http://example-site.com/index.html',
+    download_loc='path/to/downloads'
+)
 ```
 
 To mirror full website (This could overload the target server, So, be careful)
 
 ```Python
-from pywebcopy.core import init
+from pywebcopy.core import save_webpage
 
-init(
+
+save_webpage(
     url='http://example-site.com/index.html',
-    copy_all = True
-    )
+    download_loc='path/to/downloads',
+    copy_all=True
+)
+```
+
+### 1.2.2 Object Creation Method
+
+```Python
+from pywebcopy.structures import WebPage
+
+url = 'http://example-site.com/index.html'
+download_loc = 'path/to/downloads/folder'
+
+wp = WebPage(url, download_loc)
+
+# if you want assets only
+wp.save_assets_only()
+
+# if you want html only
+wp.save_html_only()
+
+# if you want complete webpage
+wp.save_complete()
+
+# bonus : you can also use any beautiful_soup methods on it
+links = wp.find_all('a', href=True)
+
 ```
 
 that's it.
 
-You will now have a folder in C: drive
-`C:\WebCopyProjects\example-site.com\example-site.com\`
+You will now have a folder at `download_loc` with all the webpage and its linked files ready to be used.
 
 Just browse it as would on any browser!
 
-## Configuration
+## 1.3 Configuration
 
 `pywebcopy` is highly configurable.
+
+### 1.3.1 Direct Call Method
 
 To change any configuration, just pass it to the `init` call.
 
 Example:
 
 ```Python
-from pywebcopy.core import init
+from pywebcopy.core import save_webpage
 
-init(
+save_webpage(
 
     url='http://some-site.com/', # required
+    download_loc='path/to/downloads/', # required
 
     # config keys are case-insensitive
     any_config_key='new_value',
@@ -78,14 +113,54 @@ init(
 )
 ```
 
+### 1.3.2 `core.setup_config` Method
+
+You can manually configure every configuration by using a 
+`core.setup_config` call.
+
+```Python
+
+import pywebcopy
+
+url = 'http://example-site.com/index.html'
+download_loc = 'path/to/downloads/'
+
+pywebcopy.core.setup_config(url, download_loc)
+
+# done!
+
+>>> pywebcopy.config.config['url']
+'http://example-site.com/index.html'
+
+>>> pywebcopy.config.config['mirrors_dir']
+'path/to/downloads'
+
+>>> pywebcopy.config.config['project_name']
+'example-site.com'
+
+
+## You can also change any of these by just adding param to
+## `setup_config` call
+
+>>> pywebcopy.core.setup_config(url, 
+        download_loc,project_name='Your-Project', ...)
+
+## You can also change any config even after
+## the `setup_config` call
+
+pywebcopy.config.config['url'] = 'http://url-changed.com'
+# rest of config remains unchanged
+
+```
+
 Done!
 
-### List of available `configurations`
+### 1.3.3 List of available `configurations`
 
 below is the list of `config` keys with their `default` values :
 
 ``` Python
-# writes the log file content to console directly
+# writes the trace output and log file content to console directly
 'DEBUG': False  
 
 # make zip archive of the downloaded content
@@ -118,9 +193,6 @@ below is the list of `config` keys with their `default` values :
                       '.jpeg', '.jpg', '.png', '.ttf',
                       '.eot', '.otf', '.woff']
 
-# file to write all valid links found on pages
-'LINK_INDEX_FILE': None
-
 # log file path
 'LOG_FILE': None
 
@@ -142,7 +214,7 @@ below is the list of `config` keys with their `default` values :
 'URL': None
 
 # define the base directory to store all copied sites data
-'MIRRORS_DIR': C:/WebCopyProjects/ + Project_Name
+'MIRRORS_DIR': None
 
 # all downloaded file location
 # available after any project completion
@@ -159,8 +231,7 @@ below is the list of `config` keys with their `default` values :
 'FILENAME_VALIDATION_PATTERN': re.compile(r'[*":<>\|\?]+')
 
 # user agent to be shown on requests made to server
-'USER_AGENT' : Mozilla/4.0 (compatible; WebCopyBot/X.X;
-                +Non-Harmful-LightWeight)
+'USER_AGENT' : Mozilla/5.0 (compatible; WebCopyBot/X.X;)
 
 # bypass the robots.txt restrictions
 'BYPASS_ROBOTS' : False
@@ -168,7 +239,7 @@ below is the list of `config` keys with their `default` values :
 
 told you there were plenty of `config` vars available!
 
-## Help
+## 1.4 Help
 
 For any queries related to this project you can email me at
 `rajatomar788@gmail.com`
@@ -181,7 +252,7 @@ You can help in many ways:
 
 Thanks!
 
-## Undocumented Features
+## 1.5 Undocumented Features
 
 I built many utils and classes in this project to ease 
 the tasks I was trying to do.
@@ -192,14 +263,20 @@ these task are also suitable for general purpose use.
 So,
 if you want, you can help in generating suitable `documentation` for these undocumented ones, then you can always email me.
 
-## Changelog
+## 1.6 Changelog
 
-### [version 1.9]
+### [version 2.0(beta)]
 
-- more redundant code
-- modules are now separated based on type e.g. Core, Generators, Utils etc.
-- new helper functions and class `structures.WebPage`
-- Compatible with Python 2.6, 2.7, 3.6, 3.7
+- `init` function is replaced with `save_webpage`
+- three new `config` automation functions are added -
+  - `core.setup_config` (creates every ideal config just from url and download location)
+  - `config.reset_config` (resets the configuration to default state)
+  - `config.update_config` (manual-mode version of `core.setup_config`)  
+- object `structures.WebPage` added
+- merged `generators.generate_style_map` and `generators.generate_relative_paths` to a single function `generators.generate_style_map`
+- rewrite of majority of functions
+- new module `exceptions` added
+
 
 ### [version 1.10]
 
@@ -208,3 +285,10 @@ if you want, you can help in generating suitable `documentation` for these undoc
 - `init` call now takes `url` arg by default and could raise a error when not supplied
 - professional looking log entries
 - rewritten archiving system now uses `zipfile` and `exceptions` handling to prevent errors and eventual archive corruption
+
+### [version 1.9]
+
+- more redundant code
+- modules are now separated based on type e.g. Core, Generators, Utils etc.
+- new helper functions and class `structures.WebPage`
+- Compatible with Python 2.6, 2.7, 3.6, 3.7
