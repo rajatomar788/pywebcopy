@@ -1,4 +1,4 @@
-# PyWebCopy &copy; 2.0(beta)
+# PyWebCopy &copy; 2.0.0
 
 `Created By : Raja Tomar`
 `License : MIT`
@@ -264,6 +264,14 @@ So,
 if you want, you can help in generating suitable `documentation` for these undocumented ones, then you can always email me.
 
 ## 1.6 Changelog
+
+### [version 2.0.0]
+
+- html-parser is now defaulted to 'lxml'. You can use any through new `config.config` key called `parser`
+- fixed issue in `generators.extract_css_urls` which was caused by `str` and `bytes` difference in python3
+- fixed minor issues while modules importing. (Thanks **Илья Игоревич**)
+- added `errorhandling` to required functions
+
 
 ### [version 2.0(beta)]
 
