@@ -169,6 +169,12 @@ below is the list of `config` keys with their `default` values :
 # delete the project folder after making zip archive of it
 'CLEAN_UP': False
 
+# which parser to use when parsing pages
+# for speed choose 'html.parser' (will crack some webpages)
+# for exact webpage copy choose 'html5lib' (a little slow)
+# or you can leave it to default 'lxml' (balanced)
+'PARSER' : 'lxml'
+
 # to download css file or not
 'LOAD_CSS': True
 
