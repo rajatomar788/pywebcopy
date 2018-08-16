@@ -118,7 +118,7 @@ save_webpage(
 >**This function is changed from  `core.setup_config`**
 
 You can manually configure every configuration by using a 
-`core.setup_config` call.
+`config.setup_config` call.
 
 ```Python
 

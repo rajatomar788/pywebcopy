@@ -11,10 +11,6 @@ Core of the aerwebcopy engine.
 
 from __future__ import print_function
 
-__all__ = [
-    'py3', 'py2', 'setup_config', 'get', 'now', 'save_webpage', 'wrap_up'
-]
-
 import datetime
 import shutil
 import sys
@@ -40,6 +36,12 @@ import utils
 import config as cfg
 import structures
 import exceptions 
+
+
+
+__all__ = [
+    'py3', 'py2', 'setup_config', 'get', 'now', 'save_webpage', 'wrap_up'
+]
 
 
 def save_webpage(url, mirrors_dir, reset_config=True, **kwargs):
