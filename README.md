@@ -113,7 +113,9 @@ save_webpage(
 )
 ```
 
-### 1.3.2 `core.setup_config` Method
+### 1.3.2 `config.setup_config` Method
+
+>**This function is changed from  `core.setup_config`**
 
 You can manually configure every configuration by using a 
 `core.setup_config` call.
@@ -125,7 +127,7 @@ import pywebcopy
 url = 'http://example-site.com/index.html'
 download_loc = 'path/to/downloads/'
 
-pywebcopy.core.setup_config(url, download_loc)
+pywebcopy.config.setup_config(url, download_loc)
 
 # done!
 
@@ -142,7 +144,7 @@ pywebcopy.core.setup_config(url, download_loc)
 ## You can also change any of these by just adding param to
 ## `setup_config` call
 
->>> pywebcopy.core.setup_config(url, 
+>>> pywebcopy.config.setup_config(url, 
         download_loc,project_name='Your-Project', ...)
 
 ## You can also change any config even after
@@ -272,6 +274,10 @@ if you want, you can help in generating suitable `documentation` for these undoc
 ## 1.6 Changelog
 
 ### [version 2.0.0]
+
+#### [changed]
+
+- `core.setup_config` function is changed to `config.setup_config`.
 
 #### [added]
 
