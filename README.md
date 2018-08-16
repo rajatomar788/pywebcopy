@@ -273,9 +273,18 @@ if you want, you can help in generating suitable `documentation` for these undoc
 
 ### [version 2.0.0]
 
+#### [added]
+
+- added `utils.trace` decorator, which  will **print** *function_name*, *args*, *kwargs* and *return value* when debug config key is True.
+- new html-parsers ('html5lib', 'lxml') are supported for better webpages.
 - html-parser is now defaulted to 'lxml'. You can use any through new `config.config` key called `parser`
-- fixed issue in `generators.extract_css_urls` which was caused by `str` and `bytes` difference in python3
-- fixed minor issues while modules importing. (Thanks **Илья Игоревич**)
+
+#### [fixed]
+
+- fixed issue while changing `user-agent` key cracked 
+webpages. You can now use any browser's user-agent id and it will get exact same page downloaded.
+- fixed issue in `generators.extract_css_urls` which was caused by `str` and `bytes` difference in python3.
+- fixed issues while modules importing. (Thanks "**Илья Игоревич**").
 - added `errorhandling` to required functions
 
 
