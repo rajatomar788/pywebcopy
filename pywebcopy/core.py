@@ -11,14 +11,19 @@ Core of the aerwebcopy engine.
 
 from __future__ import print_function
 
+__all__ = [
+    'py3', 'py2', 'setup_config', 'get', 'now', 'save_webpage', 'wrap_up'
+]
+
 import datetime
 import shutil
 import sys
 import zipfile
-import functools
+
 import os
 import bs4
 import requests
+import html5lib
 
 py2 = True if sys.version_info.major == 2 else False
 py3 = True if sys.version_info.major == 3 else False
@@ -27,89 +32,26 @@ if py2:
     import urlparse
 elif py3:
     from urllib import parse as urlparse
+else:
+    raise ImportError("Error while importing Modules!")
 
 import generators as gens
 import utils
 import config as cfg
 import structures
-import exceptions
-
-
-__all__ = [
-    'py3', 'py2', 'setup_config', 'get', 'now', 'save_webpage'
-]
-
-
-# -----------------------------------------------------
-# function which sets up defaults and dirs to work with
-# then fires up the main engines
-# -----------------------------------------------------
-def setup_config(url, download_loc, **kwargs):
-    """ Easiest way to auto configure config keys for error free usage.
-    Just provide the params and every other config key is automatically
-    configured.
-
-    :param url: url of the page to work with
-    :param download_loc: path where to store the downloaded content
-    """
-
-    # if external configuration is provided then use it
-    cfg.config.update(kwargs)
-
-    # check if the provided url works
-    _dummy_request = get(url)
-
-    # new resolved url
-    _url = _dummy_request.url
-
-    if not _dummy_request.ok:
-        raise exceptions.ConnectionError("Provided URL '%s' didn't work!" % url)
-
-        # Assign the resolved or found url so that it does not generate
-    # error of redirection request
-    cfg.config['URL'] = _url
-
-    if cfg.config['PROJECT_NAME'] is None:
-        cfg.config['PROJECT_NAME'] = utils.netloc_without_port(_url)
-
-    if cfg.config['MIRRORS_DIR'] is None:
-        cfg.config['MIRRORS_DIR'] = os.path.abspath(os.path.join(download_loc,
-                                                                 'WebCopyProjects', cfg.config['PROJECT_NAME']))
-
-    if cfg.config['LOG_FILE'] is None:
-        cfg.config['LOG_FILE'] = os.path.join(
-            cfg.config['MIRRORS_DIR'], cfg.config['PROJECT_NAME'] + '_log.log')
-
-    # initialise the new robots parser so that we don't overrun websites
-    # with copyright policies
-    cfg.config['ROBOTS'] = structures.RobotsTxt(_url + '/robots.txt')
-
-    # create work dirs if it do not exists
-    if not os.path.exists(cfg.config['MIRRORS_DIR']):
-        os.makedirs(cfg.config['MIRRORS_DIR'])
-
-    # delete all the log in logfile and start afresh
-    if os.path.isfile(cfg.config['LOG_FILE']):
-        os.remove(cfg.config['log_file'])
-
-    now(
-        '\n\nInitialising the Script with following Configuration Set: \n%s \n \n' % '\n\n'.join(
-            str(cfg.config).strip('\{\}').split(', ')),
-        level=1,
-        compressed=False
-    )
+import exceptions 
 
 
 def save_webpage(url, mirrors_dir, reset_config=True, **kwargs):
     """ Starts crawler, archives and writes logs etc. """
 
-    setup_config(url, mirrors_dir, **kwargs)
+    cfg.setup_config(url, mirrors_dir, **kwargs)
 
     # save the page
-    _save_webpage(cfg.config['URL'])
+    _crawl(cfg.config['URL'])
 
     # Everything is done! Now Clean up and write logs.
-    project_info()
+    wrap_up()
 
     if reset_config:
         # reset the config so that it does not mess up
@@ -119,7 +61,7 @@ def save_webpage(url, mirrors_dir, reset_config=True, **kwargs):
     print("All Done!")
 
 
-def project_info():
+def wrap_up():
     """ Print Useful information about completed project to python console. """
 
     now(
@@ -207,11 +149,6 @@ def _can_access(user_agent, url):
         return True
 
     else:
-        now(
-            "allowed :: Website allows access to the url %s" % url,
-            to_console=True,
-            level=2
-        )
         return True
 
 
@@ -309,7 +246,7 @@ def new_file(download_loc, content_url=None, content=None, mime_type='text/html'
             return download_loc
 
     # if file of this type is allowed to be saved
-    if utils.get_filename(download_loc) not in cfg.config['ALLOWED_FILE_EXT']:
+    if not os.path.splitext(download_loc)[-1] in cfg.config['ALLOWED_FILE_EXT']:
         now(
             'error :: file of type %s is not allowed!'
             % str(os.path.splitext(download_loc)[-1]),
@@ -330,8 +267,16 @@ def new_file(download_loc, content_url=None, content=None, mime_type='text/html'
             return download_loc
 
         else:
-            now('Existing file at %s removed!' % download_loc)
-            os.remove(download_loc)
+
+            # if file size is same that means we don't have to overwrite
+            if content_url and req.headers.get('Content-Length', 0) == os.stat(download_loc).st_size:
+
+                now('skipping :: Existing file is same as new file! %s %s' % (download_loc, content_url), to_console=True)
+
+                return download_loc
+            else:
+                now('Existing file at %s removed!' % download_loc)
+                os.remove(download_loc)
 
     # Write the File
     with open(download_loc, 'wb') as f:
@@ -368,10 +313,7 @@ def _watermark(file_path):
 
     file_type = os.path.splitext(file_path)[-1]
 
-    if file_type == '.css' or file_type == '.js':
-        comment_style = '/*!#*/'
-
-    elif file_type == '.html':
+    if file_type == '.html':
         comment_style = '<!--!#-->'
     else:
         comment_style = '/*!#*/'
@@ -383,32 +325,10 @@ def _watermark(file_path):
             datetime.datetime.utcnow()
         )
 
-    # Resolves Compatibility issues due to bytes type in py2 and py3
-    if py2:
-        return bytes(comment_style.replace('#', mark))
-    elif py3:
+    if py3:
         return bytes(comment_style.replace('#', mark), 'utf-8')
     else:
         return comment_style.replace('#', mark)
-
-
-def trace(func):
-    """ Prints function's name and parameters to screen in debug mode. """
-
-    @functools.wraps(func)
-    def wrapper(*args, **kwargs):
-
-        if cfg.config['debug']:
-
-            print('TRACE: calling <func {}> with {}, {}'.format(func.__name__, *args, **kwargs))
-            func_result = func(*args, **kwargs)
-            print('TRACE: <func {}> returned {}'.format(func.__name__, func_result))
-            return func_result
-
-        else:
-            return func(*args, **kwargs)
-
-    return wrapper
 
 
 # ----------------------------------------------------------------------
@@ -419,7 +339,7 @@ def trace(func):
 # with ease
 # -----------------------------------------------------------------------
 def now(string, level=0, unbuffered=False, to_console=False, compressed=cfg.config['LOG_FILE_COMPRESSION']):
-    """Writes any input string to external logfile
+    """ Writes any input string to external logfile
 
     :param string: any string which you want to write to log
     :param level: defines the priority of the string to end user
@@ -501,7 +421,7 @@ def _save_webpage(url):
         return req.status_code
 
     # generate soup of the request
-    soup = bs4.BeautifulSoup(req.content, 'html.parser')
+    soup = bs4.BeautifulSoup(req.content, cfg.config['parser'])
 
     # create a path where to download this page
     download_path = gens.generate_path_for(url, filename_check=True, default_filename='index.html')
@@ -541,56 +461,65 @@ def _save_webpage(url):
 # this fetches the first page and scans for links to
 # other pages which are under your given url
 # ----------------------------------------------------
+crawled_urls = list()
+crawlable_urls = list()
+
+
 def _crawl(url):
-    # store crawled url in a list
-    global crawlable_urls
-    crawled_urls = list()
-    crawlable_urls = list()
+    """ Scans pages for links to other pages to save in COPY_ALL mode.
+    """
 
-    # crawler to extract all the valid page links on the given page
-    now('Trying to start crawler on url %s' % url)
+    # if single webpage is requested
+    if cfg.config['copy_all'] == False: 
 
-    # make a request to the page
-    req = get(url)
-
-    # something went wrong; exit
-    if req is None:
-        now('Crawler encountered an Error while requesting web page on url %s' %
-            url, level=4)
-        now('Crawler Exiting!', level=4)
-        sys.exit(1)
-
-    # page found and working
-    # make a soup of it
-    soup = bs4.BeautifulSoup(req.content, 'html.parser')
-
-    # select all the links on page
-    a_tags = soup.find_all('a', href=True)
-
-    # store absolute url of them in a separate dict
-    crawlable_urls += set([
-        utils.join_urls(url, i.get('href', ''))
-        for i in a_tags
-        if utils.join_urls(url, i.get('href', '')).startswith(url)
-    ]
-    )
-
-    # save these pages
-    if cfg.config['COPY_ALL'] is None:
-        raise exceptions.UndefinedConfigValue('Key COPY_ALL is undefined!')
-
-    if cfg.config['COPY_ALL']:
-        for i in crawlable_urls:
-            if i in crawled_urls:
-                continue
-
-            _save_webpage(url=i)
-            crawled_urls.append(i)
-
-    else:
-        if url not in crawled_urls:
+        if url not in crawled_urls:            
             _save_webpage(url)
             crawled_urls.append(url)
+
+        return
+
+    else:
+        # crawler to extract all the valid page links on the given page
+        now('Trying to start crawler on url %s' % url)
+
+        # make a request to the page
+        req = get(url)
+
+        # something went wrong; exit
+        if req is None:
+            now('Crawler encountered an Error while requesting web page on url %s' %
+                url, level=4)
+            now('Crawler Exiting!', level=4)
+            sys.exit(1)
+
+        # page found and working
+        # make a soup of it
+        soup = bs4.BeautifulSoup(req.content, cfg.config['parser'])
+
+        # select all the links on page
+        a_tags = soup.find_all('a', href=True)
+
+        # store absolute url of them in a separate dict
+        for a_tag in a_tags:
+            # create a absolute url
+            _abs_url = utils.join_urls(url, a_tag.get('href', ''))
+
+            if _abs_url.startswith(url) and utils.url_path(url) not in ('', '/', '\\') and _abs_url not in crawled_urls and _abs_url not in crawlable_urls:
+                crawlable_urls.append(url)
+
+        # iter through all the links of website
+        for _url in crawlable_urls:
+            # if url is already saved
+            if _url in crawled_urls:
+                # go to the next url
+                continue
+
+            # otherwise save this url and add this to saved list
+            _save_webpage(_url)
+            crawled_urls.append(_url)
+
+            # send this url again for url searching
+            _crawl(_url)
 
     now("Crawled URL list : ")
     now('\n'.join(crawlable_urls))

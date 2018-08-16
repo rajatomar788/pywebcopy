@@ -6,7 +6,7 @@ def l_desc():
 
 setup(
     name='pywebcopy',
-    version='2.0.0beta',
+    version='2.0.0',
     description='Mirrors online webpages and complete websites.',
     long_description=l_desc(),
     long_description_content_type="text/markdown",
@@ -32,7 +32,7 @@ setup(
     license='MIT',
     packages=['pywebcopy'],
     install_requires=[
-          'requests', 'bs4',
+          'requests', 'bs4', 'lxml', 'html5lib'
       ],
     zip_safe=False
 )

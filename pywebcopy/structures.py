@@ -12,7 +12,6 @@ import os
 import bs4
 
 import core
-import config
 import utils
 import generators
 import exceptions
@@ -91,6 +90,27 @@ class CaseInsensitiveDict(collections.MutableMapping):
         return str(dict(self.items()))
 
 
+class Url(object):
+    """Provides several operations on a url."""
+
+    def __init__(self, url):
+        self.url = url
+        self.is_valid = self.check_validity(self.url)
+
+    def netloc(self):
+        return utils.hostname(self.url)
+
+    def port(self):
+        return utils.url_port(self.url)
+
+    def abs_url(self):
+        """Returns a absolute url from any url."""
+
+    @staticmethod
+    def check_validity(url):
+        """Checks if a url is valid."""
+
+
 class RobotsTxt(robotparser.RobotFileParser, object):
     """ Represents the sites 'robots.txt' with some funcs """
 
@@ -141,14 +161,14 @@ class WebPage(bs4.BeautifulSoup):
 
     """
 
-    def __init__(self, url, download_path, parser='html.parser', *args, **kwargs):
+    def __init__(self, url, download_path, parser='html5lib', *args, **kwargs):
 
         self.request = self._make_request(url)
         self.file_name = self._file_name(self.request.url)
         self.url = urlparse.urljoin(self.request.url, self.file_name).strip('/')
-        self.file_path = os.path.realpath(os.path.join(download_path, utils.compatible_path(self.url)))
+        self.file_path = generators.generate_path_for(self.url, create_path=False)
         self.download_path = download_path
-        
+        import config
         # set these values so that no error in other functions occur
         config.config['URL'] = self.url
         config.config['MIRRORS_DIR'] = self.download_path

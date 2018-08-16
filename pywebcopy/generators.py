@@ -9,6 +9,12 @@ aerwebcopy.generators
 Data & patterns generators powering aerwebcopy.
 """
 
+
+__all__ = [
+    "generate_path_for", "generate_style_map", "extract_css_urls"
+]
+
+
 import os
 import re
 import utils
@@ -16,17 +22,17 @@ import core
 import config
 import exceptions
 
+
 if core.py2:
     from urllib import pathname2url, url2pathname
 elif core.py3:
     from urllib.request import pathname2url, url2pathname
-
-__all__ = [
-    "generate_path_for", "generate_style_map", "extract_css_urls"
-]
+else:
+    raise ImportError("Error while importing Modules!")
 
 
-# toolkit func to create dirs and return dir for storage of file
+
+@utils.trace
 def generate_path_for(url, base_url=None, filename_check=False, default_filename=None, create_path=True):
     """ Creates a valid file path from urls.
 
@@ -49,10 +55,11 @@ def generate_path_for(url, base_url=None, filename_check=False, default_filename
     # if filename is required in generated path
     if filename_check:
         if os.path.splitext(url)[-1].find('.') == -1 or \
-                os.path.splitext(url)[-1] == utils.netloc_without_port(url).split('.')[-1]:
+                os.path.splitext(url)[-1] == utils.hostname(url).split('.')[-1]:
             if default_filename is None:
                 raise TypeError("Default Filename is not valid.")
-            file_comp = default_filename
+            else:
+                file_comp = default_filename
         else:
             file_comp = utils.get_filename(url)
         # join file name to url
@@ -86,11 +93,10 @@ def generate_path_for(url, base_url=None, filename_check=False, default_filename
     path = utils.join_paths(path, file_comp)
 
     core.now('Path Generated :: %s' % path)
-    # return the full path made for file
+
     return path
 
 
-# toolkit func to download and _save_linked_file urls used in css
 def extract_css_urls(url_of_file, file_path):
     """
     Extracts url() links in css and saves and
@@ -106,13 +112,11 @@ def extract_css_urls(url_of_file, file_path):
     if file_path is None:
         return
 
-    # if system drive path of the file is given
     # file can be corrupted to open
     try:
         # read the file
         core.now('Reading Existing file at %s' % file_path)
-        file_content = str(open(file_path, 'rb').read())
-        core.now('Finding CSS urls in file %s' % file_path)
+        file_content = open(file_path, 'rb').read()
 
     except IOError:
         core.now(
@@ -120,9 +124,20 @@ def extract_css_urls(url_of_file, file_path):
             level=4
         )
         return
+    except UnicodeDecodeError:
+        core.now(
+            'Failed to open file %s for CSS urls search' % file_path,
+            level=4
+        )
+        return
+    
 
+    core.now('Finding CSS urls in file %s' % file_path)
     # find all css urls
-    _urls = re.findall(r'''url\(['|"|](.*?)['|"|]\)''', file_content)
+    _urls = re.findall(b'url\\((.*?)\\)', file_content)
+    # the _urls also have those with double mix-match quotes
+    _urls = [x.strip(b'"').strip(b"'") for x in _urls]
+
 
     core.now('CSS url search completed Successfully!')
 
@@ -138,57 +153,82 @@ def extract_css_urls(url_of_file, file_path):
 
     for _url in _urls:
 
-        # url can be encoded content
-        if 'base64' in _url:
+        # convert bytes url to string
+        try:
+            _str_url = _url.decode('utf-8')
+        except UnicodeDecodeError:
             continue
-        print(_url)
+
+        # url can be encoded content
+        if 'base64' in _str_url:
+            continue
+
         try:
             # generate a dummy path based on url
-            _path = generate_path_for(_url, url_of_file)
+            _path = generate_path_for(_str_url, url_of_file)
         except exceptions.InvalidFilename:
             continue
 
         # save this file
-        core.new_file(_path, content=None, content_url=utils.join_urls(url_of_file, _url))
+        core.new_file(_path, content=None, content_url=utils.join_urls(url_of_file, _str_url))
 
         # generate a relative path for this downloaded file
         _rel_url = pathname2url(utils.relate(
             _path, os.path.abspath(file_path)
         ))
-        core.now('Replacing linked file path %s by %s' % (_url, _rel_url))
+        core.now('Replacing linked file path %s by %s' % (_str_url, _rel_url))
 
         # _save_linked_file the location of the downloaded file on the original file
         if core.py2:
-            file_content = file_content.replace(_url, bytes(_rel_url))
+            _rel_url = bytes(_rel_url)
+            _url = bytes(_url)
+            file_content = re.sub(_url, _rel_url, file_content)
         else:
-            file_content = file_content.replace(_url, bytes(_rel_url, encoding='utf-8'))
+            # reconvert to bytes
+            _rel_url = bytes(_rel_url, 'utf-8')
+
+            file_content = re.sub(_url, _rel_url, file_content)
 
     # rewrite the original file to contain the newly downloaded file links
     with open(file_path, 'wb') as orig_file:
         orig_file.truncate()
         orig_file.write(file_content)
-        orig_file.close()
 
 
+@utils.trace
 def _save_linked_file(link_obj, attr, base_url=None, base_path=None, download_file=True):
     """ Saves linked file and Replace the files location in document with file on disk """
 
     # get the 'href' attribute of html element
     _url = link_obj.get(attr, '')
 
+    # create a absolute url
+    abs_url = utils.join_urls(config.config['url'], _url)
+
     # check if the link is just domain or empty
-    if base_url and utils.url_path(utils.join_urls(base_url, _url)) in ('/', '', '\\'):
+    if base_url and utils.url_path(abs_url) in ('/', '', '\\'):
         return '', ''
 
     # if the downloading is not requested
     if not download_file:
 
         try:
-            # create a absolute url
+            # if a single page is being downloaded then the links on the page
+            # should all be absolute so that when we click on them they do not throw and
+            # file not found error
+            if not config.config['copy_all']:
+                core.now('Replacing url :: %s' % _url)
+                link_obj[attr] = abs_url
+                core.now('Replaced with url %s' % link_obj[attr])
+                return abs_url, ''
+
+            # create a absolute path from the url
             path = generate_path_for(_url, base_url, False, None, False)
             # _save_linked_file html attribute with relative url
             link_obj[attr] = pathname2url(utils.relate(path, base_path))
+
             return '', ''
+
         except exceptions.InvalidFilename:
             return '', ''
     else:
@@ -200,9 +240,9 @@ def _save_linked_file(link_obj, attr, base_url=None, base_path=None, download_fi
             return '', ''
 
     # save the file
-    _saved_file_path = core.new_file(path, content_url=utils.join_urls(base_url, _url))
-
-    if _saved_file_path is None:
+    try:
+        _saved_file_path = core.new_file(path, content_url=utils.join_urls(base_url, _url))
+    except:
         return '', ''
 
     core.now('Replacing url :: %s' % _url)
@@ -210,10 +250,10 @@ def _save_linked_file(link_obj, attr, base_url=None, base_path=None, download_fi
     # generate a relative url
     final_url = pathname2url(utils.relate(_saved_file_path, base_path))
 
-    core.now('Final url :: %s' % final_url)
-
     # finally _save_linked_file the link in file_soup object
     link_obj[attr] = final_url
+
+    core.now('Replaced url with :: %s' % link_obj[attr])
 
     # remove 'crossorigin' or similar attributes so that the browser
     # loads the css or scripts without CORS restriction
@@ -221,11 +261,12 @@ def _save_linked_file(link_obj, attr, base_url=None, base_path=None, download_fi
         del link_obj['crossorigin']
     if link_obj.get('integrity') is not None:
         del link_obj['integrity']
+    if link_obj.get('srcset') is not None:
+        del link_obj['srcset']
 
     return utils.join_urls(base_url, _url), _saved_file_path
 
 
-# toolkit func generate a list of stylesheets and js files used on the page
 def generate_style_map(file_url, file_path, file_soup):
     """ Saves css, js and img to disk and replaces their location on 
     page soup.
