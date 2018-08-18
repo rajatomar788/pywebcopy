@@ -10,18 +10,14 @@ Data & patterns generators powering aerwebcopy.
 """
 
 
-__all__ = [
-    "generate_path_for", "generate_style_map", "extract_css_urls"
-]
-
-
 import os
 import re
-import utils
-import core
-import config
-import exceptions
 
+
+core = __import__('core')
+config = __import__('config')
+exceptions = __import__('pywebcopy.exceptions')
+utils = __import__('utils')
 
 if core.py2:
     from urllib import pathname2url, url2pathname
@@ -166,7 +162,7 @@ def extract_css_urls(url_of_file, file_path):
         try:
             # generate a dummy path based on url
             _path = generate_path_for(_str_url, url_of_file)
-        except exceptions.InvalidFilename:
+        except:
             continue
 
         # save this file
@@ -197,7 +193,7 @@ def extract_css_urls(url_of_file, file_path):
 
 @utils.trace
 def _save_linked_file(link_obj, attr, base_url=None, base_path=None, download_file=True):
-    """ Saves linked file and Replace the files location in document with file on disk """
+    """ Saves linked file and Replace the files location in document with file saved on disk """
 
     # get the 'href' attribute of html element
     _url = link_obj.get(attr, '')
@@ -229,7 +225,7 @@ def _save_linked_file(link_obj, attr, base_url=None, base_path=None, download_fi
 
             return '', ''
 
-        except exceptions.InvalidFilename:
+        except:
             return '', ''
     else:
         try:
@@ -275,11 +271,11 @@ def generate_style_map(file_url, file_path, file_soup):
     absolute to relative for preventing file not found error while
     browsing offline
 
-    :param file_url: absolute url of the web page e.g. with 'http' & 'index.html'
+    :param file_url: absolute url of the web page e.g. with 'http' & filename or 'index.html'
     :param file_path: current file path of the file on system drive
     :param file_soup: beautiful_soup object of the file to be modified
-    :return: beautiful_soup object with urls and css, js saved and their links converted
-    to relative path
+    :return: beautiful_soup object with urls and css, js saved and their links 
+    converted to relative path
  
     """
 

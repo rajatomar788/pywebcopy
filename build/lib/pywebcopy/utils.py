@@ -10,8 +10,8 @@ Utils easing aerwebcopy.
 import os
 import re
 import functools
-import config
-import core
+config = __import__('config')
+core = __import__('core')
 
 if core.py2:
     from urlparse import urlparse, urljoin

@@ -1,8 +1,16 @@
 from setuptools import setup
 
+import sys
+
+
 def l_desc():
-    with open("README.md", "r") as fh:
-        return fh.read()
+    if sys.version_info[0] == 3:
+
+        with open("README.md", "r", encoding='utf-8') as fh:
+            return fh.read()
+    else:
+        with open("README.md", "r") as fh:
+            return fh.read()
 
 setup(
     name='pywebcopy',
@@ -11,7 +19,7 @@ setup(
     long_description=l_desc(),
     long_description_content_type="text/markdown",
     classifiers=[
-    	'Development Status :: 4 - Beta',
+    	'Development Status :: 5 - Production/Stable',
         'Environment :: Console',
         'Environment :: Web Environment',
         'Intended Audience :: End Users/Desktop',

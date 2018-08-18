@@ -11,10 +11,11 @@ import collections
 import os
 import bs4
 
-import core
-import utils
-import generators
-import exceptions
+core = __import__('core')
+utils = __import__('utils')
+generators = __import__('generators')
+exceptions = __import__('exceptions')
+config = __import__('config')
 
 if core.py2:
     import robotparser
@@ -116,7 +117,7 @@ class RobotsTxt(robotparser.RobotFileParser, object):
 
     def __init__(self, robots_url=None):
 
-        self.robots_url = robots_url
+        self.robots_url = robots_url or ''
         
         if self.robots_url is None or self.robots_url == '':
             self.is_dummy = True
@@ -168,7 +169,6 @@ class WebPage(bs4.BeautifulSoup):
         self.url = urlparse.urljoin(self.request.url, self.file_name).strip('/')
         self.file_path = generators.generate_path_for(self.url, create_path=False)
         self.download_path = download_path
-        import config
         # set these values so that no error in other functions occur
         config.config['URL'] = self.url
         config.config['MIRRORS_DIR'] = self.download_path

@@ -11,6 +11,7 @@ Core of the aerwebcopy engine.
 
 from __future__ import print_function
 
+
 import datetime
 import shutil
 import sys
@@ -31,23 +32,17 @@ elif py3:
 else:
     raise ImportError("Error while importing Modules!")
 
-import generators as gens
-import utils
-import config as cfg
-import structures
-import exceptions 
+gens = __import__('generators')
+utils = __import__('utils')
+cfg = __import__('config')
+structures = __import__('structures')
+exceptions = __import__('exceptions')
 
 
-
-__all__ = [
-    'py3', 'py2', 'setup_config', 'get', 'now', 'save_webpage', 'wrap_up'
-]
-
-
-def save_webpage(url, mirrors_dir, reset_config=True, **kwargs):
+def save_webpage(url, mirrors_dir, reset_config=True, *args, **kwargs):
     """ Starts crawler, archives and writes logs etc. """
 
-    cfg.setup_config(url, mirrors_dir, **kwargs)
+    cfg.setup_config(url, mirrors_dir, *args, **kwargs)
 
     # save the page
     _crawl(cfg.config['URL'])
@@ -92,7 +87,7 @@ def wrap_up():
         )'''
 
         # NOTE: new method, less error prone
-        # make zip archive of all the files
+        # make zip archive of all the files and not the empty folders
         archive = zipfile.ZipFile(
             os.path.abspath(cfg.config['MIRRORS_DIR']) +
             '.zip', 'w', zipfile.ZIP_DEFLATED
@@ -132,6 +127,9 @@ def wrap_up():
 def _can_access(user_agent, url):
     """ Determines if user-agent is allowed to access url. """
 
+    if cfg.config['robots'].is_dummy:
+        return True
+
     # check if website allows bot access
     if not cfg.config['ROBOTS'].can_fetch(user_agent, url) and not cfg.config['BYPASS_ROBOTS']:
 
@@ -167,7 +165,7 @@ def get(url):
     """
 
     if not _can_access("*", url):
-        raise exceptions.PermissionError("Access to %s not allowed by site." % url)
+        raise exceptions.AccessError("Access to %s not allowed by site." % url)
 
     headers = {
         "Accept-Language": "en-US,en;q=0.5",
@@ -192,7 +190,7 @@ def get(url):
             level=4,
             to_console=True
         )
-        raise exceptions.ConnectionError(e.message)
+        raise e
 
     except requests.exceptions.InvalidSchema as e:
         now(
@@ -200,7 +198,7 @@ def get(url):
             level=4,
             to_console=True
         )
-        raise exceptions.InvalidUrl(e.message)
+        raise e
 
 
 # -----------------------------------------------------------
@@ -292,7 +290,7 @@ def new_file(download_loc, content_url=None, content=None, mime_type='text/html'
         f.write(content)
         f.write(_water_mark)
 
-    # last check if file was successfully
+    # last check if file was successfully written to the disk
     assert os.path.isfile(download_loc)
 
     cfg.config['DOWNLOADED_FILES'].append(download_loc)
@@ -355,6 +353,9 @@ def now(string, level=0, unbuffered=False, to_console=False, compressed=cfg.conf
     :param to_console: also prints the string to python console
     :param compressed: reduces the string length to 80 characters
     """
+
+    if cfg.config['quiet']:
+        return
 
     _event_level_strings = ["info", "error", "critical", "success"]
 
@@ -467,61 +468,62 @@ crawled_urls = list()
 crawlable_urls = list()
 
 
-def _crawl(url):
+def _crawl(url, level=0, max_level=2):
     """ Scans pages for links to other pages to save in COPY_ALL mode.
     """
 
     # if single webpage is requested
-    if cfg.config['copy_all'] == False: 
-
-        if url not in crawled_urls:            
-            _save_webpage(url)
-            crawled_urls.append(url)
+    if not cfg.config['copy_all']: 
+ 
+        _save_webpage(url)
+        crawled_urls.append(url)
 
         return
 
-    else:
-        # crawler to extract all the valid page links on the given page
-        now('Trying to start crawler on url %s' % url)
+    # if max deep level is reached
+    if level == max_level:
+        return
 
-        # make a request to the page
-        req = get(url)
+    # crawler to extract all the valid page links on the given page
+    now('Trying to start crawler on url %s' % url, to_console=True)
 
-        # something went wrong; exit
-        if req is None:
-            now('Crawler encountered an Error while requesting web page on url %s' %
-                url, level=4)
-            now('Crawler Exiting!', level=4)
-            sys.exit(1)
+    # make a request to the page
+    req = get(url)
 
-        # page found and working
-        # make a soup of it
-        soup = bs4.BeautifulSoup(req.content, cfg.config['parser'])
+    # something went wrong; exit
+    if not req.ok:
+        now('Crawler encountered an Error while requesting web page on url %s' %
+            url, level=4, to_console=True)
+        now('Crawler Exiting!', level=4, to_console=True)
+        sys.exit(1)
 
-        # select all the links on page
-        a_tags = soup.find_all('a', href=True)
+    # page found and working
+    # make a soup of it
+    soup = bs4.BeautifulSoup(req.content, cfg.config['parser'])
 
-        # store absolute url of them in a separate dict
-        for a_tag in a_tags:
-            # create a absolute url
-            _abs_url = utils.join_urls(url, a_tag.get('href', ''))
+    # select all the links on page
+    a_tags = soup.find_all('a', href=True)
 
-            if _abs_url.startswith(url) and utils.url_path(url) not in ('', '/', '\\') and _abs_url not in crawled_urls and _abs_url not in crawlable_urls:
-                crawlable_urls.append(url)
+    # store absolute url of them
+    global crawlable_urls
+    crawlable_urls += set([urlparse.urljoin(url, i.get('href', ''))
+        for i in a_tags if urlparse.urljoin(url, i.get('href', '')).startswith(url)])
+    
+    # every url found will be checked and sent to be saved through the 
+    # save_webpage method
+    for url in crawlable_urls:
+    
+        # if url is already saved
+        if url in crawled_urls:
+            # go to the next url
+            continue
 
-        # iter through all the links of website
-        for _url in crawlable_urls:
-            # if url is already saved
-            if _url in crawled_urls:
-                # go to the next url
-                continue
+        # otherwise save this url and add this to saved list
+        _save_webpage(url)
+        crawled_urls.append(url)
 
-            # otherwise save this url and add this to saved list
-            _save_webpage(_url)
-            crawled_urls.append(_url)
-
-            # send this url again for url searching
-            _crawl(_url)
+        # send this url again for url searching
+        _crawl(url, level=(level + 1))
 
     now("Crawled URL list : ")
     now('\n'.join(crawlable_urls))

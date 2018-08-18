@@ -12,19 +12,15 @@ Configuration modifying aerwebcopy.
 
 import os
 import re
-import core
-import utils
-import structures
-import exceptions
+core = __import__('core')
+utils = __import__('utils')
+structures = __import__('structures')
+exceptions = __import__('exceptions')
 
-
-__all__ = [
-    'config', 'setup_config', 'update_config', 'reset_config'
-]
 
 
 global version
-version = '1.10'
+version = '2.0.0'
 
 
 config = structures.CaseInsensitiveDict({
@@ -46,14 +42,15 @@ config = structures.CaseInsensitiveDict({
     'LOAD_IMAGES': True,
     # to download js file or not
     'LOAD_JAVASCRIPT': True,
-    # to download every page available inside url tree turn this True
-    'COPY_ALL': False,
     # to overwrite the existing files if found
     'OVER_WRITE': False,
     # allowed file extensions
     'ALLOWED_FILE_EXT': ['.html', '.php', '.asp', '.htm', '.xhtml', '.css',
-                         '.json', '.js', '.xml', '.svg', '.gif', '.ico', '.jpeg',
-                         '.jpg', '.png', '.ttf', '.eot', '.otf', '.woff'],
+                         '.json', '.js', '.xml', '.svg', '.gif', '.ico', '.jpeg', '.pdf',
+                         '.jpg', '.png', '.ttf', '.eot', '.otf', '.woff', '.woff2',],
+
+    # Completely silents the script except 'trace' functions in debug mode
+    'QUIET' : False,
     # log file path
     'LOG_FILE': None,
     # reduce log produced by removing unnecessary info from log file
@@ -77,17 +74,19 @@ config = structures.CaseInsensitiveDict({
 
     # HANDLE WITH CARE
 
+    # to download every page available inside url tree turn this True
+    'COPY_ALL': False,
     # user-agent of this scripts requests
     'USER_AGENT' : 'Mozilla/5.0 (PywebcopyBot/{})'.format(version),
     # dummy robots.txt class
-    'ROBOTS' : structures.RobotsTxt(),
+    'ROBOTS' : structures.RobotsTxt(''),
     # bypass sites policy
     'BYPASS_ROBOTS' : False
 })
 
 
 """ This is used in to store default config as backup """
-default_config = config
+default_config = dict(config)
 
 
 def update_config(**kwargs):
@@ -98,7 +97,7 @@ def update_config(**kwargs):
 def reset_config():
     """ Resets all to configuration to default state. """
     global config
-    config = default_config
+    config = structures.CaseInsensitiveDict(default_config)
 
 
 

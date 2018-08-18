@@ -4,40 +4,33 @@
 aerwebcopy.exceptions
 ~~~~~~~~~~~~~~~
 
-* DO NOT TOUCH *
-
 Exceptions which can occur in aerwebcopy engine.
 """
 
 
-class BaseError(Exception):
+class PywebcopyException(IOError):
     """ Base class for other exceptions which are defined. """
-    pass
+    def __init__(self, *args, **kwargs):
+        super(PywebcopyException, self).__init__(*args, **kwargs)
 
 
-class PermissionError(BaseError):
+class AccessError(PywebcopyException):
     """ Access to resource not allowed. """
-    pass
 
 
-class InvalidUrl(BaseError):
+class InvalidUrl(PywebcopyException):
     """ Supplied url is not a valid URL. """
-    pass
 
 
-class InvalidFilename(BaseError):
+class InvalidFilename(PywebcopyException):
     """ Filename is either too long or contains special characters 
     which are not supported by filesystem. """
-    pass
 
 
-class UndefinedConfigValue(BaseError):
+class UndefinedConfigValue(PywebcopyException):
     """ If a specific configuration value is set to None """
-    pass
 
 
-class ConnectionError(BaseError):
+class ConnectError(PywebcopyException):
     """ Internet connection is not found. """
-    pass
-
-
+    
