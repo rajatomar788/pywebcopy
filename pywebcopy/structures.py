@@ -7,88 +7,28 @@ aerwebcopy.structures
 Data structures powering aerwebcopy.
 """
 
-import collections
 import os
 import bs4
 
-core = __import__('core')
-utils = __import__('utils')
-generators = __import__('generators')
-exceptions = __import__('exceptions')
-config = __import__('config')
 
-if core.py2:
+from pywebcopy.exceptions import ConnectError
+
+try:
     import robotparser
     import urlparse
-elif core.py3:
+except ImportError:
     from urllib import robotparser
     from urllib import parse as urlparse
 
 
 __all__ = [
-    'CaseInsensitiveDict', 'RobotsTxt', 'WebPage'
+    'RobotsTxt', 'WebPage'
 ]
 
 
 __metaclass__ = type
 
 
-class CaseInsensitiveDict(collections.MutableMapping):
-    """ Provides flexible dictionary which creates less errors
-    during lookups.
-
-    Source: `requests.structures`
-
-    Examples:
-        dict = CaseInsensitiveDict()
-        dict['Config'] = 'Config'
-
-        dict.get('config') => 'Config'
-        dict.get('CONFIG') => 'Config'
-        dict.get('conFig') => 'Config'
-    """
-
-    def __init__(self, data=None, **kwargs):
-        self._store = dict()
-        if data is None:
-            data = {}
-        self.update(data, **kwargs)
-
-    def __setitem__(self, key, value):
-        # store the lowered case key along with original key
-        self._store[key.lower()] = value
-
-    def __getitem__(self, key):
-        return self._store[key.lower()]
-
-    def __delitem__(self, key):
-        del self._store[key.lower()]
-
-    def __iter__(self):
-        return (orig_key for orig_key, key_value in self._store.items())
-
-    def __len__(self):
-        return len(self._store)
-
-    def lowered_case_items(self):
-        return (
-            (lowered_key, key_value)
-            for lowered_key, key_value in self._store.items()
-        )
-
-    def __eq__(self, other):
-        if isinstance(other, collections.Mapping):
-            other = CaseInsensitiveDict(other)
-        else:
-            raise NotImplemented
-
-        return dict(self.lowered_case_items()) == dict(other.lowered_case_items())
-
-    def copy(self):
-        return CaseInsensitiveDict(self._store.values())
-
-    def __repr__(self):
-        return str(dict(self.items()))
 
 
 class Url(object):
@@ -129,7 +69,7 @@ class RobotsTxt(robotparser.RobotFileParser, object):
             try:
                 self.read()
             except IOError:
-                raise exceptions.ConnectionError("Connection Failed!")
+                raise ConnectError("Connection Failed!")
 
     def __repr__(self):
         return '<RobotsTxt at {}>'.format(self.robots_url)
@@ -143,6 +83,10 @@ class RobotsTxt(robotparser.RobotFileParser, object):
 
         super(RobotsTxt, self).can_fetch(user_agent, url)
 
+
+from pywebcopy import utils
+from pywebcopy import generators
+from pywebcopy import core
 
 class WebPage(bs4.BeautifulSoup):
     """ Represents a web page in python code.
@@ -169,9 +113,13 @@ class WebPage(bs4.BeautifulSoup):
         self.url = urlparse.urljoin(self.request.url, self.file_name).strip('/')
         self.file_path = generators.generate_path_for(self.url, create_path=False)
         self.download_path = download_path
+
+        config = __import__('config')
         # set these values so that no error in other functions occur
         config.config['URL'] = self.url
         config.config['MIRRORS_DIR'] = self.download_path
+
+        del config
 
         super(WebPage, self).__init__(self.request.content, parser=parser, *args, **kwargs)
 
@@ -188,7 +136,7 @@ class WebPage(bs4.BeautifulSoup):
         if not req.ok:
             core.now('Server Responded with an error!', level=4, to_console=True)
             core.now('Error code: %s' % str(req.status_code), to_console=True)
-            raise exceptions.ConnectionError("Error while fetching %s" % url)
+            raise ConnectError("Error while fetching %s" % url)
 
         return req
 
@@ -196,9 +144,8 @@ class WebPage(bs4.BeautifulSoup):
         """ Returns a byte type content of the html page """
 
         # Resolves compatibility issues to bytes func on python2 and python3
-        if core.py2:
-            content = bytes(str(self))
-        elif core.py3:
+
+        if py3:
             content = bytes(str(self), "utf-8")
         else:
             content = str(self)
@@ -236,12 +183,10 @@ class WebPage(bs4.BeautifulSoup):
         # save any css or js or images linked to this page
         _final_content = generators.generate_style_map(file_url=self.url, file_path=self.file_path, file_soup=self)
 
-        if core.py2:
-            content = bytes(str(_final_content))
-        elif core.py3:
+        if py3:
             content = bytes(str(_final_content), "utf-8")
         else:
-            content = str(_final_content)
+            content = bytes(str(_final_content))
 
         # finally save the html page itself
         _saved_file = core.new_file(download_loc=self.url, content=content)

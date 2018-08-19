@@ -14,7 +14,7 @@ def l_desc():
 
 setup(
     name='pywebcopy',
-    version='2.0.0',
+    version='2.0.2',
     description='Mirrors online webpages and complete websites.',
     long_description=l_desc(),
     long_description_content_type="text/markdown",

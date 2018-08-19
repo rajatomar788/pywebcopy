@@ -9,15 +9,13 @@ aerwebcopy.generators
 Data & patterns generators powering aerwebcopy.
 """
 
-
 import os
 import re
 
-
-core = __import__('core')
-config = __import__('config')
-exceptions = __import__('pywebcopy.exceptions')
-utils = __import__('utils')
+from pywebcopy import exceptions
+from pywebcopy import config
+from pywebcopy import utils
+from pywebcopy import core
 
 if core.py2:
     from urllib import pathname2url, url2pathname
@@ -25,7 +23,6 @@ elif core.py3:
     from urllib.request import pathname2url, url2pathname
 else:
     raise ImportError("Error while importing Modules!")
-
 
 
 @utils.trace
@@ -53,7 +50,7 @@ def generate_path_for(url, base_url=None, filename_check=False, default_filename
         if os.path.splitext(url)[-1].find('.') == -1 or \
                 os.path.splitext(url)[-1] == utils.hostname(url).split('.')[-1]:
             if default_filename is None:
-                raise TypeError("Default Filename is not valid.")
+                raise exceptions.InvalidFilename("Default Filename is not valid.")
             else:
                 file_comp = default_filename
         else:
@@ -68,17 +65,17 @@ def generate_path_for(url, base_url=None, filename_check=False, default_filename
     _path = url2pathname(utils.compatible_path(url))
 
     # remove any invalid chars
-    _path = re.sub(config.config['filename_validation_pattern'], '', _path)
+    _path = config.config['filename_validation_pattern'].sub('', _path)
 
-    # check if path is valid
-    if not utils.file_path_is_valid(_path):
-        raise exceptions.InvalidFilename("Filename '%s' is invalid!" % _path)
+    if not _path:
+        return _path
 
     # return the newly made path
     path = os.path.abspath(
         os.path.join(
             config.config['MIRRORS_DIR'], os.path.dirname(_path)
         )
+
     )
 
     if create_path:
@@ -126,14 +123,12 @@ def extract_css_urls(url_of_file, file_path):
             level=4
         )
         return
-    
 
     core.now('Finding CSS urls in file %s' % file_path)
     # find all css urls
     _urls = re.findall(b'url\\((.*?)\\)', file_content)
     # the _urls also have those with double mix-match quotes
     _urls = [x.strip(b'"').strip(b"'") for x in _urls]
-
 
     core.now('CSS url search completed Successfully!')
 

@@ -11,7 +11,6 @@ Core of the aerwebcopy engine.
 
 from __future__ import print_function
 
-
 import datetime
 import shutil
 import sys
@@ -20,7 +19,6 @@ import zipfile
 import os
 import bs4
 import requests
-import html5lib
 
 py2 = True if sys.version_info.major == 2 else False
 py3 = True if sys.version_info.major == 3 else False
@@ -32,17 +30,14 @@ elif py3:
 else:
     raise ImportError("Error while importing Modules!")
 
-gens = __import__('generators')
-utils = __import__('utils')
-cfg = __import__('config')
-structures = __import__('structures')
-exceptions = __import__('exceptions')
+from pywebcopy.exceptions import AccessError, InvalidUrl, ConnectError
+from pywebcopy import config as cfg
 
 
-def save_webpage(url, mirrors_dir, reset_config=True, *args, **kwargs):
+def save_webpage(url, mirrors_dir, reset_config=True, **kwargs):
     """ Starts crawler, archives and writes logs etc. """
 
-    cfg.setup_config(url, mirrors_dir, *args, **kwargs)
+    cfg.setup_config(url, mirrors_dir, **kwargs)
 
     # save the page
     _crawl(cfg.config['URL'])
@@ -127,7 +122,7 @@ def wrap_up():
 def _can_access(user_agent, url):
     """ Determines if user-agent is allowed to access url. """
 
-    if cfg.config['robots'].is_dummy:
+    if not cfg.config['robots'] or cfg.config['robots'].is_dummy:
         return True
 
     # check if website allows bot access
@@ -165,7 +160,7 @@ def get(url):
     """
 
     if not _can_access("*", url):
-        raise exceptions.AccessError("Access to %s not allowed by site." % url)
+        raise AccessError("Access to %s not allowed by site." % url)
 
     headers = {
         "Accept-Language": "en-US,en;q=0.5",
@@ -184,21 +179,21 @@ def get(url):
 
         return req
 
-    except requests.exceptions.ConnectionError as e:
+    except requests.exceptions.ConnectionError:
         now(
             'error :: Internet Connection not Found!',
             level=4,
             to_console=True
         )
-        raise e
+        raise ConnectError("error :: Internet Connection not Found!")
 
-    except requests.exceptions.InvalidSchema as e:
+    except requests.exceptions.InvalidSchema:
         now(
             'error :: Invalid URL',
             level=4,
             to_console=True
         )
-        raise e
+        raise InvalidUrl("Url is invalid! %s" % url)
 
 
 # -----------------------------------------------------------
@@ -267,16 +262,8 @@ def new_file(download_loc, content_url=None, content=None, mime_type='text/html'
             return download_loc
 
         else:
-
-            # if file size is same that means we don't have to overwrite
-            if content_url and req.headers.get('Content-Length', 0) == os.stat(download_loc).st_size:
-
-                now('skipping :: Existing file is same as new file! %s %s' % (download_loc, content_url), to_console=True)
-
-                return download_loc
-            else:
-                now('Existing file at %s removed!' % download_loc)
-                os.remove(download_loc)
+            now('Existing file at %s removed!' % download_loc)
+            os.remove(download_loc)
 
     # Write the File
     with open(download_loc, 'wb') as f:
@@ -318,17 +305,17 @@ def _watermark(file_path):
     else:
         comment_style = '/*!#*/'
 
-    mark = """\n* AerWebCopy [version {}]\n* Copyright Aeroson Systems & Co.\n* File mirrored from {} \n* at {}\n"""\
-        .format(
-            cfg.config['version'],
-            os.path.basename(file_path),
-            datetime.datetime.utcnow()
-        )
+    mark = "\n* AerWebCopy [version {}]\n* Copyright Aeroson Systems & Co.\n* " \
+           "File mirrored from {} \n* at {}\n".format(
+                                                    cfg.config['version'],
+                                                    os.path.basename(file_path),
+                                                    datetime.datetime.utcnow()
+                                                )
 
     if py3:
         return bytes(comment_style.replace('#', mark), 'utf-8')
     else:
-        return comment_style.replace('#', mark)
+        return bytes(comment_style.replace('#', mark))
 
 
 # ----------------------------------------------------------------------
@@ -426,6 +413,8 @@ def _save_webpage(url):
     # generate soup of the request
     soup = bs4.BeautifulSoup(req.content, cfg.config['parser'])
 
+    from pywebcopy import generators as gens
+
     # create a path where to download this page
     download_path = gens.generate_path_for(url, filename_check=True, default_filename='index.html')
 
@@ -447,10 +436,8 @@ def _save_webpage(url):
     # Compatibility issues to bytes func on py2 and py3
     if py2:
         content = bytes(str(final_soup))
-    elif py3:
-        content = bytes(str(final_soup), "utf-8")
     else:
-        content = str(final_soup)
+        content = bytes(str(final_soup), "utf-8")
 
     # finally save this file
     # create a new file from soup
@@ -473,8 +460,7 @@ def _crawl(url, level=0, max_level=2):
     """
 
     # if single webpage is requested
-    if not cfg.config['copy_all']: 
- 
+    if not cfg.config['copy_all']:
         _save_webpage(url)
         crawled_urls.append(url)
 
@@ -507,12 +493,12 @@ def _crawl(url, level=0, max_level=2):
     # store absolute url of them
     global crawlable_urls
     crawlable_urls += set([urlparse.urljoin(url, i.get('href', ''))
-        for i in a_tags if urlparse.urljoin(url, i.get('href', '')).startswith(url)])
-    
+                           for i in a_tags if urlparse.urljoin(url, i.get('href', '')).startswith(url)])
+
     # every url found will be checked and sent to be saved through the 
     # save_webpage method
     for url in crawlable_urls:
-    
+
         # if url is already saved
         if url in crawled_urls:
             # go to the next url

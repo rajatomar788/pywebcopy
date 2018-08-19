@@ -10,21 +10,24 @@ Utils easing aerwebcopy.
 import os
 import re
 import functools
-config = __import__('config')
-core = __import__('core')
 
-if core.py2:
+
+from pywebcopy import config
+debug = config.config['debug']
+validation_pattern = config.config['filename_validation_pattern']
+del config
+
+
+try:
     from urlparse import urlparse, urljoin
-elif core.py3:
+except ImportError:
     from urllib.parse import urlparse
     from urllib.parse import urljoin
-else:
-    raise ImportError("Error while importing Modules!")
 
 
 __all__ = [
     'trace', 'netloc', 'url_path', 'url_port', 'url_scheme', 'join_urls', 
-    'join_paths', 'relate', 'netloc_without_port', 'make_path', 
+    'join_paths', 'relate', 'hostname', 'make_path',
     'compatible_path', 'get_filename', 'get_attr', 'get_asset_filename', 
     'file_path_is_valid'
 ]
@@ -36,7 +39,7 @@ def trace(func):
     @functools.wraps(func)
     def wrapper(*args, **kwargs):
 
-        if config.config['debug']:
+        if debug:
             print('TRACE: <func {}> called with {}, {}'.format(func.__name__, args, kwargs))
 
             func_result = func(*args, **kwargs)
@@ -97,13 +100,6 @@ def make_path(path):
 
     if not os.path.exists(path):
         os.makedirs(path)
-        core.now('Path Created Successfully! %s ' % path)
-
-    elif os.path.exists(path):
-        core.now('Path already exists!', level=2)
-
-    else:
-        core.now('Path creation failed!', level=4)
 
     return path
 
@@ -152,17 +148,22 @@ def file_path_is_valid(file_path):
 
     _path_without_drive = os.path.splitdrive(file_path)[-1]
 
-    if len(re.findall(config.config['filename_validation_pattern'], _path_without_drive)) != 0:
-        core.now(
+    from pywebcopy.core import now
+
+    if validation_pattern.match(_path_without_drive) is not None:
+        now(
             'File path is not valid! "%s"' % _path_without_drive,
             level=3
         )
         return False
 
-    core.now(
+    now(
         'File path is valid! "%s"' % _path_without_drive,
         level=2
     )
+
+    del now
+
     return True
 
 
@@ -180,10 +181,5 @@ def relate(target_file, start_file):
 
     except ValueError:
         rel_path = ''
-
-        core.now(
-            'Error while relating paths! %r %r' % (target_file, start_file),
-            level=4
-        )
 
     return rel_path
