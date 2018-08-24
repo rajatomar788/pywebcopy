@@ -15,7 +15,8 @@ import datetime
 import shutil
 import sys
 import zipfile
-
+import threading
+import logging
 import os
 import bs4
 import requests
@@ -33,11 +34,30 @@ else:
 from pywebcopy.exceptions import AccessError, InvalidUrl, ConnectError
 from pywebcopy import config as cfg
 
+SESSION = requests.Session()
+LOGGER = logging.getLogger("pyebcopy")
+LOGGER.setLevel(logging.DEBUG)
+
+CLOGGER = logging.StreamHandler()
+CLOGGER.setLevel(logging.ERROR)
+
+
+formatter = logging.Formatter('%(asctime)s - %(levelname)s - %(message)s')
+formatter.datefmt = "%d-%b-%Y %H:%M:%S"
+CLOGGER.setFormatter(formatter)
+LOGGER.addHandler(CLOGGER)
+
 
 def save_webpage(url, mirrors_dir, reset_config=True, **kwargs):
     """ Starts crawler, archives and writes logs etc. """
 
     cfg.setup_config(url, mirrors_dir, **kwargs)
+
+    # Add a log file writer to Logger
+    FLOGGER = logging.FileHandler(cfg.config['log_file'])
+    FLOGGER.setLevel(logging.DEBUG)
+    FLOGGER.setFormatter(formatter)
+    LOGGER.addHandler(FLOGGER)
 
     # save the page
     _crawl(cfg.config['URL'])
@@ -66,12 +86,6 @@ def wrap_up():
             cfg.config['DOWNLOADED_FILES'])
     )
 
-    # writes the buffered log to external file if buffering was on
-    if cfg.config['LOG_BUFFERING']:
-        with open(cfg.config['LOG_FILE'], 'a+') as log_file:
-            log_file.write(
-                '\n\n'.join(cfg.config['LOG_BUFFER_ARRAY'])
-            )
 
     if cfg.config['MAKE_ARCHIVE']:
 
@@ -139,7 +153,7 @@ def _can_access(user_agent, url):
         now(
             'forced :: Accessing restricted website part %s' % url,
             to_console=True,
-            level=4
+            level=2
         )
         return True
 
@@ -171,7 +185,7 @@ def get(url):
     try:
 
         # make request to page
-        req = requests.get(url, headers=headers)
+        req = SESSION.get(url, headers=headers)
 
         # log downloaded file size
         cfg.config['DOWNLOAD_SIZE'] += int(
@@ -179,21 +193,15 @@ def get(url):
 
         return req
 
-    except requests.exceptions.ConnectionError:
+    except Exception as e:
         now(
             'error :: Internet Connection not Found!',
             level=4,
             to_console=True
         )
-        raise ConnectError("error :: Internet Connection not Found!")
+        return
 
-    except requests.exceptions.InvalidSchema:
-        now(
-            'error :: Invalid URL',
-            level=4,
-            to_console=True
-        )
-        raise InvalidUrl("Url is invalid! %s" % url)
+
 
 
 # -----------------------------------------------------------
@@ -201,39 +209,41 @@ def get(url):
 # it checks various expects before creating a file
 # but it is as easy as `new_file('pathtofile', 'filecontent')`
 # -----------------------------------------------------------
-def new_file(download_loc, content_url=None, content=None, mime_type='text/html'):
+def new_file(download_loc, content_url=None, content=None):
     """ Downloads any file to the disk.
 
     :param download_loc: path where to save the file
 
     :param content: contents or binary data of the file
-    :param mime_type: content type of the provided content
     :OR:
     :param content_url: download the file from url
 
     :returns: location of downloaded file on disk
     """
 
+    if not download_loc or not (content or content_url):
+        return download_loc
+
     now('Saving file at %s path' % download_loc)
 
     # if content of a file is to be filled through an content_url
-    if content_url is not None:
+    if content_url:
         now('Downloading file content from :: %s' % content_url)
 
         try:
             # fetch the content_url
             req = get(content_url)
 
-            # get the file type from request
-            mime_type = req.headers.get('Content-Type', mime_type)
+            if not req or not req.ok:
+                return download_loc
 
             # store the content of the request
             content = req.content
 
-        except requests.exceptions.ConnectionError:
+        except Exception as e:
             now(
-                'error :: Failed to load the file from content_url %s'
-                % content_url,
+                'error :: Failed to load the file from content_url %s due to error %s'
+                % (content_url, e.message),
                 to_console=True,
                 compressed=False,
                 level=4
@@ -241,7 +251,7 @@ def new_file(download_loc, content_url=None, content=None, mime_type='text/html'
             return download_loc
 
     # if file of this type is allowed to be saved
-    if not os.path.splitext(download_loc)[-1] in cfg.config['ALLOWED_FILE_EXT']:
+    if not os.path.splitext(download_loc)[-1].lower() in cfg.config['ALLOWED_FILE_EXT']:
         now(
             'error :: file of type %s is not allowed!'
             % str(os.path.splitext(download_loc)[-1]),
@@ -265,27 +275,21 @@ def new_file(download_loc, content_url=None, content=None, mime_type='text/html'
             now('Existing file at %s removed!' % download_loc)
             os.remove(download_loc)
 
-    # Write the File
-    with open(download_loc, 'wb') as f:
+    try:
+        # Write the File
+        with open(download_loc, 'wb') as f:
 
-        _water_mark = _watermark(content_url or download_loc)
-
-        # if this is a text file write an extra watermark at top
-        if not content_url or mime_type.split('/')[0] == 'text':
+            _water_mark = _watermark(content_url or download_loc)
             f.write(_water_mark)
+            f.write(content)
+            f.write(_water_mark)
+    except Exception as e:
+        now("Exception occured during writing file %s exception %s" %(download_loc, e.message), level=4)
+        return download_loc
 
-        f.write(content)
-        f.write(_water_mark)
+    cfg.config['downloaded_files'].append(download_loc)
 
-    # last check if file was successfully written to the disk
-    assert os.path.isfile(download_loc)
-
-    cfg.config['DOWNLOADED_FILES'].append(download_loc)
-
-    now(
-        'success :: File %s written Successfully!' % download_loc,
-        to_console=True
-    )
+    now('success :: File %s written Successfully!' % download_loc, to_console=True)
 
     # return the file path of the saved file
     return download_loc
@@ -300,17 +304,23 @@ def _watermark(file_path):
 
     file_type = os.path.splitext(file_path)[-1]
 
-    if file_type == '.html':
+    if file_type in ['.html', '.htm', '.xhtml', '.aspx', '.asp', '.php']:
         comment_style = '<!--!#-->'
-    else:
+    elif file_type in ['.css', '.js', '.xml']:
         comment_style = '/*!#*/'
+    else:
+        return b''
 
-    mark = "\n* AerWebCopy [version {}]\n* Copyright Aeroson Systems & Co.\n* " \
-           "File mirrored from {} \n* at {}\n".format(
-                                                    cfg.config['version'],
-                                                    os.path.basename(file_path),
-                                                    datetime.datetime.utcnow()
-                                                )
+    mark = """
+    * AerWebCopy [version {}]
+    * Copyright Aeroson Systems & Co.
+    * File mirrored from {}
+    * at {}
+    """.format(
+                cfg.config['version'],
+                os.path.basename(file_path),
+                datetime.datetime.utcnow()
+            )
 
     if py3:
         return bytes(comment_style.replace('#', mark), 'utf-8')
@@ -325,6 +335,7 @@ def _watermark(file_path):
 # of log then set cfg.config['DEBUG']=True and see what's going on inside
 # with ease
 # -----------------------------------------------------------------------
+
 def now(string, level=0, unbuffered=False, to_console=False, compressed=cfg.config['LOG_FILE_COMPRESSION']):
     """ Writes any input string to external logfile
 
@@ -341,20 +352,6 @@ def now(string, level=0, unbuffered=False, to_console=False, compressed=cfg.conf
     :param compressed: reduces the string length to 80 characters
     """
 
-    if cfg.config['quiet']:
-        return
-
-    _event_level_strings = ["info", "error", "critical", "success"]
-
-    if level == 4:
-        _event_level = _event_level_strings[2]
-    elif level == 1 or level == 2:
-        _event_level = _event_level_strings[3]
-    elif level == 3:
-        _event_level = _event_level_strings[1]
-    else:
-        _event_level = _event_level_strings[0]
-
     # shorten the string
     if compressed:
         if len(string) > 80:
@@ -367,30 +364,19 @@ def now(string, level=0, unbuffered=False, to_console=False, compressed=cfg.conf
         _caller = '<function {}>'.format(_caller)
 
     # standardisation of the input string
-    if compressed:
-        _formatted_string = "[{}] [{}] {}".format(
-            _caller, _event_level, string)
-    else:
-        _formatted_string = "[{}] [{}] [{}] {}".format(
-            datetime.datetime.utcnow(), _caller, _event_level, string)
+    _formatted_string = " [{}] {}".format(
+        _caller, string)
+
 
     # if _debug switch is true than this will write now() instances to console
     # if string is requested to be printed to console also
-    if cfg.config['DEBUG'] or to_console:
+    if cfg.config['DEBUG'] or to_console and not cfg.config['quiet']:
         print(_formatted_string)
 
     # if the location of log file is undefined; return
-    if cfg.config['LOG_FILE'] is None:
+    if not cfg.config['LOG_FILE']:
         return
-
-    # append the string to log array
-    if cfg.config['LOG_BUFFERING'] and not unbuffered:
-        cfg.config['LOG_BUFFER_ARRAY'].append(_formatted_string)
-        return
-
-    with open(cfg.config['LOG_FILE'], 'a') as log_file:
-        log_file.write(_formatted_string)
-        log_file.write('\n\n')
+    LOGGER.log(level * 10,_formatted_string)
 
 
 # main func that runs and downloads html source code of page
@@ -405,7 +391,7 @@ def _save_webpage(url):
     req = get(url)
 
     # check if request was successful
-    if not req.ok:
+    if not req or not req.ok:
         now('Server Responded with an error!', level=4, to_console=True)
         now('Error code: %s' % str(req.status_code), to_console=True)
         return req.status_code
@@ -418,10 +404,10 @@ def _save_webpage(url):
     # create a path where to download this page
     download_path = gens.generate_path_for(url, filename_check=True, default_filename='index.html')
 
-    # store the file name
+    # store the file name generated for the url
     file_comp = os.path.split(download_path)[-1]
 
-    # we have make sure the url have an filename e.g. 'http://site.com' not
+    # the url may not have an filename e.g. 'http://site.com' not
     # have a file name and we have to add file name to it
     url = urlparse.urljoin(url, file_comp).strip('/')
 

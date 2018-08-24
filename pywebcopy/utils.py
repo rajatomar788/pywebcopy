@@ -146,23 +146,8 @@ def file_path_is_valid(file_path):
     any special chars e.g. ?<>{ etc.
     """
 
-    _path_without_drive = os.path.splitdrive(file_path)[-1]
-
-    from pywebcopy.core import now
-
     if validation_pattern.match(_path_without_drive) is not None:
-        now(
-            'File path is not valid! "%s"' % _path_without_drive,
-            level=3
-        )
         return False
-
-    now(
-        'File path is valid! "%s"' % _path_without_drive,
-        level=2
-    )
-
-    del now
 
     return True
 
@@ -172,14 +157,12 @@ def relate(target_file, start_file):
     """ Returns relative path of target-file from start-file. """
 
     try:
-        rel_path = os.path.join(
+        return os.path.join(
             os.path.relpath(
-                os.path.split(target_file)[0],
-                os.path.split(start_file)[0]),
-            os.path.basename(target_file)
+                os.path.split(target_file or '')[0],
+                os.path.split(start_file or '')[0]),
+            os.path.basename(target_file or '')
         )
 
     except ValueError:
-        rel_path = ''
-
-    return rel_path
+        return ''

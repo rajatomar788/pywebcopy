@@ -1,20 +1,19 @@
+from __future__ import with_statement
 from setuptools import setup
-
+from io import open
 import sys
-
 
 def l_desc():
     if sys.version_info[0] == 3:
-
-        with open("README.md", "r", encoding='utf-8') as fh:
+        with open("README.md", encoding='utf8', errors='ignore') as fh:
             return fh.read()
     else:
-        with open("README.md", "r") as fh:
+        with open("README.md", errors='ignore') as fh:
             return fh.read()
 
 setup(
     name='pywebcopy',
-    version='2.0.2',
+    version='2.0.3',
     description='Mirrors online webpages and complete websites.',
     long_description=l_desc(),
     long_description_content_type="text/markdown",

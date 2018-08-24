@@ -12,10 +12,9 @@ Configuration modifying aerwebcopy.
 import collections
 import os
 import re
-
 from pywebcopy import exceptions
 
-version = '2.0.2'
+version = '2.0.3'
 
 
 class CaseInsensitiveDict(collections.MutableMapping):
@@ -98,7 +97,7 @@ config = CaseInsensitiveDict({
     # to overwrite the existing files if found
     'OVER_WRITE': False,
     # allowed file extensions
-    'ALLOWED_FILE_EXT': ['.html', '.php', '.asp', '.htm', '.xhtml', '.css',
+    'ALLOWED_FILE_EXT': ['.html', '.php', '.asp', '.aspx' '.htm', '.xhtml', '.css',
                          '.json', '.js', '.xml', '.svg', '.gif', '.ico', '.jpeg', '.pdf',
                          '.jpg', '.png', '.ttf', '.eot', '.otf', '.woff', '.woff2',],
 
@@ -176,11 +175,11 @@ def setup_config(url, download_loc, **kwargs):
     # check if the provided url works
     _dummy_request = core.get(url)
 
+    if not _dummy_request or not _dummy_request.ok:
+        raise exceptions.ConnectError("Provided URL '%s' didn't work!" % url)
+
     # new resolved url
     _url = _dummy_request.url
-
-    if not _dummy_request.ok:
-        raise exceptions.ConnectError("Provided URL '%s' didn't work!" % url)
 
     # Assign the resolved or found url so that it does not generate
     # error of redirection request
@@ -203,7 +202,7 @@ def setup_config(url, download_loc, **kwargs):
 
     # initialise the new robots parser so that we don't overrun websites
     # with copyright policies
-    config['ROBOTS'] = create_robots_obj(_url + '/robots.txt')
+    config['ROBOTS'] = create_robots_obj(utils.join_urls(_url, '/robots.txt'))
 
     # create work dirs if it do not exists
     if not os.path.exists(config['mirrors_dir']):

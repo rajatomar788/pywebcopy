@@ -1,9 +1,11 @@
 *.pyc
 .vscode
+.idea
 *.txt
 *.cmd
 *.bat
 
+dist/*
 
 # Python egg metadata, regenerated from source files by setuptools.
 /*.egg-info

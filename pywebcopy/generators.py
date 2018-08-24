@@ -71,12 +71,15 @@ def generate_path_for(url, base_url=None, filename_check=False, default_filename
         return _path
 
     # return the newly made path
-    path = os.path.abspath(
-        os.path.join(
-            config.config['MIRRORS_DIR'], os.path.dirname(_path)
-        )
+    try:
+        path = os.path.abspath(
+            os.path.join(
+                config.config['MIRRORS_DIR'], os.path.dirname(_path)
+            )
 
-    )
+        )
+    except:
+        return _path
 
     if create_path:
         # make this path if not exists

@@ -1,4 +1,4 @@
-# PyWebCopy &copy; 2.0.0
+# PyWebCopy &copy; 2
 
 `Created By : Raja Tomar`
 `License : MIT`

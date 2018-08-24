@@ -31,6 +31,3 @@ __all__ = [
     'core', 'structures', 'config', 'utils', 'generators', 'exceptions'
 ]
 
-
-if __name__ == "__main__":
-    core.save_webpage('http://google.com', 'e://tests/', bypass_robots=True, over_write=True)
