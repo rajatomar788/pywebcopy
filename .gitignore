@@ -1,0 +1,6 @@
+/.idea/*
+/.vscode/*
+/.pytest_cache/*
+/dist/*
+*.pyc
+/requests-html-master/

@@ -1,0 +1,6 @@
+requests
+lxml
+pyquery
+parse
+w3lib
+bs4
