@@ -1,11 +1,12 @@
-# PyWebCopy &copy; 2
+# PyWebCopy &copy; 4
 
 `Created By : Raja Tomar`
 `License : MIT`
+`Email: rajatomar788@gmail.com`
 
-Mirrors Complete webpages with python.
+Web Scraping and Saving Complete webpages and websites with python.
 
-Website mirroring and archiving tool written in Python
+Web scraping and archiving tool written in Python
 Archive any online website and its assets, css, js and
 images for offilne reading, storage or whatever reasons.
 It's easy with `pywebcopy`.
@@ -15,7 +16,12 @@ Why it's great? because it -
 - respects `robots.txt`
 - have a single-function basic usages
 - lots of configuration for many custom needs
-- many `utils` and `generator` functions to ease extraction of any part of website
+- provides several scraping packages in one Objects (thanks to their original owners)
+  - beautifulsoup4
+  - lxml
+  - requests
+  - requests_html
+  - pyquery
 
 Email me at `rajatomar788@gmail.com` of any query :)
 
@@ -27,63 +33,255 @@ Email me at `rajatomar788@gmail.com` of any query :)
 pip install pywebcopy
 ```
 
+You are ready to go. Read the tutorials below to get started.
+
+## First steps
+
+You should always check if the pywebcopy is installed successfully.
+
+```python
+>>> import pywebcopy
+>>> pywebcopy.__version___
+4.x
+```
+
+Your version may be different, now you can continue the tutorial.
+
 ## 1.2 Basic Usages
 
-### 1.2.1 Direct Function Methods
-To mirror any single page, just type in python console
+To save any single page, just type in python console
 
 ```Python
-from pywebcopy.core import save_webpage
+from pywebcopy import save_webpage
 
 
 save_webpage(
     url='http://example-site.com/index.html',
-    download_loc='path/to/downloads'
+    project_folder='path/to/downloads'
 )
 ```
 
-To mirror full website (This could overload the target server, So, be careful)
+To save full website (This could overload the target server, So, be careful)
 
 ```Python
-from pywebcopy.core import save_webpage
+from pywebcopy import save_website
 
-
-save_webpage(
+save_website(
     url='http://example-site.com/index.html',
-    download_loc='path/to/downloads',
-    copy_all=True
+    project_folder='path/to/downloads',
 )
 ```
 
-### 1.2.2 Object Creation Method
+### 1.2.2 Webpage() object
 
 ```Python
-from pywebcopy.structures import WebPage
+from pywebcopy import WebPage
 
-url = 'http://example-site.com/index.html'
-download_loc = 'path/to/downloads/folder'
+url = 'http://example-site.com/index.html' or None
+project_loc = 'path/to/downloads/folder'
 
-wp = WebPage(url, download_loc)
+wp = WebPage(url,
+project_folder
+default_encoding=None,
+HTML=None,
+**configKwargs
+)
+
+# You can choose to load the page explicitly using 
+# `requests` module
+wp.get(url, **requestsKwargs)
 
 # if you want assets only
-wp.save_assets_only()
+wp.save_assets()
 
 # if you want html only
-wp.save_html_only()
+wp.save_html()
 
 # if you want complete webpage
 wp.save_complete()
+```
 
-# bonus : you can also use any beautiful_soup methods on it
-links = wp.find_all('a', href=True)
+#### BeautifulSoup methods are supported
+
+you can also use any beautiful_soup methods on it
+
+```python
+>>> links = wp.bs4.find_all('a')
+
+['//docs.python.org/3/tutorial/', '/about/apps/', 'https://github.com/python/pythondotorg/issues', '/accounts/login/', '/download/other/']
 
 ```
 
-that's it.
+### LXML is completely supported
 
-You will now have a folder at `download_loc` with all the webpage and its linked files ready to be used.
+You can use any lxml methods on it. Read more about lxml at `http://lxml.de/`
 
-Just browse it as would on any browser!
+```python
+>>> wp.lxml.xpath('//a', ..)
+[<Element 'a'>,<Element 'a'>]
+
+```
+
+### PyQuery is Fully supported
+
+You can use PyQuery methods on it .Read more about pyquery at `https://pythonhosted.org/pyquery/`
+
+```python
+>>> wp.pq.select(selector, ..)
+...
+```
+
+### XPath is also supported
+
+xpath is also natively supported which retures a :class: `requests_html.Element` See more at `https://html.python-requests.org`
+
+```python
+
+>>> wp.xpath('a')
+[<Element 'a' class='btn' href='https://help.github.com/articles/supported-browsers'>]
+```
+
+### You can also select only elements containing certain text
+
+```python
+>>> wp.find('a', containing='kenneth')
+[<Element 'a' href='http://kennethreitz.com/pages/open-projects.html'>, <Element 'a'
+```
+
+## Tutorials: sample use-cases with pywebcopy
+
+## Common Settings and Errors
+
+### `pywebcopy.exceptions.AccessError`
+
+If you are getting `pywebcopy.exceptions.AccessError` Exception.
+then check if website allows scraping of its content.
+
+```python
+>>> import pywebcopy
+>>> pywebcopy.config['bypass_robots'] = True
+
+# rest of your code follows..
+```
+
+### Overwrite existing files when copying
+
+If you want to overwrite existing files in the directory then
+use the over_write config key.
+
+```python
+>>> import pywebcopy
+>>> pywebcopy.config['over_write'] = True
+
+# rest of your code follows..
+```
+
+### Changing your project name
+
+By default the pywebcopy creates a directory inside project_folder
+with the url you have provided but you can change this using the code 
+below
+
+```python
+>>> import pywebcopy
+>>> pywebcopy.config['project_name'] = 'my_project'
+
+# rest of your code follows..
+```
+
+## How to - Save Single Webpage
+
+Particular webpage can be saved easily using the following methods.
+
+Note: if you get `pywebcopy.exceptions.AccessError` when running any of these code then use the code provided on later sections.
+
+### Method 1
+
+Webpage can easily be saved using an inbuilt funtion called `.save_webpage()` which takes several
+arguments also.
+
+```python
+>>> import pywebcopy
+>>> pywebcopy.save_webpage(project_url='http://google.com', project_folder='c://Saved_Webpages/',)
+
+# rest of your code follows..
+```
+
+### Method 2
+
+This use case is slightly more powerful as it can provide every functionallity of the WebPage 
+data class.
+
+```python
+>>> from pywebcopy import Webpage
+
+>>> wp = WebPage('http://google.com', 'e://tests/', project_name='Google')
+>>> wp.save_complete()
+
+# This Webpage object contains every methods of the Webpage() class and thus
+# can be reused for later usages.
+
+```
+
+### Method 2 using Plain HTML
+
+> :New in version 4.x:
+
+I told you earlier that Webpage object is powerful and can be manipulated in any ways.
+
+One feature is that the raw html is now also accepted.
+
+```python
+
+>>> from pywebcopy import Webpage
+
+>>> HTML = open('test.html').read()
+
+>>> base_url = 'http://example.com' # used as a base for downloading imgs, css, js files.
+>>> project_folder = '/saved_pages/'
+
+>>> wp = WebPage(base_url, project_folder, HTML=HTML)
+>>> wp.save_webpage()
+```
+
+## How to - Whole Websites
+
+Use caution when copying websites as this can overload or damage the
+servers of the site and rarely could be illegal, so check everything before
+you proceed.
+
+### Method 1 -
+
+Using the inbuilt api `.save_website()` which takes several arguments.
+
+```python
+>>> import pywebcopy
+
+>>> pywebcopy.save_website(project_url='http://localhost:8000', project_folder='e://tests/')
+```
+
+### Method 2 -
+
+By creating a Crawler() object which provides several other functions as well.
+
+```python
+>>> import pywebcopy
+
+>>> pywebcopy.config.setup_config(project_url='http://localhost:5000/', project_folder='e://tests/', project_name='LocalHost')
+
+>>> crawler = pywebcopy.Crawler('http://localhost:5000/')
+>>> crawler.crawl()
+```
+
+## Contribution
+
+You can contribute in many ways
+
+- reporting bugs on github repo: <https://github.com/rajatomar788/pywebcopy/> or my email.
+- creating pull requests on github repo: <https://github.com/rajatomar788/pywebcopy/>
+- sending a thanks mail
+
+If you have any suggestions or fixes or reports feel free to mail me :)
 
 ## 1.3 Configuration
 
@@ -161,15 +359,15 @@ Done!
 
 below is the list of `config` keys with their `default` values :
 
-``` Python
+```Python
 # writes the trace output and log file content to console directly
 'DEBUG': False  
 
 # make zip archive of the downloaded content
-'MAKE_ARCHIVE': True
+'zip_project_folder': True
 
 # delete the project folder after making zip archive of it
-'CLEAN_UP': False
+'delete_project_folder': False
 
 # which parser to use when parsing pages
 # for speed choose 'html.parser' (will crack some webpages)
@@ -186,11 +384,6 @@ below is the list of `config` keys with their `default` values :
 # to download js file or not
 'LOAD_JAVASCRIPT': True
 
-# to download every page available inside 
-# url tree turn this True
-# NOTE: This could overload the server and could 
-# result in ip ban
-'COPY_ALL': False
 
 # to overwrite the existing files if found
 'OVER_WRITE': False
@@ -204,42 +397,22 @@ below is the list of `config` keys with their `default` values :
 # log file path
 'LOG_FILE': None
 
-# compress log by removing unnecessary info from log file
-'LOG_FILE_COMPRESSION': False
-
-# log buffering store log in ram until finished, then write to file
-# Turning it on can reduce task completion time
-'LOG_BUFFERING': True
-
-# log buffer holder for performance speed up
-# Can change this to your preferable cache provider :)
-'LOG_BUFFER_ARRAY': list()
-
 # name of the mirror project
 'PROJECT_NAME': website-name.com
 
-# url to download
-'URL': None
-
 # define the base directory to store all copied sites data
-'MIRRORS_DIR': None
-
-# all downloaded file location
-# available after any project completion
-'DOWNLOADED_FILES': list()
+'PROJECT_FOLDER': None
 
 
 # DANGER ZONE
 # CHANGE THESE ON YOUR RESPONSIBILITY
 # NOTE: Do not change unless you know what you're doing
 
-# pattern is used to check file name is supported by os
-# FS, you can also change this to allow files of
-# specific chars
-'FILENAME_VALIDATION_PATTERN': re.compile(r'[*":<>\|\?]+')
-
-# user agent to be shown on requests made to server
-'USER_AGENT' : Mozilla/5.0 (compatible; WebCopyBot/X.X;)
+# requests headers to be shown on requests made to server
+'http_headers': {
+    "Accept-Language": "en-US,en;q=0.9",
+    'User-Agent': "Mozilla/5.0 (Windows NT 10.0; Win64; x64; PyWebcopyBot/{};) AppleWebKit/604.1.38 (KHTML, like Gecko) Chrome/68.0.3325.162".format(VERSION)
+}
 
 # bypass the robots.txt restrictions
 'BYPASS_ROBOTS' : False
@@ -247,22 +420,9 @@ below is the list of `config` keys with their `default` values :
 
 told you there were plenty of `config` vars available!
 
-## 1.4 Help
-
-For any queries related to this project you can email me at
-`rajatomar788@gmail.com`
-
-You can help in many ways:
-
-- reporting bugs
-- sending me patches to fix or improve the code
-- in generating the complete documentation of this project
-
-Thanks!
-
 ## 1.5 Undocumented Features
 
-I built many utils and classes in this project to ease 
+I built many utils and classes in this project to ease
 the tasks I was trying to do.
 
 But,
@@ -272,6 +432,10 @@ So,
 if you want, you can help in generating suitable `documentation` for these undocumented ones, then you can always email me.
 
 ## 1.6 Changelog
+
+### [version 4.x]
+
+- *A complete rewrite and restructing of core functionality.*
 
 ### [version 2.0.0]
 
@@ -287,12 +451,10 @@ if you want, you can help in generating suitable `documentation` for these undoc
 
 #### [fixed]
 
-- fixed issue while changing `user-agent` key cracked 
-webpages. You can now use any browser's user-agent id and it will get exact same page downloaded.
+- fixed issue while changing `user-agent` key cracked webpages. You can now use any browser's user-agent id and it will get exact same page downloaded.
 - fixed issue in `generators.extract_css_urls` which was caused by `str` and `bytes` difference in python3.
-- fixed issues while modules importing. (Thanks "**Илья Игоревич**").
+- fixed issues in modules importing. (Thanks "**Илья Игоревич**").
 - added `errorhandling` to required functions
-
 
 ### [version 2.0(beta)]
 
@@ -305,7 +467,6 @@ webpages. You can now use any browser's user-agent id and it will get exact same
 - merged `generators.generate_style_map` and `generators.generate_relative_paths` to a single function `generators.generate_style_map`
 - rewrite of majority of functions
 - new module `exceptions` added
-
 
 ### [version 1.10]
 
