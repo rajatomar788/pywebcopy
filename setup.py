@@ -17,7 +17,7 @@ DESCRIPTION = 'Ease of scraping and saving webpages and websites to local storag
 URL = 'https://github.com/rajatomar788/pywebcopy/'
 EMAIL = 'rajatomar788@gmail.com'
 AUTHOR = 'Raja Tomar'
-VERSION = '4.0.0'
+VERSION = '4.0.1'
 
 # What packages are required for this module to be executed?
 REQUIRED = [

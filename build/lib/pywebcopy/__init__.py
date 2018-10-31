@@ -28,7 +28,7 @@ import logging
 
 DEBUG = False
 
-VERSION = '3.0.0alpha1'
+VERSION = '4.0.1'
 __version__ = VERSION   # alias
 
 

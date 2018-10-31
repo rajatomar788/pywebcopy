@@ -105,7 +105,7 @@ class Url(object):
         return "<Url({})>".format(self.original_url)
 
     def hash(self):
-        return str(int(hashlib.sha1(self.original_url).hexdigest(), 16) % (10 ** 8))
+        return str(int(hashlib.sha1(self.original_url.encode('utf-8')).hexdigest(), 16) % (10 ** 8))
 
     @property
     def parsed_url(self):

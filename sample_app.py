@@ -70,7 +70,7 @@ choose and uncomment the method which you like to use.
 # wp.save_to_disk()
 
 # method 3:
-# pywebcopy.WebPage('http://google.com', 'e://tests/', project_name='Google').save_complete()
+pywebcopy.WebPage('http://google.com', 'e://tests/', project_name='Google').save_complete()
 
 # Advanced Features in Test Phase
 

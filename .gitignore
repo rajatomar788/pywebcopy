@@ -3,4 +3,5 @@
 /.pytest_cache/*
 /dist/*
 *.pyc
+/pywebcopy.egg-info/*
 /requests-html-master/
