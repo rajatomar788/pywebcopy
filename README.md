@@ -1,4 +1,8 @@
+<<<<<<< HEAD
 # PyWebCopy &copy; 4
+=======
+# PyWebCopy &copy; 5
+>>>>>>> v5.0.0
 
 `Created By : Raja Tomar`
 `License : MIT`

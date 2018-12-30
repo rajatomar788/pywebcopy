@@ -6,6 +6,7 @@ pywebcopy.parsers
 
 Custom HTML parsers used in pywebcopy.
 
+<<<<<<< HEAD
 """
 
 import os
@@ -18,12 +19,28 @@ import lxml
 from bs4 import UnicodeDammit
 from lxml import html, etree
 from lxml.html import tostring
+=======
+Most of the source code is from the MIT Licensed library called
+`requests-html` courtesy of kenneth, code has been modified to
+fit the needs of this project but some apis are still untouched.
+
+
+
+"""
+
+
+import sys
+
+import bs4
+import lxml
+>>>>>>> v5.0.0
 from lxml.html.clean import Cleaner
 from parse import findall
 from parse import search as parse_search
 from pyquery import PyQuery
 from w3lib.encoding import html_to_unicode
 
+<<<<<<< HEAD
 from pywebcopy import LOGGER, SESSION
 from pywebcopy.config import config
 from pywebcopy.core import new_file
@@ -49,6 +66,15 @@ CSS_URLS = re.compile(b'''url\\(['|"]?(.*?)["|']?\\)''')
 ENCODING = re.compile(r'charset=([\w_-]+)')
 
 # HTML cleaner
+=======
+from . import LOGGER, SESSION
+
+
+PY3 = (sys.version_info[0] == 3)
+
+
+# HTML style and script tags cleaner
+>>>>>>> v5.0.0
 cleaner = Cleaner()
 cleaner.javascript = True
 cleaner.style = True
@@ -64,9 +90,15 @@ class BaseParser:
     """
 
     def __init__(self, element=None, url=None, default_encoding=None, HTML=None):
+<<<<<<< HEAD
         # type: (object or str, str, str, str or object) -> object
         self.element = element
         self.url = url
+=======
+        self.element = element
+        self.url = url
+
+>>>>>>> v5.0.0
         self._useDefaultDecoder = False
         self.default_encoding = default_encoding
         self._encoding = None
@@ -86,7 +118,11 @@ class BaseParser:
         """
 
         if self._lxml is None:
+<<<<<<< HEAD
             self._lxml = html.fromstring(self.html)
+=======
+            self._lxml = lxml.html.fromstring(self.html)
+>>>>>>> v5.0.0
         return self._lxml
 
     @property
@@ -118,12 +154,17 @@ class BaseParser:
     def html(self):
         """Unicode representation of the HTML content."""
         if self._html:
+<<<<<<< HEAD
             if not self._useDefaultDecoder:
                 LOGGER.info("Using Forced Encoding %r on raw_html!" % self.encoding)
                 return self.raw_html.decode(self.encoding, errors='xmlcharrefreplace')
             else:
                 LOGGER.info("Using default Codec on raw_html!")
                 return self.decode_html(self.raw_html)
+=======
+            LOGGER.info("Using default Codec on raw_html!")
+            return self.decode_html(self.raw_html)
+>>>>>>> v5.0.0
         else:
             return lxml.html.tostring(self.element, encoding='unicode').strip()
 
@@ -135,11 +176,23 @@ class BaseParser:
         self._html = HTML.decode(self.encoding, errors='xmlcharrefreplace')
 
     def decode_html(self, html_string):
+<<<<<<< HEAD
         converted = UnicodeDammit(html_string)
         if not converted.unicode_markup:
             raise UnicodeDecodeError("Failed to detect encoding, tried [%s]", ','.join(converted.tried_encodings))
         self.encoding = converted.original_encoding
         return converted.unicode_markup
+=======
+        try:
+            converted = bs4.UnicodeDammit(html_string)
+            if not converted.unicode_markup:
+                raise UnicodeDecodeError("Failed to detect encoding, tried [%s]", ','.join(converted.tried_encodings))
+            self.encoding = converted.original_encoding
+            return converted.unicode_markup
+        except UnicodeDecodeError:
+            LOGGER.error("Unicode decoder failed to decode html! Trying fallback..")
+            return html_string.decode(self.encoding)
+>>>>>>> v5.0.0
 
     def encode(self, encoding=None, errors='xmlcharrefreplace'):
         """Returns the html of this :class: encoded with specified encoding."""
@@ -321,6 +374,7 @@ class BaseParser:
         return [r for r in findall(template, self.html)]
 
 
+<<<<<<< HEAD
 class UrlHandler:
     """Handles different url types in the webpage."""
 
@@ -599,6 +653,9 @@ class WebPage(BaseParser, object):
 
 
 class Element(BaseParser):
+=======
+class Element(BaseParser, object):
+>>>>>>> v5.0.0
     """An element of HTML.
 
     :param element: The element from which to base the parsing upon.
