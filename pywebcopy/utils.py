@@ -9,19 +9,11 @@ Utils easing pywebcopy.
 
 import os
 import re
-<<<<<<< HEAD
-try:
-    from urlparse import urlsplit, urljoin, urlparse
-except ImportError:
-    from urllib.parse import urljoin, urlsplit, urlparse
-from pywebcopy import LOGGER, DEBUG
-=======
 
 from six.moves.urllib.parse import urljoin, urlsplit, urlparse
 from six.moves.urllib.request import pathname2url, url2pathname
 
 from . import LOGGER, DEBUG
->>>>>>> v5.0.0
 
 
 validation_pattern = re.compile(r'[*":<>|?]+')
@@ -31,12 +23,8 @@ __all__ = [
     'filename_present', 'trace', 'netloc', 'url_path', 'url_port', 'url_scheme', 'join_urls',
     'join_paths', 'relate', 'hostname', 'make_path',
     'compatible_path', 'get_filename', 'get_asset_filename',
-<<<<<<< HEAD
-    'file_path_is_valid', 'validation_pattern'
-=======
     'file_path_is_valid', 'validation_pattern',
     'pathname2url', 'url2pathname',
->>>>>>> v5.0.0
 ]
 
 
@@ -186,18 +174,9 @@ def relate(target_file, start_file):
 
     # Default os.path.relpath takes directories as argument, thus we need strip the filename
     # if present in the path else continue as is.
-<<<<<<< HEAD
-    _target_dir = os.path.dirname(target_file) if filename_present(target_file) else target_file
-    _start_dir = os.path.dirname(start_file) if filename_present(start_file) else start_file
-
-    # Calculate the relative path using the standard module and then concatenate the file names if
-    # they were previously present.
-    return os.path.join(os.path.relpath(_target_dir, _start_dir), os.path.basename(target_file))
-=======
     target_dir = os.path.dirname(target_file)
     start_dir = os.path.dirname(start_file)
 
     # Calculate the relative path using the standard module and then concatenate the file names if
     # they were previously present.
     return os.path.join(os.path.relpath(target_dir, start_dir), os.path.basename(target_file))
->>>>>>> v5.0.0

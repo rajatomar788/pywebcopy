@@ -13,19 +13,8 @@ __all__ = ['CaseInsensitiveDict', 'RobotsTxt']
 
 
 from collections import MutableMapping
-<<<<<<< HEAD
-try:
-    import robotparser
-    import urlparse
-    from urllib import url2pathname
-except ImportError:
-    from urllib.request import url2pathname
-    from urllib import robotparser
-    from urllib import parse as urlparse
-=======
 
 from six.moves.urllib.robotparser import RobotFileParser
->>>>>>> v5.0.0
 
 
 class CaseInsensitiveDict(MutableMapping):
@@ -79,11 +68,7 @@ class CaseInsensitiveDict(MutableMapping):
         return dict(self.lower_case_items()) == dict(other.lower_case_items())
 
 
-<<<<<<< HEAD
-class RobotsTxt(robotparser.RobotFileParser, object):
-=======
 class RobotsTxt(RobotFileParser, object):
->>>>>>> v5.0.0
     """ Provides a error tolerant python form of robots.txt
 
     Example:
@@ -96,26 +81,12 @@ class RobotsTxt(RobotFileParser, object):
     """
 
     def __init__(self, user_agent, url):
-<<<<<<< HEAD
-        self.url = url or ''
-        self.user_agent = user_agent
-        if url == '':
-            self.is_dummy = True
-        else:
-            self.is_dummy = False
-
-        super(RobotsTxt, self).__init__(self.url)
-
-    def can_fetch(self, url, *args, **kwargs):
-        if self.is_dummy:
-=======
         self.url = url
         self.user_agent = user_agent
         super(RobotsTxt, self).__init__(self.url)
 
     def can_fetch(self, url, *args, **kwargs):
         if not self.url or url:
->>>>>>> v5.0.0
             return True
         else:
             super(RobotsTxt, self).can_fetch(self.user_agent, url)

@@ -10,7 +10,7 @@ You should always check if the pywebcopy is installed successfully.
 ```python
 >>> import pywebcopy
 >>> pywebcopy.__version___
-4.x
+5.x
 ```
 
 Your version may be different, now you can continue the tutorial.

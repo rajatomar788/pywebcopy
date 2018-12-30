@@ -1,8 +1,4 @@
-<<<<<<< HEAD
-# PyWebCopy &copy; 4
-=======
 # PyWebCopy &copy; 5
->>>>>>> v5.0.0
 
 `Created By : Raja Tomar`
 `License : MIT`
@@ -46,7 +42,7 @@ You should always check if the pywebcopy is installed successfully.
 ```python
 >>> import pywebcopy
 >>> pywebcopy.__version___
-4.x
+5.x
 ```
 
 Your version may be different, now you can continue the tutorial.
@@ -74,6 +70,15 @@ save_website(
     url='http://example-site.com/index.html',
     project_folder='path/to/downloads',
 )
+```
+
+### 1.2.1 Running Tests
+Running tests is simple and doesn't require any external library. 
+Just run this command from root directory of pywebcopy package
+
+
+```shell
+$ python -m unittest pywebcopy.tests
 ```
 
 ### 1.2.2 Webpage() object
@@ -436,6 +441,11 @@ So,
 if you want, you can help in generating suitable `documentation` for these undocumented ones, then you can always email me.
 
 ## 1.6 Changelog
+
+### [version 5.x]
+
+- Optimization of existing code, upto 5x speed ups in certain cases
+- Removed cluttering, improved readability
 
 ### [version 4.x]
 

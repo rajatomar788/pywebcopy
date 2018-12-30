@@ -13,17 +13,6 @@ from setuptools import setup, Command
 
 # Package meta-data.
 NAME = 'pywebcopy'
-<<<<<<< HEAD
-DESCRIPTION = 'Ease of scraping and saving webpages and websites to local storage.'
-URL = 'https://github.com/rajatomar788/pywebcopy/'
-EMAIL = 'rajatomar788@gmail.com'
-AUTHOR = 'Raja Tomar'
-VERSION = '4.0.1'
-
-# What packages are required for this module to be executed?
-REQUIRED = [
-    'requests', 'lxml', 'pyquery', 'parse', 'w3lib', 'bs4'
-=======
 DESCRIPTION = 'Lightweight python package for scraping and saving webpages and websites to local storage.'
 URL = 'https://github.com/rajatomar788/pywebcopy/'
 EMAIL = 'rajatomar788@gmail.com'
@@ -33,7 +22,6 @@ VERSION = '5.0.0'
 # What packages are required for this module to be executed?
 REQUIRED = [
     'requests', 'lxml', 'pyquery', 'parse', 'w3lib', 'bs4', 'six'
->>>>>>> v5.0.0
 ]
 
 
@@ -77,8 +65,6 @@ class UploadCommand(Command):
         self.status('Uploading the package to PyPi via Twine…')
         os.system('twine upload dist/*')
 
-<<<<<<< HEAD
-=======
         self.status("Setting up git..")
         os.system('git init')
         os.system('git add .')
@@ -86,7 +72,6 @@ class UploadCommand(Command):
         self.status("Pushing to github master branch..")
         os.system('git push origin master')
 
->>>>>>> v5.0.0
         self.status('Publishing git tags…')
         os.system('git tag v{0}'.format(VERSION))
         os.system('git push origin --tags')

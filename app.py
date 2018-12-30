@@ -20,7 +20,7 @@ t = time.time()
 pywebcopy.DEBUG = True
 # page_url = 'https://google.com/'
 page_url = 'https://www.w3schools.com/'
-# page_url = 'http://providenceri.iqm2.com/Citizens/Default.aspx'
+
 download_folder = os.path.join(os.getcwd(), 'saved')
 
 '''
@@ -110,7 +110,7 @@ crawler.crawl()
 
 # method 2:
 
-pywebcopy.save_webpage(page_url, download_folder)
+pywebcopy.save_website(page_url, download_folder)
 
 
 print("Execution time : ", time.time() - t)

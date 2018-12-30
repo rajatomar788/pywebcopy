@@ -6,20 +6,6 @@ pywebcopy.parsers
 
 Custom HTML parsers used in pywebcopy.
 
-<<<<<<< HEAD
-"""
-
-import os
-import io
-import re
-import sys
-import requests
-import bs4
-import lxml
-from bs4 import UnicodeDammit
-from lxml import html, etree
-from lxml.html import tostring
-=======
 Most of the source code is from the MIT Licensed library called
 `requests-html` courtesy of kenneth, code has been modified to
 fit the needs of this project but some apis are still untouched.
@@ -33,40 +19,12 @@ import sys
 
 import bs4
 import lxml
->>>>>>> v5.0.0
 from lxml.html.clean import Cleaner
 from parse import findall
 from parse import search as parse_search
 from pyquery import PyQuery
 from w3lib.encoding import html_to_unicode
 
-<<<<<<< HEAD
-from pywebcopy import LOGGER, SESSION
-from pywebcopy.config import config
-from pywebcopy.core import new_file
-from pywebcopy.elements import Asset
-from pywebcopy.elements import LinkTag, AnchorTag
-from pywebcopy.elements import FileMixin
-from pywebcopy.elements import ImgTag
-from pywebcopy.elements import ScriptTag
-from pywebcopy.exceptions import InvalidUrlError
-from pywebcopy.urls import Url
-from pywebcopy.utils import relate
-
-try:
-    from urllib import pathname2url
-    from urlparse import urljoin
-except ImportError:
-    # noinspection PyCompatibility
-    from urllib.parse import urljoin
-    from urllib.request import pathname2url
-
-PY3 = (sys.version_info[0] == 3)
-CSS_URLS = re.compile(b'''url\\(['|"]?(.*?)["|']?\\)''')
-ENCODING = re.compile(r'charset=([\w_-]+)')
-
-# HTML cleaner
-=======
 from . import LOGGER, SESSION
 
 
@@ -74,7 +32,6 @@ PY3 = (sys.version_info[0] == 3)
 
 
 # HTML style and script tags cleaner
->>>>>>> v5.0.0
 cleaner = Cleaner()
 cleaner.javascript = True
 cleaner.style = True
@@ -90,15 +47,9 @@ class BaseParser:
     """
 
     def __init__(self, element=None, url=None, default_encoding=None, HTML=None):
-<<<<<<< HEAD
-        # type: (object or str, str, str, str or object) -> object
-        self.element = element
-        self.url = url
-=======
         self.element = element
         self.url = url
 
->>>>>>> v5.0.0
         self._useDefaultDecoder = False
         self.default_encoding = default_encoding
         self._encoding = None
@@ -118,11 +69,7 @@ class BaseParser:
         """
 
         if self._lxml is None:
-<<<<<<< HEAD
-            self._lxml = html.fromstring(self.html)
-=======
             self._lxml = lxml.html.fromstring(self.html)
->>>>>>> v5.0.0
         return self._lxml
 
     @property
@@ -154,17 +101,8 @@ class BaseParser:
     def html(self):
         """Unicode representation of the HTML content."""
         if self._html:
-<<<<<<< HEAD
-            if not self._useDefaultDecoder:
-                LOGGER.info("Using Forced Encoding %r on raw_html!" % self.encoding)
-                return self.raw_html.decode(self.encoding, errors='xmlcharrefreplace')
-            else:
-                LOGGER.info("Using default Codec on raw_html!")
-                return self.decode_html(self.raw_html)
-=======
             LOGGER.info("Using default Codec on raw_html!")
             return self.decode_html(self.raw_html)
->>>>>>> v5.0.0
         else:
             return lxml.html.tostring(self.element, encoding='unicode').strip()
 
@@ -176,13 +114,6 @@ class BaseParser:
         self._html = HTML.decode(self.encoding, errors='xmlcharrefreplace')
 
     def decode_html(self, html_string):
-<<<<<<< HEAD
-        converted = UnicodeDammit(html_string)
-        if not converted.unicode_markup:
-            raise UnicodeDecodeError("Failed to detect encoding, tried [%s]", ','.join(converted.tried_encodings))
-        self.encoding = converted.original_encoding
-        return converted.unicode_markup
-=======
         try:
             converted = bs4.UnicodeDammit(html_string)
             if not converted.unicode_markup:
@@ -192,7 +123,6 @@ class BaseParser:
         except UnicodeDecodeError:
             LOGGER.error("Unicode decoder failed to decode html! Trying fallback..")
             return html_string.decode(self.encoding)
->>>>>>> v5.0.0
 
     def encode(self, encoding=None, errors='xmlcharrefreplace'):
         """Returns the html of this :class: encoded with specified encoding."""
@@ -374,288 +304,7 @@ class BaseParser:
         return [r for r in findall(template, self.html)]
 
 
-<<<<<<< HEAD
-class UrlHandler:
-    """Handles different url types in the webpage."""
-
-    def __init__(self, base_url=None, base_path=None):
-        self.base_url = base_url
-        self.base_path = base_path
-        self._store = []
-        self._urlMap = {}
-
-        LOGGER.info("Url Handler initiated with base_url: %s and base_path: %s" % (base_url, base_path))
-
-    @property
-    def elements(self):
-        return self._store
-
-    def _base_handler(self, elem, attr, url, pos):
-        """Can handle <img>, <link>, <script> :class: `lxml.html.Element` object."""
-        LOGGER.debug("Handling url %s" % url)
-
-        if url.startswith(u"#") or url.startswith(u"data:") or url.startswith(u'javascript'):
-            return None  # not valid link
-
-        try:
-            if elem.tag == 'link':
-                obj = LinkTag(url)
-            elif elem.tag == 'script':
-                obj = ScriptTag(url)
-            elif elem.tag == 'img':
-                obj = ImgTag(url)
-            elif elem.tag == 'a':
-                obj = AnchorTag(url)
-            else:
-                obj = Asset(url)
-
-            obj.base_url = self.base_url
-            obj.tag = attr
-            obj.rel_path = pathname2url(relate(obj.file_path, self.base_path))
-            self._store.append(obj)
-            return obj
-
-        except Exception as e:
-            LOGGER.error(e)
-            LOGGER.error('Exception occurred while creating an object for %s' % url)
-            return None  # return unmodified
-
-    def default_handler(self, elem, attr, url, pos):
-        """Handles any link type <a> <link> <script> <style> <style url>.
-        Note: Default handler function structures makes use of .rel_path attribute
-        which is completely internal and any usage depending on this attribute
-        may not work properly.
-        """
-        obj = self._base_handler(elem, attr, url, pos)
-
-        if obj is None:
-            return
-
-        if attr is None:
-            new = elem.text[:pos] + obj.rel_path + elem.text[len(url) + pos:]
-            elem.text = new
-        else:
-            cur = elem.get(attr)
-            if not pos and len(cur) == len(url):
-                new = obj.rel_path  # most common case
-            else:
-                new = cur[:pos] + obj.rel_path + cur[pos + len(url):]
-
-            elem.set(attr, new)
-        LOGGER.info("Remapped url of the file: %s to the path: %s " % (url, obj.rel_path))
-        self._urlMap[url] = obj.rel_path
-        return obj
-
-    def handle(self, elem, attr, url, pos):
-        """Base handler function."""
-        if url.startswith(u'#') or url.startswith(u'java') or \
-                url.startswith(u'data') or not url.strip('/') or not url.strip():
-            return url
-
-        if not self.base_url:
-            raise AttributeError("Url attributes are unset!")
-
-        _handler = self.default_handler(elem, attr, url, pos)
-
-        if not _handler:
-            LOGGER.debug("No handler found for the link of type %s !" % elem.tag)
-            return url  # return unmodified
-        else:
-            return _handler
-
-
-class WebPage(BaseParser, object):
-    """Provides scraping and parsing and saving ability in one class."""
-
-    def __init__(self, url, project_folder=None, project_name=None, encoding=None,
-                 force_decoding=False, HTML=None, url_handler=None, **kwargs):
-        self.original_url = url
-        self._url = url if HTML else None
-        self._request = None
-
-        config.setup_config(url, project_folder, project_name, **kwargs)
-
-        if not HTML and (not self.request or not self.request.ok):
-            raise InvalidUrlError("Provided url didn't work %s" % url)
-
-        self._url_obj = None
-        self._url_handler = url_handler
-
-        super(WebPage, self).__init__(
-            element=HTML,
-            url=self.url,
-            default_encoding=encoding or 'utf-8' if HTML else self.request.encoding,
-            HTML=HTML or self.request.content,
-        )
-
-        self.force_decoding = force_decoding
-        if not self.force_decoding:
-            self._useDefaultDecoder = True
-
-    @property
-    def url(self):
-        """Returns a url as reported by the server."""
-        if self._url is None:
-            self._url = self.request.url
-        return self._url
-
-    @url.setter
-    def url(self, new_url):
-        self._url = new_url
-
-    @property
-    def url_obj(self):
-        """Returns an Url() object made from the self.url string.
-        :returns: Url() object"""
-        if self._url_obj is None:
-            self._url_obj = Url(self.url)
-            self._url_obj.base_path = config['project_folder']
-            self._url_obj.default_filename = 'index.html'
-            self._url_obj._unique_fn_required = False
-        return self._url_obj
-
-    @property
-    def url_handler(self):
-        if self._url_handler is None:
-            self._url_handler = UrlHandler(self.url, self.url_obj.file_path)
-        return self._url_handler
-
-    @property
-    def request(self):
-        """Makes a http request to the server and sets the .http_request attribute to
-        returned response."""
-
-        if not self._request:
-            self._request = SESSION.get(self.original_url, stream=True)
-
-            if self._request is None:
-                raise InvalidUrlError("Webpage couldn't be loaded from url %s" % self.original_url)
-
-        return self._request
-
-    @request.setter
-    def request(self, requestsResponseObject):
-        """Sets the base"""
-
-    @property
-    def htmlStream(self):
-        """Returns a stream of data fetched from the objects url attribute."""
-        return io.BytesIO(self.html)
-
-    def linkedElements(self, tags=None):
-        """Returns every linked file object as :class: `lxml.html.Element` (multiple times)."""
-
-        for elem in self.url_handler.elements:
-            if not tags:
-                yield elem
-            else:
-                if elem.tag in tags:
-                    yield elem
-
-    def _extractLinks(self):
-        """Rewrites url in document root."""
-        # `lxml.html` object has a `.iterlinks` function which is crucial for this
-        # task to be completed.
-        if self.lxml is None:
-            raise RuntimeError("Couldn't generate a etree object for the url %s" % self.url)
-
-        # stores the etree.html object generated by the lxml in the attribute
-        for i in self.lxml.iterlinks():
-            self.url_handler.handle(*i)
-
-    def _remapImages(self):
-        """Rewrites <img> attributes if it have an srcset type attribute which prevents rendering of img
-        from its original src attribute url."""
-
-        if self.lxml is None:
-            raise RuntimeError("Couldn't rewrite images for the url %s" % self.url)
-
-        set_url = re.compile(r'((?:https?:\/|)[\w\/\.\\_-]+)')
-
-        for elem in self.lxml.xpath('.//img[@*]'):
-            _keys = elem.attrib.keys()
-            LOGGER.debug("Pre-Attributes for the imgs")
-            LOGGER.debug(elem.attrib)
-            if 'src' in _keys: # element would be catched later while saving files
-                elem.attrib.update({'data-src': '', 'data-srcset': '', 'srcset':''})
-            elif 'data-src' in _keys:
-                elem.attrib.update({'data-src': '', 'data-srcset': '', 'srcset': '', 'src': elem.attrib['data-src']})
-            elif 'data-srcset' in _keys:
-                _first_url = set_url.findall(elem.attrib.get('data-srcset'))[0]
-                elem.attrib.update({'data-srcset': '', 'data-src': '', 'srcset': '', 'src': _first_url})
-            elif 'srcset' in _keys:
-                _first_url = set_url.findall(elem.attrib.get('srcset'))[0]
-                elem.attrib.update({'data-srcset': '', 'data-src': '', 'srcset': '', 'src': _first_url})
-            else:
-                pass    # unknown case
-            LOGGER.debug("Remapped Attributes of the img.")
-            LOGGER.debug(elem.attrib)
-
-    def get(self, url, use_global_session=True, **requestskwargs):
-        """Fetches the Html content from Internet.
-
-        :param url: url of the webpage to fetch
-        :param use_global_session: if you would like later http requests made to server to follow the
-        same configuration as you provided then leave it to 'True' else if you want
-        only single http request to follow these configuration set it to 'False'.
-        :param **requestskwargs: keyword arguments which `requests` module may accept.
-        """
-        if use_global_session:
-            self.html = SESSION.get(url, **requestskwargs).content
-        else:
-            self.html = requests.get(url, **requestskwargs).content
-
-    def save_html(self, file_name=None, raw_html=True):
-        """Saves the html of the page to a default or specified file.
-
-        :param file_name: path of the file to write the contents to
-        :param raw_html: whether write the unmodified html or the rewritten html
-        """
-        if raw_html:
-            with open(file_name or self.url_obj.file_path, 'wb') as fh:
-                fh.write(self.raw_html)
-        else:
-            self.lxml.getroottree().write(file_name or self.url_obj.file_path, method="html")
-
-    def save_assets(self, base_path=None, reset_html=True):
-        """Save only the linked files to the disk.
-
-        :param base_path: folder in which to store the files.
-        :param reset_html: whether to write modified file locations to the html content
-        of this object
-        """
-
-        if base_path and not os.path.isdir(base_path):
-            raise ValueError("Provided path is not a valid directory! %" % base_path)
-
-        self._remapImages()
-        self._extractLinks()
-        for elem in self.url_handler.elements:
-            try:
-                if base_path:
-                    elem.base_path = base_path
-                elem.save_file()
-            except Exception as e:
-                LOGGER.error("Linked file generated an error upon saving!")
-                LOGGER.error(e)
-                pass
-
-        if reset_html:
-            self._lxml = None   # reset the ElementTree
-
-    def save_complete(self):
-        """Saves the complete html page to a file and also writes its linked files to the disk."""
-        self.save_assets(reset_html=False)
-        # new_file(self.url_obj.file_path, content=tostring(self.lxml, encoding=self.encoding))
-        self.lxml.getroottree().write(self.url_obj.file_path, method="html")
-
-        self._lxml = None # reset the tree
-
-
-class Element(BaseParser):
-=======
 class Element(BaseParser, object):
->>>>>>> v5.0.0
     """An element of HTML.
 
     :param element: The element from which to base the parsing upon.
