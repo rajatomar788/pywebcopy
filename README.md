@@ -329,7 +329,7 @@ You can manually configure every configuration by using a
 
 ```Python
 
-import pywebcopy
+from pywebcopy import config
 
 url = 'http://example-site.com/index.html'
 download_loc = 'path/to/downloads/'
