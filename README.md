@@ -338,13 +338,13 @@ pywebcopy.config.setup_config(url, download_loc)
 
 # done!
 
->>> pywebcopy.config.config['url']
+>>> pywebcopy.config['url']
 'http://example-site.com/index.html'
 
->>> pywebcopy.config.config['mirrors_dir']
+>>> pywebcopy.config['mirrors_dir']
 'path/to/downloads'
 
->>> pywebcopy.config.config['project_name']
+>>> pywebcopy.config['project_name']
 'example-site.com'
 
 
