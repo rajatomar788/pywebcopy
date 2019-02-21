@@ -8,13 +8,13 @@ Structures powering pywebcopy.
 
 """
 
+from collections import MutableMapping, OrderedDict
 
-__all__ = ['CaseInsensitiveDict', 'RobotsTxt']
+import requests
+from six.moves.urllib_robotparser import RobotFileParser
 
 
-from collections import MutableMapping
-
-from six.moves.urllib.robotparser import RobotFileParser
+__all__ = ['CaseInsensitiveDict', 'RobotsTxtParser']
 
 
 class CaseInsensitiveDict(MutableMapping):
@@ -31,7 +31,7 @@ class CaseInsensitiveDict(MutableMapping):
     """
 
     def __init__(self, data=None, **kwargs):
-        self._store = dict()
+        self._store = OrderedDict()
         if data is None:
             data = {}
         self.update(data, **kwargs)
@@ -68,25 +68,48 @@ class CaseInsensitiveDict(MutableMapping):
         return dict(self.lower_case_items()) == dict(other.lower_case_items())
 
 
-class RobotsTxt(RobotFileParser, object):
-    """ Provides a error tolerant python form of robots.txt
+class RobotsTxtParser(RobotFileParser):
+    """Reads the robots.txt from the site.
 
-    Example:
-        >>> rp = RobotsTxt('*', url='http://some-site.com/robots.txt')
+    Usage::
+        >>> rp = RobotsTxtParser(user_agent='*', url='http://some-site.com/robots.txt')
+        >>> rp.read()
         >>> rp.can_fetch('/hidden/url_path')
-        False
+        >>> False
         >>> rp.can_fetch('/public/url_path/')
-        True
+        >>> True
 
     """
 
     def __init__(self, user_agent, url):
         self.url = url
         self.user_agent = user_agent
-        super(RobotsTxt, self).__init__(self.url)
+        RobotFileParser.__init__(self, self.url)
 
-    def can_fetch(self, url, *args, **kwargs):
-        if not self.url or url:
-            return True
+    @staticmethod
+    def _get(url):
+        return requests.get(url)
+
+    def read(self):
+        """Modify the read method to use the inbuilt http session instead
+        of using a new raw urllib connection.
+
+        This usually sets up a session and a cookie jar.
+        Thus subsequent requests should be faster.
+        """
+        try:
+            f = self._get(self.url)
+            f.raise_for_status()
+        except requests.exceptions.HTTPError as err:
+            code = err.response.status_code
+            if code in (401, 403):
+                self.disallow_all = True
+            elif 400 <= code < 500:
+                self.allow_all = True
+        except requests.exceptions.ConnectionError:
+            self.allow_all = True
         else:
-            super(RobotsTxt, self).can_fetch(self.user_agent, url)
+            self.parse(f.text.splitlines())
+
+    def can_fetch(self, url, useragent=None):
+        RobotFileParser.can_fetch(self, useragent=useragent or self.user_agent, url=url)

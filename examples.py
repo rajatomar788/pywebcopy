@@ -13,16 +13,36 @@ its arguments to instantly get the results.
 
 
 import os
-import pywebcopy
 import time
-t = time.time()
+import platform
 
-pywebcopy.DEBUG = True
+import pywebcopy
+
+if platform.system() == 'Windows':
+    try:  # Python 3.3+
+        preferred_clock = time.perf_counter
+    except AttributeError:  # Earlier than Python 3.
+        preferred_clock = time.clock
+else:
+    preferred_clock = time.time
+
+
+# pywebcopy.DEBUG = True
+pywebcopy.config['bypass_robots'] = True
+# page_url = 'https://bing.com/'
 # page_url = 'https://google.com/'
-page_url = 'https://www.w3schools.com/'
+# page_url = 'https://codeburst.io/building-beautiful-command-line-interfaces-with-python-26c7e1bb54df'
+# page_url = 'https://www.w3schools.com/'
+page_url = 'https://test-domain.com/'
+# page_url = 'http://localhost:5000'
+handle = open(os.path.join(os.getcwd(), 'tests', 'test.html'), 'rb')
+# page_url = 'https://getbootstrap.com/'
 
-download_folder = os.path.join(os.getcwd(), 'saved')
+download_folder = os.path.join(os.path.dirname(os.getcwd()), 'saved')
 
+start = preferred_clock()
+
+pywebcopy.save_webpage(page_url, download_folder, html=handle)
 '''
 If you are getting `pywebcopy.exceptions.AccessError` Exception.
 then check if website allows scraping of its content.
@@ -56,7 +76,6 @@ Uncomment the line below.
 # pywebcopy.config['project_name'] = 'my_project'
 
 
-
 """
 Save Single Webpage
 
@@ -87,7 +106,8 @@ choose and uncomment the method which you like to use.
 # raw html is now also accepted
 # HTML = open('c:/users/raja/desktop/test.html').read()
 
-# pywebcopy.WebPage(url='https://google.com/', project_folder='e://tests/pwc4/', HTML=HTML, over_write=True).save_complete()
+# pywebcopy.WebPage(url='https://google.com/', project_folder='e://tests/pwc4/',
+# HTML=HTML, over_write=True).save_complete()
 
 
 '''
@@ -109,9 +129,23 @@ crawler.crawl()
 '''
 
 # method 2:
-
+'''
 pywebcopy.save_website(page_url, download_folder)
-
-
-print("Execution time : ", time.time() - t)
+'''
+# pywebcopy.save_webpage(page_url, download_folder)
+# pywebcopy.WebPage(page_url, html).save_html('e://tests//index.html')
+# wp = pywebcopy.webpage.WebPage()
+# wp.url = 'http://localhost:5000'
+# wp.get('http://google.com/')
+# wp.set_source(handle)
+# pywebcopy.config.setup_config(wp.url, download_folder, 'LocalHost')
+# wp.save_complete()
+'''
+for thread in threading.enumerate():
+    if thread == threading.main_thread():
+        continue
+    else:
+        thread.join()
+'''
+print("Execution time : ", preferred_clock() - start)
 

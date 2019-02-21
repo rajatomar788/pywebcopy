@@ -13,7 +13,10 @@ import re
 from six.moves.urllib.parse import urljoin, urlsplit, urlparse
 from six.moves.urllib.request import pathname2url, url2pathname
 
-from . import LOGGER, DEBUG
+from . import LOGGER
+from .configs import config
+
+DEBUG = config['DEBUG']
 
 
 validation_pattern = re.compile(r'[*":<>|?]+')

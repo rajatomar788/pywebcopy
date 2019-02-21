@@ -1,4 +1,12 @@
 # encoding: utf8
+"""
+pywebcopy.__main__
+~~~~~~~~~~~~~~~~~~
+
+Command line usage provider for pywebcopy.
+
+"""
+
 
 from __future__ import print_function
 
@@ -6,7 +14,11 @@ import os
 import sys
 import textwrap
 
-from . import save_website, save_webpage
+from pywebcopy import save_website, save_webpage, config
+
+
+# Defaultly no following robots.txt
+config['bypass_robots'] = True
 
 
 USAGE = textwrap.dedent("""\
@@ -18,10 +30,15 @@ USAGE = textwrap.dedent("""\
             -c  http://example.com/ -d /downloads/              # Save this webSite at /downloads/ folder      
         """)
 
+
+def print_usage():
+    print(USAGE)
+
+
 args = sys.argv[1:]
 
 if not args or args[0] not in ('-p', '-c', '-t'):
-    print(USAGE)
+    print_usage()
     sys.exit(1)
 
 if args[0] == '-t':
@@ -29,7 +46,7 @@ if args[0] == '-t':
 
 if args[0] == '-p':
     if len(args) < 2:
-        print(USAGE)
+        print_usage()
         sys.exit(1)
 
     if len(args) == 2:
@@ -41,12 +58,12 @@ if args[0] == '-p':
         save_webpage(args[1], args[3])
 
     else:
-        print(USAGE)
+        print_usage()
         sys.exit(1)
 
 elif args[0] == '-c':
     if len(args) < 2:
-        print(USAGE)
+        print_usage()
         sys.exit(1)
 
     if len(args) == 2:
@@ -58,5 +75,5 @@ elif args[0] == '-c':
         save_website(args[1], args[3])
 
     else:
-        print(USAGE)
+        print_usage()
         sys.exit(1)
