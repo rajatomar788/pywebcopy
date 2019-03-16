@@ -1,0 +1,8 @@
+site_name: PyWebcopy
+theme: readthedocs
+nav:
+  - Home: index.md
+  - How-To: how-tos.md
+  - Configuration: configurations.md
+  - Library: library.md
+  - About: about.md

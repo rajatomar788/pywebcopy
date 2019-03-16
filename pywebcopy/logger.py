@@ -154,7 +154,7 @@ class HTMLFormatter(logging.Formatter):
 
 
 # ============================================================
-#   Glabal logger object setup
+#   Global logger object setup
 # ============================================================
 
 
@@ -171,8 +171,8 @@ logFormatter.datefmt = "%d-%b-%Y %H:%M:%S"
 logFormatter.__doc__ = """Formatter to be used in logger object for formatting log entries."""
 
 """Add custom logging levels for ease of information flow."""
-successLevelNum = 35
-actionLevelNum = 25
+successLevelNum = 25
+actionLevelNum = 21
 
 
 def success(self, message, *args, **kws):

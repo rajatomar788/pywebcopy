@@ -17,6 +17,9 @@ from .parsers import deregister_tag_handler
 from .webpage import WebPage
 
 
+__all__ = ['save_webpage', 'save_website']
+
+
 def webpage():
     """Returns a freshly prepared WebPage object.
     """
@@ -85,7 +88,7 @@ def save_webpage(project_url, project_folder, html=None, project_name=None,
 
     # Everything is done! Now archive the files and delete the folder afterwards.
     if config['zip_project_folder']:
-        zip_project()
+        zip_project(config['join_timeout'])
 
     if reset_config:
         # reset the config so that it does not mess up any con-current calls to
@@ -141,12 +144,11 @@ def save_website(url, project_folder, project_name=None, **kwargs):
     #: collection
     c = Crawler(url)
     c.run()
-    path = c.file_path
+    path = getattr(c, 'file_path', '')
     del c
     #: This function will zip the files downloaded from the server
     #: and will block until it is done
     if config['zip_project_folder']:
-        zip_project()
+        zip_project(config['join_timeout'])
 
     open_new_tab(path)
-

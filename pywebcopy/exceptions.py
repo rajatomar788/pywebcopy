@@ -12,7 +12,7 @@ class PywebcopyError(IOError):
     """Pywebcopy has come across an error which could be safe or critical."""
     def __init__(self, *args, **kwargs):
         self.reason = self.__doc__
-        super(PywebcopyError, self).__init__(*args, **kwargs)
+        IOError.__init__(self, *args, **kwargs)
 
 
 class InvalidUrlError(PywebcopyError, ValueError):

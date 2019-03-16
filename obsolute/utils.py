@@ -13,8 +13,8 @@ import re
 from six.moves.urllib.parse import urljoin, urlsplit, urlparse
 from six.moves.urllib.request import pathname2url, url2pathname
 
-from . import LOGGER
-from .configs import config
+from pywebcopy import LOGGER
+from configs import config
 
 DEBUG = config['DEBUG']
 
@@ -23,7 +23,8 @@ validation_pattern = re.compile(r'[*":<>|?]+')
 
 
 __all__ = [
-    'filename_present', 'trace', 'netloc', 'url_path', 'url_port', 'url_scheme', 'join_urls',
+    'filename_present', 'trace', 'netloc', 'url_path', 'url_port',
+    'url_scheme', 'join_urls',
     'join_paths', 'relate', 'hostname', 'make_path',
     'compatible_path', 'get_filename', 'get_asset_filename',
     'file_path_is_valid', 'validation_pattern',

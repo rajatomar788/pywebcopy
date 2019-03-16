@@ -8,10 +8,10 @@ Structures powering pywebcopy.
 
 """
 
-from collections import MutableMapping, OrderedDict
+from collections import MutableMapping
 
 import requests
-from six.moves.urllib_robotparser import RobotFileParser
+from .compat import OrderedDict, RobotFileParser
 
 
 __all__ = ['CaseInsensitiveDict', 'RobotsTxtParser']

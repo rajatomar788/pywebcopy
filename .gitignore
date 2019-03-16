@@ -1,13 +1,8 @@
-/.idea/*
-/.vscode/*
-<<<<<<< HEAD
-/.pytest_cache/*
-/dist/*
+.idea/*
+.vscode/*
+dist/*
+site/*
+.pytest_cache/*
+pywebcopy.egg-info/*
 *.pyc
-/pywebcopy.egg-info/*
-/requests-html-master/
-=======
-/dist/*
 *.pyc
-/pywebcopy.egg-info/*
->>>>>>> v5.0.0
