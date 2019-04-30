@@ -1,13 +1,10 @@
 /.idea/*
 /.vscode/*
-<<<<<<< HEAD
 /.pytest_cache/*
 /dist/*
 *.pyc
 /pywebcopy.egg-info/*
 /requests-html-master/
-=======
-/dist/*
-*.pyc
-/pywebcopy.egg-info/*
->>>>>>> v5.0.0
+Pipfile
+Pipfile.lock
+/testing/
