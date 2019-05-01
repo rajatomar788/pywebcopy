@@ -10,31 +10,22 @@ Core functionality of the pywebcopy engine.
 """
 
 import os
-import sys
 import shutil
 import zipfile
-from textwrap import dedent
 from datetime import datetime
+from functools import lru_cache
+from threading import enumerate, main_thread
 
 import requests
+from requests import Response
+from requests.exceptions import HTTPError, ConnectionError
+from six import BytesIO
 
 from . import VERSION, SESSION, LOGGER
-from .exceptions import AccessError, ConnectionError
+from .globals import MARK
+from .exceptions import AccessError
 from .configs import config
-
-
-PY2 = True if sys.version_info.major == 2 else False
-PY3 = True if sys.version_info.major == 3 else False
-
-
-MARK = dedent("""
-        {0}
-        * AerWebCopy Engine [version {1}]
-        * Copyright Aeroson Systems & Co.
-        * File mirrored from {2}
-        * At UTC time: {3}
-        {4}
-        """)
+from .structures import RobotsTxtParser
 
 
 def zip_project():
@@ -43,26 +34,32 @@ def zip_project():
     :rtype: str
     :returns: location of the zipped project_folder file.
     """
+    _mainThread = main_thread()
+    # wait for the threads to finish downloading files
 
-    # make zip archive of all the files and not the empty folders
-    archive = zipfile.ZipFile(
-        os.path.abspath(config['project_folder']) + '.zip', 'w', zipfile.ZIP_DEFLATED)
+    for thread in enumerate():
+        if not thread or thread is _mainThread:
+            continue
+        if thread.is_alive():
+            thread.join()
 
-    for dirn, _, fn in os.walk(config['project_folder']):
-        # only files will be added to the zip archive instead of empty
-        # folder which may be created during process
-        for f in fn:
+    zipf = os.path.abspath(config['project_folder']) + '.zip'
 
-            try:
-                new_fn = os.path.join(dirn, f)
-                archive.write(
-                    new_fn, new_fn[len(config['project_folder']):])
+    with zipfile.ZipFile(zipf, 'w', zipfile.ZIP_DEFLATED) as archive:
 
-            except Exception as e:
-                LOGGER.error(e)
-                LOGGER.warning("Failed to add file to archive file %s" % f)
+        #: Iterate through file tree
+        for dirn, _, fn in os.walk(config['project_folder']):
+            # only files will be added to the zip archive instead of empty
+            # folder which might have been created during process
+            for f in fn:
+                try:
+                    new_fn = os.path.join(dirn, f)
+                    archive.write(new_fn, new_fn[len(config['project_folder']):])
+                except ValueError:
+                    LOGGER.exception("Attempt to use ZIP archive that was already closed", exc_info=True)
+                except RuntimeError:
+                    LOGGER.exception("Failed to add file to archive file %s" % f, exc_info=True)
 
-    archive.close()
     LOGGER.info('Saved the Project as ZIP archive at %s' % (config['project_folder'] + '.zip'))
 
     # Project folder can be automatically deleted after making zip file from it
@@ -70,35 +67,22 @@ def zip_project():
     if config['delete_project_folder']:
         shutil.rmtree(config['project_folder'])
 
+    LOGGER.info("Downloaded Contents Size :: %s KB's" % str(config['download_size'] // 1024))
 
-def _can_access(url):
-    """ Determines if site allows certain url to be accessed.
+    return zipf
 
-    NOTE: It requires config['_robots_obj'] = structures.RobotsTxt object
-    to be created first.
-    """
 
-    # If the robots class is not declared or is just empty instance
-    # always return true
-    if not config['_robots_obj']:
-        return True
+def _dummy_resp():
+    """ Response with dummy data so that a dummy file will always be downloaded """
 
-    elif config['_robots_obj'].can_fetch(url):
-        return True
-
-    # Website may have restricted access to the certain url and if not in bypass
-    # mode access would be denied
-    elif not config['_robots_obj'].can_fetch(url):
-
-        if config['bypass_robots']:
-            # if explicitly declared to bypass robots then the restriction will be ignored
-            LOGGER.warning("Forcefully Accessing restricted website part %s" % url)
-            return True
-        else:
-            LOGGER.error("Website doesn't allow access to the url %s" % url)
-            return False
-    else:
-        return True
+    dummy_resp = Response()
+    dummy_resp.raw = BytesIO(b'This File could not be downloaded because '
+                             b'the server returned an error response!')
+    dummy_resp.encoding = 'utf-8'  # plain encoding
+    dummy_resp.status_code = 200  # fake the status
+    dummy_resp.is_dummy = True  # but leave a mark
+    dummy_resp.reason = 'Failed to access'  # fail reason
+    return dummy_resp
 
 
 def get(url, *args, **kwargs):
@@ -113,23 +97,32 @@ def get(url, *args, **kwargs):
     """
 
     # Make a check if url is meant for public viewing by checking for
-    # the url in the /robots.txt file provided by site.
-    if not _can_access(url):
-        raise AccessError("Access is not allowed by the site of url %s" % url)
-
+    # the url in the robots.txt file provided by site.
     try:
-        # Usages the requests module to make a get request using a persistent session
+
+        # Uses the requests module to make a get request using a persistent session
         # object and returns that
         # otherwise on fail it returns None
-        req = SESSION.get(url, *args, **kwargs)
-        # log downloaded file size
-        config['download_size'] += int(req.headers.get('content-length', 0))
-        return req
+        resp = SESSION.get(url, *args, **kwargs)
 
-    except Exception as e:
-        LOGGER.error(e)
+        # log downloaded file size
+        config['download_size'] += int(resp.headers.get('content-length', 0))
+
+    except HTTPError as err:
+        LOGGER.error(err)
+
+        # try to get the default response returned by the `requests`
+        resp = err.response
+
+        if not resp:
+            resp = _dummy_resp()
+            resp.request = err.request
+
+    except ConnectionError:    # Catches any other exception raised by `requests`
         LOGGER.error("Failed to access url at address %s" % url)
-        return
+        resp = _dummy_resp()
+
+    return resp
 
 
 def _watermark(file_path):
@@ -151,8 +144,17 @@ def _watermark(file_path):
     return MARK.format(comment_start, VERSION, file_path, datetime.utcnow(), comment_end).encode()
 
 
+@lru_cache(maxsize=100)
+def is_allowed(ext):
+    if not ext:
+        return False
+    if ext.strip().lower() in config['allowed_file_ext']:
+        return True
+    return False
+
+
 def new_file(location, content_url=None, content=None):
-    """ Downloads any file to the disk.
+    """Fail-safe Downloads any file to the disk.
 
     :param str location: path where to save the file
 
@@ -163,38 +165,28 @@ def new_file(location, content_url=None, content=None):
     :returns str: location of downloaded file on disk if download was successful
     None otherwise
     """
+    assert location, "Download location needed to be specified!"
+    assert isinstance(location, str), "Download location must be a string!"
+    assert content or content_url, "Either file content or file url is needed!"
+    assert isinstance(content_url, str), "File url must be a string!"
 
-    req = None          # type: requests.Response
+    if content:
+        assert isinstance(content, bytes), "Expected type bytes, got %r instead" % type(content)
 
-    if not location or (content_url or content) is None:
-        LOGGER.error("Location or Content for the file to be downloaded at %s is not of valid type!" % location)
-        return
+    req = None  # type: Response
 
-    if content and type(content) is not bytes:
-        LOGGER.warning("Content for the file to be saved at %s is not of bytes type!" % location)
+    _file_ext = '.' + location.rsplit('.', 1)[1].lower().strip()
 
-        # Try to convert content to bytes else will suppress the exception and return None
-        try:
-            content = content.encode()      # type: bytes
-        except Exception as e:
-            LOGGER.critical(e)
-            LOGGER.critical("Can't convert the contents to bytes for the file %s" % location)
-            return
-
-    # Files can be of any types or can be large and hence to avoid downloading
-    # those files you can configure which file types should be allowed to stored
-    _file_ext = os.path.splitext(location or '')[1].lower()
-
-    if _file_ext not in config['allowed_file_ext']:
+    if not is_allowed(_file_ext):
         LOGGER.critical('File ext %r is not allowed for file at %r' % (_file_ext, content_url or location))
         return
 
     # The file path provided can already be existing so only overwrite the files
     # when specifically configured to do so by config key 'over_write'
-    if os.path.exists(location or ''):
+    if os.path.exists(location):
 
         if not config['over_write']:
-            LOGGER.error('File already exists at the location %s' % location)
+            LOGGER.debug('File already exists at the location %s' % location)
             return location
 
         else:
@@ -206,19 +198,15 @@ def new_file(location, content_url=None, content=None):
     # Contents of the files can be supplied or filled by a content url
     # function we go online to download content from content url
     if not content and content_url is not None:
+
         LOGGER.info('Downloading content of file %s from %s' % (location, content_url))
 
-        try:
-            req = get(content_url, stream=True)
-            # The file may not be available so will raise an error which will be caught by
-            # except block an will return None
-            if req is None or not req.ok:
-                raise ConnectionError("File is not found or is unavailable on the server url %s" % content_url)
-
-        except Exception as e:
-            LOGGER.error(e)
+        req = get(content_url, stream=True)
+        # The file may not be available so will raise an error which will be caught by
+        # except block an will return None
+        if req is None or not req.ok:
             LOGGER.error('Failed to load the content of file %s from %s' % (location, content_url))
-            content = b'This File could not be downloaded because the server returned an error response!'
+            return
 
     try:
         # Files can throw an IOError or similar when failed to open or write in that
@@ -235,11 +223,10 @@ def new_file(location, content_url=None, content=None):
         # case the function will catch it and log it then return None
         LOGGER.info("Writing file at location %s" % location)
 
-        if hasattr(req, 'iter_content'):
+        if isinstance(req, Response):
             with open(location, 'wb') as f:
-                # write in chunks to manage ram usages
-                for chunk in req.iter_content(chunk_size=1024):
-                    f.write(chunk)
+                # should write in chunks to manage ram usages?
+                f.write(req.content)
                 f.write(_watermark(content_url or location))
         else:
             with open(location, 'wb') as f:
@@ -250,7 +237,6 @@ def new_file(location, content_url=None, content=None):
         LOGGER.critical(e)
         LOGGER.critical("Download failed for the file of type %s to location %s" % (_file_ext, location))
         return
-
-    LOGGER.success('File of type %s written successfully to %s' % (_file_ext, location))
-
-    return location
+    else:
+        LOGGER.success('File of type %s written successfully to %s' % (_file_ext, location))
+        return location

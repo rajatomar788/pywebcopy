@@ -13,11 +13,11 @@ from setuptools import setup, Command
 
 # Package meta-data.
 NAME = 'pywebcopy'
-DESCRIPTION = 'Lightweight python package for scraping and saving webpages and websites to local storage.'
+DESCRIPTION = 'Python package for cloning complete webpages and websites to local storage.'
 URL = 'https://github.com/rajatomar788/pywebcopy/'
 EMAIL = 'rajatomar788@gmail.com'
 AUTHOR = 'Raja Tomar'
-VERSION = '5.0.0'
+VERSION = '6.0.0beta0'
 
 # What packages are required for this module to be executed?
 REQUIRED = [
@@ -94,7 +94,7 @@ setup(
 
     install_requires=REQUIRED,
     include_package_data=True,
-    license='MIT',
+    license='Apache License 2.0',
     classifiers=[
         # Trove classifiers
         # Full list: https://pypi.python.org/pypi?%3Aaction=list_classifiers

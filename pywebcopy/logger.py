@@ -12,7 +12,8 @@ Usage:
 import time
 import logging
 
-from . import DEBUG, VERSION
+from .globals import VERSION
+
 
 #: HTML header starts the document
 _HTML_DOC_START = """<!DOCTYPE html>
@@ -110,7 +111,6 @@ class HTMLFileHandler(logging.FileHandler):
     """
 
     def __init__(self, title, version, *args):
-
         super(HTMLFileHandler, self).__init__(*args)
         self.stream.write(_HTML_DOC_START % {"title": title, "version": version})
 
@@ -124,19 +124,18 @@ class HTMLFormatter(logging.Formatter):
     """
     Formats each record in html
     """
-    css_classes = {'WARNING': 'warn',
-                   'INFO': 'info',
-                   'DEBUG': 'debug',
+    css_classes = {'WARNING' : 'warn',
+                   'INFO'    : 'info',
+                   'DEBUG'   : 'debug',
                    'CRITICAL': 'err',
-                   'ERROR': 'err',
-                   'SUCCESS': 'success',
-                   'ACTION': 'action',
+                   'ERROR'   : 'err',
+                   'SUCCESS' : 'success',
+                   'ACTION'  : 'action',
                    }
 
     datefmt = "%d-%b-%Y %H:%M:%S"
 
     def __init__(self):
-
         super(HTMLFormatter, self).__init__()
 
     def format(self, record):
@@ -163,19 +162,17 @@ LOGGER = logging.getLogger("pywebcopy")
 LOGGER.__doc__ = """Global Logger object for logging purpose use in modules."""
 LOGGER.setLevel(logging.DEBUG)
 
-
 logFormatter = logging.Formatter("%(asctime)s - %(levelname)s - %(name)s.%(module)s"
-                                     ".%(funcName)s:%(lineno)d - %(message)s")
+                                 ".%(funcName)s:%(lineno)d - %(message)s")
 
 # logFormatter = logging.Formatter("%(levelname)s - %(message)s")
 
 logFormatter.datefmt = "%d-%b-%Y %H:%M:%S"
 logFormatter.__doc__ = """Formatter to be used in logger object for formatting log entries."""
 
-
-"""Add custom loggin levels for ease of information flow."""
-successLevelNum = 70
-actionLevelNum = 60
+"""Add custom logging levels for ease of information flow."""
+successLevelNum = 35
+actionLevelNum = 25
 
 
 def success(self, message, *args, **kws):
@@ -209,15 +206,15 @@ def new_html_logger(title="PywebCopy Log", version=VERSION, filename='log.html',
     return html_file_handler
 
 
-def new_console_logger():
+def new_console_logger(level=logging.WARNING):
     """Creates a new console logging handler for use in logger.
 
     :rtype: logging.StreamHandler
     :return: new logging.StreamHandler object
     """
     c_logger = logging.StreamHandler()
-    c_logger.setLevel(logging.WARNING)
-    c_logger.setFormatter(logFormatter)
+    c_logger.setLevel(level)
+    c_logger.setFormatter(logging.Formatter("%(levelname)s - %(message)s"))
     return c_logger
 
 
@@ -233,9 +230,6 @@ def new_file_logger(file_path, mode):
     f_logger.setLevel(logging.DEBUG)
     f_logger.setFormatter(logFormatter)
     return f_logger
-
-
-LOGGER.addHandler(new_console_logger())
 
 
 # Example of usage

@@ -1,10 +1,11 @@
-# PyWebCopy &copy; 5
+# PyWebCopy &copy; 6
 
 `Created By : Raja Tomar`
 `License : MIT`
 `Email: rajatomar788@gmail.com`
 
-Web Scraping and Saving Complete webpages and websites with python.
+Python websites and webpages cloning at ease.
+Web Scraping or Saving Complete webpages and websites with python.
 
 Web scraping and archiving tool written in Python
 Archive any online website and its assets, css, js and
@@ -14,9 +15,13 @@ It's easy with `pywebcopy`.
 Why it's great? because it -
 
 - respects `robots.txt`
-- have a single-function basic usages
+- saves a webpage with css, js and images with one call
+- clones a complete website with assets and links remapped in one call
+- have direct apis for simplicity and ease
+- subclassing for advanced usage
+- custom html tags handler support
 - lots of configuration for many custom needs
-- provides several scraping packages in one Objects (thanks to their original owners)
+- provides several scraping packages in one objects (thanks to their original owners)
   - beautifulsoup4
   - lxml
   - requests
@@ -37,12 +42,12 @@ You are ready to go. Read the tutorials below to get started.
 
 ## First steps
 
-You should always check if the pywebcopy is installed successfully.
+You should always check if the latest pywebcopy is installed successfully.
 
 ```python
 >>> import pywebcopy
 >>> pywebcopy.__version___
-5.x
+6.x
 ```
 
 Your version may be different, now you can continue the tutorial.
@@ -54,10 +59,12 @@ To save any single page, just type in python console
 ```Python
 from pywebcopy import save_webpage
 
+kwargs = {'project_name': 'some-fancy-name'}
 
 save_webpage(
     url='http://example-site.com/index.html',
-    project_folder='path/to/downloads'
+    project_folder='path/to/downloads',
+    **kwargs
 )
 ```
 
@@ -66,15 +73,18 @@ To save full website (This could overload the target server, So, be careful)
 ```Python
 from pywebcopy import save_website
 
+kwargs = {'project_name': 'some-fancy-name'}
+
 save_website(
     url='http://example-site.com/index.html',
     project_folder='path/to/downloads',
+    **kwargs
 )
 ```
 
 ### 1.2.1 Running Tests
 Running tests is simple and doesn't require any external library. 
-Just run this command from root directory of pywebcopy package
+Just run this command from root directory of pywebcopy package.
 
 
 ```shell
@@ -89,16 +99,16 @@ from pywebcopy import WebPage
 url = 'http://example-site.com/index.html' or None
 project_loc = 'path/to/downloads/folder'
 
-wp = WebPage(url,
-project_folder
-default_encoding=None,
-HTML=None,
-**configKwargs
-)
+wp = WebPage()
 
 # You can choose to load the page explicitly using 
 # `requests` module
 wp.get(url, **requestsKwargs)
+
+# OR
+# You can choose to set the source yourself
+handle = open('file.html', 'rb')
+wp.set_source(handle)
 
 # if you want assets only
 wp.save_assets()
@@ -106,7 +116,7 @@ wp.save_assets()
 # if you want html only
 wp.save_html()
 
-# if you want complete webpage
+# if you want complete webpage with css, js and images
 wp.save_complete()
 ```
 
@@ -171,6 +181,7 @@ then check if website allows scraping of its content.
 >>> pywebcopy.config['bypass_robots'] = True
 
 # rest of your code follows..
+
 ```
 
 ### Overwrite existing files when copying
@@ -183,6 +194,7 @@ use the over_write config key.
 >>> pywebcopy.config['over_write'] = True
 
 # rest of your code follows..
+
 ```
 
 ### Changing your project name
@@ -196,6 +208,7 @@ below
 >>> pywebcopy.config['project_name'] = 'my_project'
 
 # rest of your code follows..
+
 ```
 
 ## How to - Save Single Webpage
@@ -204,28 +217,42 @@ Particular webpage can be saved easily using the following methods.
 
 Note: if you get `pywebcopy.exceptions.AccessError` when running any of these code then use the code provided on later sections.
 
-### Method 1
+### Method 1 : via api - `save_webpage()`
 
 Webpage can easily be saved using an inbuilt funtion called `.save_webpage()` which takes several
 arguments also.
 
 ```python
->>> import pywebcopy
->>> pywebcopy.save_webpage(project_url='http://google.com', project_folder='c://Saved_Webpages/',)
+>>> from pywebcopy import save_webpage
+>>> save_webpage(project_url='http://google.com', project_folder='c://Saved_Webpages/',)
 
-# rest of your code follows..
 ```
 
 ### Method 2
 
-This use case is slightly more powerful as it can provide every functionallity of the WebPage 
-data class.
+This use case is slightly more powerful as it can provide every functionallity of the WebPage class.
 
 ```python
->>> from pywebcopy import Webpage
+>>> from pywebcopy import Webpage, config
+>>> url = 'http://some-url.com/some-page.html'
 
->>> wp = WebPage('http://google.com', 'e://tests/', project_name='Google')
+# You should always start with setting up the config or use apis
+>>> config.setup_config(url, project_folder, project_name, **kwargs)
+
+# Create a instance of the webpage object
+>>> wp = Webpage()
+
+# If you want to use `requests` to fetch the page then
+>>> wp.get(url)
+
+# Else if you want to use plain html or urllib then use
+>>> wp.set_source(object_which_have_a_read_method, encoding=encoding)
+>>> wp.url = url   # you need to do this if you are using set_source()
+
+# Then you can access several methods like
 >>> wp.save_complete()
+>>> wp.save_html()
+>>> wp.save_assets()
 
 # This Webpage object contains every methods of the Webpage() class and thus
 # can be reused for later usages.
@@ -242,31 +269,36 @@ One feature is that the raw html is now also accepted.
 
 ```python
 
->>> from pywebcopy import Webpage
+>>> from pywebcopy import Webpage, config
 
 >>> HTML = open('test.html').read()
 
 >>> base_url = 'http://example.com' # used as a base for downloading imgs, css, js files.
 >>> project_folder = '/saved_pages/'
+>>> config.setup_config(base_url, project_folder)
 
->>> wp = WebPage(base_url, project_folder, HTML=HTML)
+>>> wp = WebPage()
+>>> wp.set_source(HTML)
+>>> wp.url = base_url
 >>> wp.save_webpage()
+
 ```
 
-## How to - Whole Websites
+## How to - Clone Whole Websites
 
 Use caution when copying websites as this can overload or damage the
 servers of the site and rarely could be illegal, so check everything before
 you proceed.
 
-### Method 1 -
+### Method 1 : via api - `save_website()`
 
 Using the inbuilt api `.save_website()` which takes several arguments.
 
 ```python
->>> import pywebcopy
+>>> from pywebcopy import save_website
 
->>> pywebcopy.save_website(project_url='http://localhost:8000', project_folder='e://tests/')
+>>> save_website(project_url='http://localhost:8000', project_folder='e://tests/')
+
 ```
 
 ### Method 2 -
@@ -274,12 +306,13 @@ Using the inbuilt api `.save_website()` which takes several arguments.
 By creating a Crawler() object which provides several other functions as well.
 
 ```python
->>> import pywebcopy
+>>> from pywebcopy import Crawler, config
 
->>> pywebcopy.config.setup_config(project_url='http://localhost:5000/', project_folder='e://tests/', project_name='LocalHost')
+>>> config.setup_config(project_url='http://localhost:5000/', project_folder='e://tests/', project_name='LocalHost')
 
->>> crawler = pywebcopy.Crawler('http://localhost:5000/')
+>>> crawler = Crawler('http://localhost:5000/')
 >>> crawler.crawl()
+
 ```
 
 ## Contribution
@@ -296,33 +329,36 @@ If you have any suggestions or fixes or reports feel free to mail me :)
 
 `pywebcopy` is highly configurable.
 
-### 1.3.1 Direct Call Method
+### 1.3.1 APIS
 
-To change any configuration, just pass it to the `init` call.
+To change any configuration, just pass it to the `api` call.
 
 Example:
 
 ```Python
-from pywebcopy.core import save_webpage
+from pywebcopy import save_webpage
+
+kwargs = {
+    'key1': 'value1',
+    ...
+}
 
 save_webpage(
 
     url='http://some-site.com/', # required
     download_loc='path/to/downloads/', # required
 
-    # config keys are case-insensitive
-    any_config_key='new_value',
-    another_config_key='another_new_value',
+    kwargs=kwargs
 
     ...
 
     # add many as you want :)
 )
+
 ```
 
 ### 1.3.2 `config.setup_config` Method
 
->**This function is changed from  `core.setup_config`**
 
 You can manually configure every configuration by using a 
 `config.setup_config` call.
@@ -378,12 +414,6 @@ below is the list of `config` keys with their `default` values :
 # delete the project folder after making zip archive of it
 'delete_project_folder': False
 
-# which parser to use when parsing pages
-# for speed choose 'html.parser' (will crack some webpages)
-# for exact webpage copy choose 'html5lib' (a little slow)
-# or you can leave it to default 'lxml' (balanced)
-'PARSER' : 'lxml'
-
 # to download css file or not
 'LOAD_CSS': True
 
@@ -398,10 +428,7 @@ below is the list of `config` keys with their `default` values :
 'OVER_WRITE': False
 
 # list of allowed file extensions
-'ALLOWED_FILE_EXT': ['.html', '.css', '.json', '.js',
-                     '.xml','.svg', '.gif', '.ico',
-                      '.jpeg', '.jpg', '.png', '.ttf',
-                      '.eot', '.otf', '.woff']
+'ALLOWED_FILE_EXT': ['.html', '.css', ...]
 
 # log file path
 'LOG_FILE': None
@@ -425,6 +452,7 @@ below is the list of `config` keys with their `default` values :
 
 # bypass the robots.txt restrictions
 'BYPASS_ROBOTS' : False
+
 ```
 
 told you there were plenty of `config` vars available!

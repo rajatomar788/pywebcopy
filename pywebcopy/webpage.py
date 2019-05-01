@@ -1,192 +1,149 @@
 # encoding: utf-8
+"""
+pywebcopy.webpage
+~~~~~~~~~~~~~~~~~
 
-import io
+Python form of a webpage.
+
+Usage::
+
+    >>> from pywebcopy import Webpage, config
+    >>> url = 'http://some-url.com/some-page.html'
+
+    # You should always start with setting up the config or use apis
+    >>> config.setup_config(url, project_folder, project_name, **kwargs)
+
+    # Create a instance of the webpage object
+    >>> wp = Webpage()
+
+    # If you want to use `requests` to fetch the page then
+    >>> wp.get(url)
+
+    # Else if you want to use plain html or urllib then use
+    >>> wp.set_source(object_which_have_a_read_method, encoding=encoding)
+    >>> wp.url = url   # you need to do this if you are using set_source()
+
+    # Then you can access several methods like
+    >>> wp.save_complete()
+    >>> wp.save_html()
+    >>> wp.save_assets()
+
+"""
+
 import os
-import re
 
 import requests
-from six.moves.urllib.request import pathname2url
+import six
 
-from .core import zip_project
-from . import SESSION, LOGGER
-from .parsers import BaseParser
-from .urls import URLTransformer, relate
-from .exceptions import InvalidUrlError
+from . import LOGGER, SESSION
 from .configs import config
-from .elements import FileMixin, LinkTag, ImgTag, AnchorTag, ScriptTag
+from .exceptions import InvalidUrlError, ParseError
+from .parsers import BaseIncrementalParser
+from .urls import URLTransformer
 
 
-class WebPage(BaseParser, object):
-    """Provides scraping and parsing and saving html and css etc. ability in one class.
+class BaseWebPage(BaseIncrementalParser):
+    """Extensible base parser for use with external data.
+    Implements the apis which foresees the data source
+    registration and element handler managements.
     """
 
-    def __init__(self, url=None, project_folder=None, project_name=None, encoding=None,
-                 force_decoding=False, HTML=None, url_handler=None, **kwargs):
-        """
+    def __init__(self):
+        super(BaseWebPage, self).__init__()
 
-        :param url: url to be used as base for fetching webpage or url operations
-        :type url: str | None
-        :param project_folder: folder in which the files will be downloaded
-        :type project_folder: str | None
-        :param project_name: name of the project to distinguish it
-        :type project_name: str | None
-        :param encoding (optional): specific encoding of the html if known
-        :type encoding: str | None
-        :param force_decoding (optional): whether to forcefully decode content using provided
-            encoding
-        :type force_decoding: bool | None
-        :param HTML (optional): string form html contents of a webpage
-        :type HTML: str | None
-        :param url_handler (optional): custom subclass of ElementsHandler for handling urls
-        :type url_handler: ElementsHandler | None
-        :param kwargs: additional configurations keys for the :config: object
-        """
-        self.original_url = url
-        self._url = url if HTML else None
-        self._request = None
+        self._url = None
         self._url_obj = None
-        self._url_handler = url_handler
-
-        super(WebPage, self).__init__(
-            element=HTML,
-            url=self.url,
-            default_encoding=encoding,
-            HTML=HTML or self.request.content,
-        )
-
-        self.force_decoding = force_decoding
-        if not self.force_decoding:
-            self._useDefaultDecoder = True
 
     @property
     def url(self):
-        """Returns a url as reported by the server."""
-        if self._url is None:
-            self._url = self.request.url
         return self._url
 
     @url.setter
     def url(self, new_url):
         self._url = new_url
+        self._url_obj = None
 
     @property
-    def url_obj(self):
+    def utx(self):
         """Returns an URLTransformer() object made from the self.url string.
 
         :rtype: URLTransformer
-        :returns: URLTransformer() object
+        :returns: prepared URLTransformer object
         """
         if self._url_obj is None:
-            self._url_obj = URLTransformer(self.url)
-            self._url_obj.base_path = config['project_folder']
-            self._url_obj.default_filename = 'index.html'
+            assert self._url is not None, "Url not setup."
+            assert config.get('project_folder', None) is not None, "Configuration not setup."
+
+            self._url_obj = URLTransformer(
+                url=self._url,
+                base_url=self._url,
+                base_path=config['project_folder'],
+                default_fn='index.html'
+            )
             self._url_obj.default_fileext = 'html'
             self._url_obj.check_fileext = True
+
         return self._url_obj
 
-    @property
-    def url_handler(self):
-        if self._url_handler is None:
-            self._url_handler = ElementsHandler(self.url, self.url_obj.file_path)
-        return self._url_handler
+    def get_source(self):
+        """Returns the resources set for this object.
+        This method can be overridden to provide alternate way of source loading."""
 
-    @property
-    def request(self):
-        """Makes a http request to the server and sets the .http_request attribute to
-        returned response."""
+        if not self._source or not hasattr(self._source, 'read'):
+            raise ParseError("Source is not defined or doesn't have a read method!")
+        return self._source
 
-        if not self._request:
-            self._request = SESSION.get(self.original_url, stream=True)
+    def set_source(self, source, encoding=None, base_url=None):
+        """Sets up the resource for this object."""
+        if not hasattr(source, 'read'):
+            try:
+                source = open(source, 'rb', encoding=encoding)
+            except OSError:
+                raise ParseError("Provided source neither have a read method "
+                                 "nor is a file path."
+                                 "Use a File like object or provide a correct file name.")
+        if not hasattr(source, 'read'):
+            TypeError("Provide a file like object with `read` method!")
+        if base_url:
+            assert isinstance(base_url, six.string_types), "Url must be a string!"
+            self._url = base_url
+            self._url_obj = None
+        self._source = source
+        self.encoding = encoding
 
-            if self._request is None:
-                raise InvalidUrlError("Webpage couldn't be loaded from url %s" % self.original_url)
+    def save_assets(self, base_path=None):
+        """Save only the linked files to the disk.
 
-        return self._request
-
-    @property
-    def html_stream(self):
-        """Returns a stream of data fetched from the objects url attribute."""
-        return io.BytesIO(self.html)
-
-    def linked_elements(self, tags=None):
-        """Returns every linked file object as :class: `lxml.html.Element` (multiple times).
-
-        :param optional tuple tags: to find specific elements matching html tags
-        :return generator: a generator containing the required elements
+        :param str base_path: folder in which to store the files.
         """
+        if self.root is None:
+            self.__parse__()
+            if not self.root:
+                raise ParseError("Tree is not being generated by parser!")
 
-        for elem in self.url_handler.elements:
-            if not tags:
-                yield elem
-            else:
-                if elem.tag in tuple(tags):
-                    yield elem
+        LOGGER.action("Starting save_assets Action on url: {!r}".format(self.utx.url))
 
-    def _extract_elements(self):
-        """Rewrites url in document root."""
-        # `lxml.html` object has a `.iterlinks` function which is crucial for this
-        # task to be completed.
-        if self.lxml is None:
-            raise RuntimeError("Couldn't generate a etree object for the url %s" % self.url)
+        if base_path:
+            if not os.path.isdir(base_path):
+                raise ValueError("Provided path is not a valid directory! %s" % base_path)
+            self.utx.base_path = base_path
 
-        # stores the etree.html object generated by the lxml in the attribute
-        for i in self.lxml.iterlinks():
-            self.url_handler.handle(*i)
+        for file in self:
+            if not hasattr(file, 'start'):
+                LOGGER.error("Downloading for file %r cannot be started!" % file)
+                continue
+            file.start()
 
-    def _remap_images(self):
-        """Rewrites <img> attributes if it have an srcset type attribute which prevents rendering of img
-        from its original src attribute url."""
-
-        if self.lxml is None:
-            raise RuntimeError("Couldn't rewrite images for the url %s" % self.url)
-
-        set_url = re.compile(r'((?:https?:/|)[\w/.\\_-]+)')
-
-        for elem in self.lxml.xpath('.//img[@*]'):
-            _keys = elem.attrib.keys()
-
-            LOGGER.debug("Remapping Image attributes for the imgs")
-            LOGGER.debug(elem.attrib)
-
-            if 'src' in _keys:  # element would be catched later while saving files
-                elem.attrib.update({'data-src': '', 'data-srcset': '', 'srcset': ''})
-            elif 'data-src' in _keys:
-                elem.attrib.update({'data-src': '', 'data-srcset': '', 'srcset': '', 'src': elem.attrib['data-src']})
-            elif 'data-srcset' in _keys:
-                _first_url = set_url.findall(elem.attrib.get('data-srcset'))[0]
-                elem.attrib.update({'data-srcset': '', 'data-src': '', 'srcset': '', 'src': _first_url})
-            elif 'srcset' in _keys:
-                _first_url = set_url.findall(elem.attrib.get('srcset'))[0]
-                elem.attrib.update({'data-srcset': '', 'data-src': '', 'srcset': '', 'src': _first_url})
-            else:
-                pass  # unknown case
-
-            LOGGER.debug("Remapped Attributes of the img.")
-            LOGGER.debug(elem.attrib)
-
-    def get(self, url, use_global_session=True, **requestskwargs):
-        """Fetches the Html content from Internet.
-
-        :param url: url of the webpage to fetch
-        :param use_global_session: if you would like later http requests made to server to follow the
-        same configuration as you provided then leave it to 'True' else if you want
-        only single http request to follow these configuration set it to 'False'.
-        :keyword **requestskwargs: keyword arguments which `requests` module may accept.
-        """
-        if use_global_session:
-            self.html = SESSION.get(url, **requestskwargs).content
-        else:
-            self.html = requests.get(url, **requestskwargs).content
-
-    def save_html(self, file_name=None, raw_html=True):
+    def save_html(self, file_name=None, raw_html=False):
         """Saves the html of the page to a default or specified file.
 
         :param str file_name: path of the file to write the contents to
         :param bool raw_html: whether write the unmodified html or the rewritten html
         """
-        LOGGER.action("Starting save_html Action on url: {!r}".format(self.url_obj.url))
+        if self.root is None:
+            self.__parse__()  # call in the action
 
-        file_name = file_name or self.url_obj.file_path
+        LOGGER.action("Starting save_html Action on url: {!r}".format(self.utx.url))
 
         # Create directories if neccessary
         if not os.path.exists(os.path.dirname(file_name)):
@@ -194,160 +151,112 @@ class WebPage(BaseParser, object):
 
         if raw_html:
             with open(file_name, 'wb') as fh:
-                fh.write(self.raw_html)
+                fh.write(self.get_source().read())
         else:
-            self.lxml.getroottree().write(file_name, method="html")
-
-    def save_assets(self, base_path=None, reset_html=True):
-        """Save only the linked files to the disk.
-
-        :param str base_path: folder in which to store the files.
-        :param bool reset_html: whether to write modified file locations to the html content
-        of this object
-        """
-        LOGGER.action("Starting save_assets Action on url: {!r}".format(self.url_obj.url))
-
-        if base_path and not os.path.isdir(base_path):
-            raise ValueError("Provided path is not a valid directory! %s" % base_path)
-
-        self._remap_images()
-        self._extract_elements()
-
-        for elem in self.url_handler.elements:
-            if base_path:
-                elem.base_path = base_path
-            elem.start()
-
-        # wait for unfinished files to download
-        for t in self.url_handler.elements:
-            t.join()
-
-        if reset_html:
-            self._lxml = None  # reset the ElementTree
+            if self.root is None:
+                self.__parse__()
+                if not self.root:
+                    raise ParseError("Tree is not being generated by parser!")
+            self.root.getroottree().write(file_name, method="html")
 
     def save_complete(self):
-        """Saves the complete html+assets on page to a file and also writes its linked files to the disk."""
-        LOGGER.action("Starting save_complete Action on url: {!r}".format(self.url_obj.url))
+        """Saves the complete html+assets on page to a file and
+        also writes its linked files to the disk.
 
-        self.save_assets(reset_html=False)  # save asset files
-        self.save_html(raw_html=False)  # save html with remapped links
-
-        self._lxml = None  # reset the tree
-
-
-class ElementsHandler:
-    """Handles different url types in the webpage."""
-
-    def __init__(self, base_url=None, base_path=None):
-        self.base_url = base_url
-        self.base_path = base_path
-        self._store = []
-        self._element_map = {
-            'link': LinkTag,
-            'script': ScriptTag,
-            'img': ImgTag,
-            'a': AnchorTag,
-        }
-
-    @property
-    def elements(self):
-        return self._store
-
-    def _create_element(self, elem, attr, url, pos):
-        """Can handle <img>, <link>, <script> :class: `lxml.html.Element` object."""
-
-        # create a object depending on tag
-        obj = self._element_map.get(elem.tag, FileMixin)(url)
-
-        # Remove integrity or cors check from the file
-        elem.attrib.pop('integrity', None)
-        elem.attrib.pop('crossorigin', None)
-
-        # Populate the object with basic properties
-        obj.base_url = self.base_url
-        obj.base_path = config['project_folder']
-        obj.tag = attr
-        obj.pos = pos
-        obj.rel_path = pathname2url(relate(obj.file_path, self.base_path))
-        return obj
-
-    def _handle(self, elem, attr, url, pos):
-        """Handles any link type <a> <link> <script> <style> <style url>.
-        Note: Default handler function structures makes use of .rel_path attribute
-        which is completely internal and any usage depending on this attribute
-        may not work properly.
+        Implements the combined logic of save_assets and save_html in
+        compact form with checks and validation.
         """
-        try:
-            # Create a new element and handle basic pre-population internally
-            obj = self._create_element(elem, attr, url, pos)
-        except Exception as e:
-            LOGGER.error(e)
-            LOGGER.error('Exception occurred while creating an object for %s' % url)
-            return None  # return unmodified
 
-        # Change the url in the object depending on case
-        if attr is None:
-            new = elem.text[:pos] + obj.rel_path + elem.text[len(url) + pos:]
-            elem.text = new
-        else:
-            cur = elem.get(attr)
-            if not pos and len(cur) == len(url):
-                new = obj.rel_path  # most common case
-            else:
-                new = cur[:pos] + obj.rel_path + cur[pos + len(url):]
-            elem.set(attr, new)
+        assert self.url is not None, "Url is not setup."
+        assert self.get_source() is not None, "Source is not setup."
 
-        LOGGER.info("Remapped url of the file: %s to the path: %s " % (url, obj.rel_path))
+        LOGGER.action("Starting save_complete Action on url: {!r}".format(self.url))
 
-        self._store.append(obj)  # store it in inventory
-        return obj
+        if self.root is None:
+            self.__parse__()  # call in the action
 
-    def handle(self, elem, attr, url, pos):
-        """Base handler function."""
-        LOGGER.debug("Handling url %s" % url)
-
-        # Integrity check of the provided url
-        if url.startswith(u'#') or url.startswith(u'java') or \
-                url.startswith(u'data') or not url.strip('/') or \
-                not url.strip():
-            return
-
-        return self._handle(elem, attr, url, pos)
+        self.save_assets()
+        self.save_html(self.utx.file_path, raw_html=False)
 
 
-def save_webpage(project_url, project_folder, project_name=None, html=None,
-                 encoding=None, reset_config=False, **kwargs):
-    """ Easiest way to save any single webpage.
+class WebPage(BaseWebPage):
+    """Provides the apis for invoking parse and save functionalities.
 
-    HTML type is not supported in fancy other generators hence if html is provided
-    then it will fall back to default regardless of the method specified.
+    usage::
 
-    :param str project_url: url of the webpage to work with
-    :param str project_name: friendly name to easily recogonise this project
-    :param str project_folder: folder in which store all the downloaded files
-    :param str html: html string if available
-    :type html: basestring
-    :param str encoding: explicit encoding declaration for decoding html
-    :type encoding: str
-    :param bool reset_config: whether to reset the config after saving the webpage; could be useful if
-    you are saving different webpages which are located on different servers.
+        >>> from pywebcopy import Webpage, config
+        >>> url = 'http://some-url.com/some-page.html'
+
+        # You should always start with setting up the config or use apis
+        >>> config.setup_config(url, project_folder, project_name, **kwargs)
+
+        # Create a instance of the webpage object
+        >>> wp = Webpage()
+
+        # If you want to use `requests` to fetch the page then
+        >>> wp.get(url)
+
+        # Else if you want to use plain html or urllib then use
+        >>> wp.set_source(object_which_have_a_read_method, encoding=encoding)
+        >>> wp.url = url   # you need to do this if you are using set_source()
+
+        # Then you can access several methods like
+        >>> wp.save_complete()
+        >>> wp.save_html()
+        >>> wp.save_assets()
+
     """
-    LOGGER.info("Starting copy of webpage at : %s" % project_url)
 
-    config.setup_config(project_url, project_folder, project_name, **kwargs)
+    def __init__(self, **kwargs):
+        super(WebPage, self).__init__()
 
-    WebPage(project_url, project_folder,
-            project_name, encoding=encoding,
-            HTML=html, **kwargs).save_complete()
+        # Some scripts might have apis specific to previous verion which this doesn't support
+        # now and would definitely remove the arguments in later version
+        if 'url' in kwargs or kwargs:
+            raise DeprecationWarning("Direct initialisation with url is not supported now. Please use"
+                                     "the get() or set_source() methods for page fetching."
+                                     "And use the config.setup_config() method to setup the kwargs."
+                                     "Arguments will be completly removed in later versions.")
 
-    # Everything is done! Now archive the files and delete the folder afterwards.
-    if config['zip_project_folder']:
-        zip_project()
+    def __repr__(self):
+        return '<WebPage: %s>' % self.url
 
-    if reset_config:
-        # reset the config so that it does not mess up any con-current calls to
-        # the different web pages
-        config.reset_config()
+    def get(self, url, use_global_session=True, **requestskwargs):
+        """Fetches the Html content from Internet using the requests.
+        You can any requests params which will be passed to the library
+        itself.
+        The requests arguments you supply will also be applied to the
+        global session meaning all the files will be downloaded using these
+        settings.
 
-    # ALL DONE
-    LOGGER.info("Downloaded Contents Size :: %s KB's" % str(config['download_size'] // 1024))
+        If you want to use some manual page fetch, like using urllib, then
+        you should use the set_source() method which would do the right job.
+
+        usage::
+
+            >>> wp = WebPage()
+            >>> wp.get(url, proxies=proxies, headers=headers, auth=auth, ...)
+            >>> wp.save_complete()
+
+        :param url: url of the webpage to fetch
+        :param use_global_session: if you would like later http requests made to server to follow the
+            same configuration as you provided then leave it to 'True' else if you want
+            only single http request to follow these configuration set it to 'False'.
+        :param \*\*requestskwargs: keyword arguments which `requests` module may accept.
+        """
+        if use_global_session:
+            req = SESSION.get(url, stream=True, **requestskwargs)
+        else:
+            req = requests.get(url, stream=True, **requestskwargs)
+        if not req.ok:
+            raise InvalidUrlError("Url invalid :  %s" % url)
+
+        # Set some information about the content being loaded so
+        # that the parser has a better idea about
+        self._url, self.encoding = req.url, req.encoding
+        self._url_obj = None
+        # The internal parser assumes a read() method to be
+        # present on the source, thus we need to pass the raw stream
+        # io object which serves the purpose
+        req.raw.decode_content = True
+        self.set_source(req.raw)

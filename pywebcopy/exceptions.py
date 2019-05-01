@@ -9,8 +9,9 @@ Exceptions which can occur in pywebcopy.
 
 
 class PywebcopyError(IOError):
-    """Base class for any Error generated through package. """
+    """Pywebcopy has come across an error which could be safe or critical."""
     def __init__(self, *args, **kwargs):
+        self.reason = self.__doc__
         super(PywebcopyError, self).__init__(*args, **kwargs)
 
 
@@ -22,13 +23,25 @@ class InvalidPathError(PywebcopyError, ValueError):
     """Provided path is invalid in creating paths on file system. """
 
 
-class ConnectionError(PywebcopyError):
+class ConnectError(PywebcopyError):
     """Connection to the server couldn't be established either due to server
     error or http error. """
 
 
 class AccessError(PywebcopyError):
     """Requested url is flagged private by the Site owner."""
+
+
+class ParseError(PywebcopyError, RuntimeError):
+    """Runtime error occurred during the parsing of html."""
+
+
+class UrlRefusedByTagHandlerError(PywebcopyError):
+    """Url has been rejected by the verification provider of the Tag handler."""
+
+
+class UrlTransformerNotSetup(PywebcopyError, UnboundLocalError):
+    """UrlTransformer method is not subclass and not being made available."""
 
 
 class RequiredAttributesMissing(PywebcopyError):
