@@ -496,7 +496,6 @@ Ways to change the global configurations are below -
     pywebcopy.config['url'] = 'http://url-changed.com'
     # rest of config remains unchanged
 
-    ```
 
     Done!
 
