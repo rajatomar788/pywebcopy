@@ -4,24 +4,28 @@
 pywebcopy.urls
 ~~~~~~~~~~~~~~
 
-Deals with different types of urls in pywebcopy.parsers.
+Parses urls.
 
 """
-import itertools
 
-__all__ = [
-    'URLTransformer',
-    'filename_present', 'url2path', 'relate',
-]
 
 import hashlib
+import itertools
 import os
 import re
 
-from six.moves.urllib.parse import urljoin, unquote, urldefrag, urlsplit
-from six.moves.urllib.request import url2pathname
-
+from .compat import (
+    urljoin,
+    unquote,
+    urldefrag,
+    urlsplit,
+    url2pathname
+)
 from . import LOGGER
+
+
+__all__ = ['URLTransformer', 'filename_present', 'url2path', 'relate']
+
 
 # Removes the non-fileSystem compatible letters or patterns from a file path
 FILENAME_CLEANER = re.compile(r'[*":<>|?]+?\.\.?[/|\\]+')
@@ -103,6 +107,10 @@ def url2path(url, base_url=None, base_path=None, default_filename=None):
 counter = itertools.count().__next__
 
 
+def make_path_from_url(url, base_url=None, base_path=None, default_fn=None):
+    return URLTransformer(url, base_url, base_path, default_fn).file_path
+
+
 class URLTransformer(object):
     """Transforms url into various types and subsections.
 
@@ -119,6 +127,12 @@ class URLTransformer(object):
         'base_url', 'base_path', 'to_path', 'get_filename_and_pos',
         'get_fileext_and_pos',
     ]
+
+    __slots__ = (
+        'default_filename', 'filename',
+        'chech_fileext', 'original_url', '_url', '_parsed',
+        '_base_url', '_base_path', 'default_fileext', 'check_fileext'
+    )
 
     def __init__(self, url, base_url=None, base_path=None, default_fn=None):
 

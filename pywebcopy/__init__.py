@@ -24,7 +24,7 @@ limitations under the License.
 __author__ = 'Raja Tomar'
 __email__ = 'rajatomar788@gmail.com'
 __license__ = 'Apache License 2.0'
-__version__ = (6, 0, 0, 'beta', 0)
+__version__ = (6, 0, 0, 'rc', 1)
 
 
 from .globals import *
@@ -33,6 +33,7 @@ from .configs import config, SESSION
 from .urls import URLTransformer, filename_present
 from .elements import LinkTag, ScriptTag, ImgTag, AnchorTag, TagBase
 from .webpage import WebPage
+from .parsers import MultiParser
 from .core import get, new_file
 from .crawler import Crawler
 from .api import save_website, save_webpage
@@ -41,13 +42,18 @@ from .api import save_website, save_webpage
 __all__ = [
     'save_webpage', 'save_website',                             #: apis
     'config',                                                   #: configuration
-    'WebPage', 'Crawler',                                       #: Classes
+    'WebPage', 'Crawler', 'MultiParser',                        #: Classes
     'SESSION',                                                  #: Http Session
     'URLTransformer', 'filename_present',                       #: Url manipulation
     'TagBase', 'LinkTag', 'ScriptTag', 'ImgTag', 'AnchorTag',   #: Customisable tag handling
     'get', 'new_file',                                          #: some goodies
 ]
 
+#: alias
+Webpage = WebPage
+
 
 def __dir__():
-    return __all__ + [__version__, __author__, __email__, __license__]
+    return __all__ + (__version__, __author__, __email__, __license__, Webpage)
+
+

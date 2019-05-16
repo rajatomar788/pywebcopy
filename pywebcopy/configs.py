@@ -8,75 +8,40 @@ Modifies the behaviour of pywebcopy.
 
 """
 
-
-import os
 import logging
-from functools import lru_cache
+import os
+import warnings
 
 import requests
-from six.moves.urllib.parse import urlparse, urljoin
 
 from . import LOGGER
-from .globals import VERSION
+from .compat import urlparse, urljoin
 from .exceptions import AccessError
-from .logger import new_file_logger, new_html_logger, new_console_logger
+from .globals import safe_file_exts, safe_http_headers
+from .logger import new_file_logger, new_console_logger
 from .structures import CaseInsensitiveDict, RobotsTxtParser
 
+__all__ = ['default_config', 'config', 'SESSION', 'AccessAwareSession']
 
-__all__ = ['default_config', 'config']
-
-
-safe_file_exts = [
-    '.html',
-    '.php',
-    '.asp',
-    '.aspx',
-    '.htm',
-    '.xhtml',
-    '.css',
-    '.json',
-    '.js',
-    '.xml',
-    '.svg',
-    '.gif',
-    '.ico',
-    '.jpeg',
-    '.pdf',
-    '.jpg',
-    '.png',
-    '.ttf',
-    '.eot',
-    '.otf',
-    '.woff',
-    '.woff2',
-    '.pwcf',  #: Default file extension
-]
-
-safe_http_headers = {
-    "Accept-Language": "en-US,en;q=0.9",
-    'User-Agent'     : "Mozilla/5.0 (Windows NT 10.0; Win64; x64;"
-                       "PyWebcopyBot/{};)"
-                       "AppleWebKit/604.1.38 (KHTML, like Gecko) "
-                       "Chrome/68.0.3325.162".format(VERSION),
-}
 
 """Default configuration with preconfigured values."""
 default_config = {
-    'debug'                : False,
-    'log_file'             : None,
-    'project_name'         : None,
-    'project_folder'       : None,
-    'over_write'           : False,
-    'bypass_robots'        : False,
-    'zip_project_folder'   : True,
+    'debug': False,
+    'log_file': None,
+    'project_name': None,
+    'project_folder': None,
+    'over_write': False,
+    'bypass_robots': False,
+    'zip_project_folder': True,
     'delete_project_folder': False,
-    'allowed_file_ext'     : safe_file_exts,
-    'http_headers'         : safe_http_headers,
-    'load_css'             : True,
-    'load_javascript'      : True,
-    'load_images'          : True,
-    'download_size'        : 0,
-    'robots_txt'           : None,
+    'allowed_file_ext': safe_file_exts,
+    'http_headers': safe_http_headers,
+    'load_css': True,
+    'load_javascript': True,
+    'load_images': True,
+    'download_size': 0,
+    'join_timeout': None,
+    'robots_txt': None,
 }
 
 
@@ -94,7 +59,7 @@ class ConfigHandler(CaseInsensitiveDict):
     def reset_config(self):
         """ Resets all to configuration to default state. """
         self._store = {}
-        ConfigHandler.__init__(self)
+        CaseInsensitiveDict.__init__(self)
 
     def setup_paths(self, project_folder, project_name):
         """ Easiest way to auto configure config keys for error free usage.
@@ -113,7 +78,7 @@ class ConfigHandler(CaseInsensitiveDict):
             self['project_name'] = project_name
 
         if not self['project_folder']:
-            assert isinstance(project_folder, str)
+            assert isinstance(project_folder, str), "Project folder path not valid!"
             assert project_folder.find(os.path.sep) > -1, \
                 "Project_folder path doesn't seem to be a valid path."
             self['project_folder'] = os.path.realpath(
@@ -138,7 +103,10 @@ class ConfigHandler(CaseInsensitiveDict):
         # LOGGER.addHandler(new_html_logger(filename=os.path.join(
         # self['project_folder'], self['project_name'] + '_log.html')))
 
-    def setup_config(self, project_url, project_folder, project_name, **kwargs):
+    def setup_config(self, project_url=None, project_folder=None, project_name=None,
+                     over_write=False, bypass_robots=False, zip_project_folder=True,
+                     delete_project_folder=False, load_css=True, load_javascript=True,
+                     load_images=True, join_timeout=None, log_file=None, debug=False):
         """Sets up the complete config parts which requires a project_url to be present.
 
         Complete configuration is done here and subject to change according to application structure
@@ -151,8 +119,12 @@ class ConfigHandler(CaseInsensitiveDict):
         #: if external configuration is provided then
         #: the config dict will update its configuration
         #: values for global usages
-        self.update(**kwargs)
-
+        self._store.update(
+            project_url=project_url, project_name=project_name, project_folder=project_folder,
+            over_write=over_write, bypass_robots=bypass_robots, zip_project_folder=zip_project_folder,
+            delete_project_folder=delete_project_folder, load_css=load_css, load_javascript=load_javascript,
+            load_images=load_images, join_timeout=join_timeout, debug=debug, log_file=log_file
+        )
         #: Updates the headers of the requests object, it is set to
         #: reflect this package as a copy bot
         #: by default which lets the server distinguish it from other
@@ -167,7 +139,7 @@ class ConfigHandler(CaseInsensitiveDict):
         #: whether to access a site or not
         #: if you want to skip the checks then override the `bypass_robots` key
         # XXX user_agent = self['http_headers'].get('User-Agent', '*')
-        user_agent = '*'    # for robots txt, a general useragent is better
+        user_agent = '*'  # for robots txt, a general useragent is better
         # prepared_robots_txt = RobotsTxtParser(user_agent, urljoin(project_url, '/robots.txt'))
         SESSION.set_robots_txt(user_agent, urljoin(project_url, '/robots.txt'))
         # self['robots_txt'] = prepared_robots_txt  # global ease access point
@@ -211,6 +183,7 @@ class DefaultConfig(ConfigHandler):
         'load_javascript',
         'load_images',
         'download_size',
+        'join_timeout'
     ]
 
     def __init__(self):
@@ -236,6 +209,7 @@ class AccessAwareSession(requests.Session):
     Session object which consults robots.txt before
     accessing a resource.
     """
+
     def __init__(self):
         super(AccessAwareSession, self).__init__()
         self.stream = True
@@ -250,21 +224,13 @@ class AccessAwareSession(requests.Session):
         self.robots_txt = robots_parser
         self.robots_txt.read()
 
-    def get(self, url, **kwargs):
-        """
-        Checks the access rules before sending the request.
-
-        Returns
-        -------
-        Response or Dummy Response
-        """
-
+    def get(self, url, **param):
         if not self._can_access(url):
             raise AccessError("Access is not allowed by the site of url %s" % url)
+        return super(AccessAwareSession, self).get(url, **param)
 
-        return super(AccessAwareSession, self).get(url, **kwargs)
+    get.__doc__ = requests.Session.get.__doc__
 
-    @lru_cache(maxsize=100)
     def _can_access(self, url):
         """ Determines if the site allows certain url to be accessed.
         """
@@ -273,6 +239,7 @@ class AccessAwareSession(requests.Session):
         # always return true
 
         if not self.robots_txt:
+            warnings.warn("Robots Parser not set up!")
             return True
         if self.robots_txt.can_fetch(url):
             return True

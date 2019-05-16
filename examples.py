@@ -33,8 +33,8 @@ pywebcopy.config['bypass_robots'] = True
 # page_url = 'https://google.com/'
 # page_url = 'https://codeburst.io/building-beautiful-command-line-interfaces-with-python-26c7e1bb54df'
 # page_url = 'https://www.w3schools.com/'
-page_url = 'https://test-domain.com/'
-# page_url = 'http://localhost:5000'
+# page_url = 'https://test-domain.com/'
+page_url = 'http://localhost:5000'
 handle = open(os.path.join(os.getcwd(), 'tests', 'test.html'), 'rb')
 # page_url = 'https://getbootstrap.com/'
 
@@ -42,7 +42,7 @@ download_folder = os.path.join(os.path.dirname(os.getcwd()), 'saved')
 
 start = preferred_clock()
 
-pywebcopy.save_webpage(page_url, download_folder, html=handle)
+pywebcopy.save_webpage(page_url, download_folder, html=handle, bypass_robots=True)
 '''
 If you are getting `pywebcopy.exceptions.AccessError` Exception.
 then check if website allows scraping of its content.

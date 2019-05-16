@@ -17,11 +17,11 @@ DESCRIPTION = 'Python package for cloning complete webpages and websites to loca
 URL = 'https://github.com/rajatomar788/pywebcopy/'
 EMAIL = 'rajatomar788@gmail.com'
 AUTHOR = 'Raja Tomar'
-VERSION = '6.0.0beta0'
+VERSION = '6.0.0rc1'
 
 # What packages are required for this module to be executed?
 REQUIRED = [
-    'requests', 'lxml', 'pyquery', 'parse', 'w3lib', 'bs4', 'six'
+    'requests', 'lxml', 'pyquery', 'parse', 'w3lib', 'bs4'
 ]
 
 
@@ -90,7 +90,7 @@ setup(
     author_email=EMAIL,
     url=URL,
     # If your package is a single module, use py_modules instead of 'packages':
-    packages=['pywebcopy'],
+    packages=['pywebcopy', 'tests'],
 
     install_requires=REQUIRED,
     include_package_data=True,
@@ -98,7 +98,7 @@ setup(
     classifiers=[
         # Trove classifiers
         # Full list: https://pypi.python.org/pypi?%3Aaction=list_classifiers
-        'License :: OSI Approved :: MIT License',
+        'License :: OSI Approved :: Apache 2.0 License',
         'Programming Language :: Python',
         'Programming Language :: Python :: 2.6',
         'Programming Language :: Python :: 2.7',

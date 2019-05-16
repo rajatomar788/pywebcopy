@@ -16,19 +16,16 @@ from datetime import datetime
 from functools import lru_cache
 from threading import enumerate, main_thread
 
-import requests
 from requests import Response
 from requests.exceptions import HTTPError, ConnectionError
-from six import BytesIO
 
 from . import VERSION, SESSION, LOGGER
-from .globals import MARK
-from .exceptions import AccessError
+from .compat import BytesIO
 from .configs import config
-from .structures import RobotsTxtParser
+from .globals import MARK
 
 
-def zip_project():
+def zip_project(timeout=10):
     """Makes zip archive of current project folder and returns the location.
 
     :rtype: str
@@ -41,7 +38,7 @@ def zip_project():
         if not thread or thread is _mainThread:
             continue
         if thread.is_alive():
-            thread.join()
+            thread.join(timeout=timeout)
 
     zipf = os.path.abspath(config['project_folder']) + '.zip'
 
@@ -56,7 +53,7 @@ def zip_project():
                     new_fn = os.path.join(dirn, f)
                     archive.write(new_fn, new_fn[len(config['project_folder']):])
                 except ValueError:
-                    LOGGER.exception("Attempt to use ZIP archive that was already closed", exc_info=True)
+                    LOGGER.error("Attempt to use ZIP archive that was already closed")
                 except RuntimeError:
                     LOGGER.exception("Failed to add file to archive file %s" % f, exc_info=True)
 
@@ -72,12 +69,18 @@ def zip_project():
     return zipf
 
 
-def _dummy_resp():
+def _dummy_resp(reason=None):
     """ Response with dummy data so that a dummy file will always be downloaded """
 
     dummy_resp = Response()
-    dummy_resp.raw = BytesIO(b'This File could not be downloaded because '
-                             b'the server returned an error response!')
+
+    if reason:
+        _text = (b'This File could not be downloaded.\n'
+                 b'Reason: \n\n %r \n\n' % reason.encode())
+    else:
+        _text = b'This File could not be downloaded.\n\n'
+
+    dummy_resp.raw = BytesIO(_text)
     dummy_resp.encoding = 'utf-8'  # plain encoding
     dummy_resp.status_code = 200  # fake the status
     dummy_resp.is_dummy = True  # but leave a mark

@@ -21,7 +21,7 @@ Why it's great? because it -
 - subclassing for advanced usage
 - custom html tags handler support
 - lots of configuration for many custom needs
-- provides several scraping packages in one objects (thanks to their original owners)
+- provides several scraping packages in one objects for scraping under one class
   - beautifulsoup4
   - lxml
   - requests
@@ -34,20 +34,23 @@ Email me at `rajatomar788@gmail.com` of any query :)
 
 `pywebcopy` is available on PyPi and is easily installable using `pip`
 
-```Python
-pip install pywebcopy
+```shell
+
+$ pip install pywebcopy
+
 ```
 
 You are ready to go. Read the tutorials below to get started.
 
-## First steps
+## 1.1.1 First steps
 
 You should always check if the latest pywebcopy is installed successfully.
 
 ```python
 >>> import pywebcopy
 >>> pywebcopy.__version___
-6.x
+6.0.0
+
 ```
 
 Your version may be different, now you can continue the tutorial.
@@ -66,11 +69,13 @@ save_webpage(
     project_folder='path/to/downloads',
     **kwargs
 )
+
 ```
 
 To save full website (This could overload the target server, So, be careful)
 
 ```Python
+
 from pywebcopy import save_website
 
 kwargs = {'project_name': 'some-fancy-name'}
@@ -80,9 +85,10 @@ save_website(
     project_folder='path/to/downloads',
     **kwargs
 )
+
 ```
 
-### 1.2.1 Running Tests
+### 1.3 Running Tests
 Running tests is simple and doesn't require any external library. 
 Just run this command from root directory of pywebcopy package.
 
@@ -91,125 +97,263 @@ Just run this command from root directory of pywebcopy package.
 $ python -m unittest pywebcopy.tests
 ```
 
-### 1.2.2 Webpage() object
+### 2.1 `WebPage` class
 
-```Python
-from pywebcopy import WebPage
+`WebPage` class, the engine of this saving actions.
+You can use this class to access many more methods to
+customise the process with.
 
-url = 'http://example-site.com/index.html' or None
-project_loc = 'path/to/downloads/folder'
+- Creating the instance
 
-wp = WebPage()
+    You can directly import this class from `pywebcopy` package.
+    
+    ```Python
+    from pywebcopy import WebPage    
+    wp = WebPage()
+    ```
 
-# You can choose to load the page explicitly using 
-# `requests` module
-wp.get(url, **requestsKwargs)
+- fetching the html source from internet
+   
+   You can tell it to fetch the source from the
+   internet, it then uses `requests` module to fetch it
+   for you.
+   
+   You can pass in the several `params`
+   which `requests.get()` would accept 
+   e.g. *proxies, auth etc.*
+   
+   ```python
+    from pywebcopy import WebPage    
+    wp = WebPage()
+  
+    # You can choose to load the page explicitly using 
+    # `requests` module with params `requests` would take
+  
+    url = 'http://google.com'
+    params = {
+        'auth': 'username@password',
+        'proxies': 'localhost:5000',
+    }
+    wp.get(url, **params)
+    ```
+    
+- providing your own opened file
+    You can also provide opened source handles
+    directly 
+    
+    ```Python
+    from pywebcopy import WebPage    
+    wp = WebPage()
+    
+    # You can choose to set the source yourself
+    handle = open('file.html', 'rb')
+    wp.set_source(handle)
+    ```
+    
+### 2.1.2  `WebPage` properties and methods
 
-# OR
-# You can choose to set the source yourself
-handle = open('file.html', 'rb')
-wp.set_source(handle)
+Apis which `WebPage` object exposes after creating
+through any method described above
 
-# if you want assets only
-wp.save_assets()
+- `.file_path` property
+    **Read-only** location at which this file will end up 
+    when you try to save the parsed html source
+    
+    To change this location you have to manipulate the
+    `.utx` property of the `WebPage` class. You can
+    look it up below.
 
-# if you want html only
-wp.save_html()
 
-# if you want complete webpage with css, js and images
-wp.save_complete()
-```
+- `.project_path` property
+    **Read-only** location at which all the files will end up 
+    when you try to save the complete webpage.
+    
+    To change this location you have to manipulate the
+    `.utx` property of the `WebPage` class. You can
+    look it up below.
 
-#### BeautifulSoup methods are supported
 
-you can also use any beautiful_soup methods on it
+- `.save_assets` method
+    This methods saves all the `css`, `js`, `images`, `fonts` etc.
+    in the folder you setup through property `.project_path`.
+
+    ```Python
+
+    from pywebcopy import WebPage
+    wp = WebPage()
+    wp.get('http://google.com')
+
+    wp.save_html()
+    #> a .html file would be saved at
+    ```
+
+
+- `.save_html` method
+    After setting up the `WebPage` instance you can
+    use this method to save a local copy of the parsed
+    and modified html at `.file_path` property value.
+
+    ```Python
+
+    from pywebcopy import WebPage
+    wp = WebPage()
+    wp.get('http://google.com')
+
+    wp.save_html()
+    #> a .html file would be saved at location which
+    #> `.file_path` property returns
+    ```
+
+- `.save_complete` method
+    This is the important api which you would be using
+    frequently for saving or cloning a webpage for later
+    reading or whatever the use case would be.
+
+    This methods saves all the `css`, `js`, `images`, `fonts` etc.
+    in the same order as a most browser would do when you will click on
+    the `save page` option in the right click menu.
+
+    if you want complete webpage with css, js and images
+    ```Python
+    from pywebcopy import WebPage
+    wp = WebPage()
+    wp.get('http://google.com')
+
+    wp.save_complete()
+    ```
+
+## 3.1 Scrapings Support
+
+Multiple scraping packages are wrapped up in one object 
+which you can use to unlock the best of all those libraries
+at one go without having to go through the hassle of 
+instanciating each one of those libraries
+
+> To use all the methods and properties documented below
+> just create a object once as described
 
 ```python
->>> links = wp.bs4.find_all('a')
+from pywebcopy import MultiParser
 
-['//docs.python.org/3/tutorial/', '/about/apps/', 'https://github.com/python/pythondotorg/issues', '/accounts/login/', '/download/other/']
+import requests
+
+req = requests.get('http://google.com')
+
+html = req.content
+
+# You can skip the encoding declaration
+# it is start enough to auto-detect :)
+encoding = req.encoding
+
+wp = MultiParser(html, encoding)
+
+# done
 
 ```
 
-### LXML is completely supported
+> All code follows above code
 
-You can use any lxml methods on it. Read more about lxml at `http://lxml.de/`
+-    #### BeautifulSoup methods are supported
+    
+    you can also use any beautiful_soup methods on it
+    
+    ```python
+    >>> links = wp.bs4.find_all('a')
+    
+    ['//docs.python.org/3/tutorial/', '/about/apps/', 'https://github.com/python/pythondotorg/issues', '/accounts/login/', '/download/other/']
+    
+    ```
 
-```python
->>> wp.lxml.xpath('//a', ..)
-[<Element 'a'>,<Element 'a'>]
+-   #### `lxml` is completely supported
+    
+    You can use any lxml methods on it. Read more about lxml at `http://lxml.de/`
+    
+    ```python
+    >>> wp.lxml.xpath('//a', ..)
+    [<Element 'a'>,<Element 'a'>]
+    
+    ```
 
-```
+- #### `pyquery` is Fully supported
+    
+    You can use PyQuery methods on it .Read more about pyquery at `https://pythonhosted.org/pyquery/`
+    
+    ```python
+    >>> wp.pq.select(selector, ..)
+    ...
+    ```
 
-### PyQuery is Fully supported
+-   #### `lxml.xpath` is also supported
+    
+    xpath is also natively supported which retures a :class: `requests_html.Element`
+    See more at `https://html.python-requests.org`
+    
+    ```python
+    
+    >>> wp.xpath('a')
+    ['<Element 'a' class='btn' href='https://help.github.com/articles/supported-browsers'>']
+    ```
+    
+-   #### select only elements containing certain text
+    
+    Provided through the `requests_html` module.
+    
+    ```python
+    >>> wp.find('a', containing='kenneth')
+    >>> [<Element 'a' href='http://kennethreitz.com/pages'>, ...]
+    ```
 
-You can use PyQuery methods on it .Read more about pyquery at `https://pythonhosted.org/pyquery/`
+## `Crawler` class in `pywebcopy`
+Class on which website cloning depends upon.
 
-```python
->>> wp.pq.select(selector, ..)
-...
-```
 
-### XPath is also supported
-
-xpath is also natively supported which retures a :class: `requests_html.Element` See more at `https://html.python-requests.org`
-
-```python
-
->>> wp.xpath('a')
-[<Element 'a' class='btn' href='https://help.github.com/articles/supported-browsers'>]
-```
-
-### You can also select only elements containing certain text
-
-```python
->>> wp.find('a', containing='kenneth')
-[<Element 'a' href='http://kennethreitz.com/pages/open-projects.html'>, <Element 'a'
-```
-
-## Tutorials: sample use-cases with pywebcopy
 
 ## Common Settings and Errors
 
-### `pywebcopy.exceptions.AccessError`
+You can easily make a beginners mistake or could get confuse,
+thus here are the common errors and how to correct them if you
+are facing them. 
 
-If you are getting `pywebcopy.exceptions.AccessError` Exception.
-then check if website allows scraping of its content.
+1. `pywebcopy.exceptions.AccessError`
 
-```python
->>> import pywebcopy
->>> pywebcopy.config['bypass_robots'] = True
+    If you are getting `pywebcopy.exceptions.AccessError` Exception.
+    then check if website allows scraping of its content.
+    
+    ```python
+    >>> import pywebcopy
+    >>> pywebcopy.config['bypass_robots'] = True
+    
+    # rest of your code follows..
+    
+    ```
 
-# rest of your code follows..
+2. Overwrite existing files when copying
+    
+    If you want to overwrite existing files in the directory then
+    use the over_write config key.
+    
+    ```python
+    
+    import pywebcopy
+    pywebcopy.config['over_write'] = True
+    
+    # rest of your code follows..
+    
+    ```
 
-```
-
-### Overwrite existing files when copying
-
-If you want to overwrite existing files in the directory then
-use the over_write config key.
-
-```python
->>> import pywebcopy
->>> pywebcopy.config['over_write'] = True
-
-# rest of your code follows..
-
-```
-
-### Changing your project name
-
-By default the pywebcopy creates a directory inside project_folder
-with the url you have provided but you can change this using the code 
-below
-
-```python
->>> import pywebcopy
->>> pywebcopy.config['project_name'] = 'my_project'
-
-# rest of your code follows..
-
-```
+3. Changing your project name
+    
+    By default the pywebcopy creates a directory inside project_folder
+    with the url you have provided but you can change this using the code 
+    below
+    
+    ```python
+    >>> import pywebcopy
+    >>> pywebcopy.config['project_name'] = 'my_project'
+    
+    # rest of your code follows..
+    
+    ```
 
 ## How to - Save Single Webpage
 
@@ -233,7 +377,7 @@ arguments also.
 This use case is slightly more powerful as it can provide every functionallity of the WebPage class.
 
 ```python
->>> from pywebcopy import Webpage, config
+>>> from pywebcopy import WebPage, config
 >>> url = 'http://some-url.com/some-page.html'
 
 # You should always start with setting up the config or use apis
@@ -261,15 +405,13 @@ This use case is slightly more powerful as it can provide every functionallity o
 
 ### Method 2 using Plain HTML
 
-> :New in version 4.x:
-
 I told you earlier that Webpage object is powerful and can be manipulated in any ways.
 
 One feature is that the raw html is now also accepted.
 
 ```python
 
->>> from pywebcopy import Webpage, config
+>>> from pywebcopy import WebPage, config
 
 >>> HTML = open('test.html').read()
 
@@ -315,149 +457,136 @@ By creating a Crawler() object which provides several other functions as well.
 
 ```
 
-## Contribution
+## 1.3 Configuration
+
+`pywebcopy` is highly configurable. You can setup the global object
+using the methods exposed by the `pywebcopy.config` object.
+
+Ways to change the global configurations are below -
+
+- Using the method `.setup_config`  on global `pywebcopy.config` object
+
+    You can manually configure every configuration by using a 
+    `.setup_config` call.
+
+    ```Python
+
+    >>> import pywebcopy
+
+    >>> url = 'http://example-site.com/index.html'
+    >>> download_loc = 'path/to/downloads/'
+    >>> project = 'my_project'
+
+    >>> pywebcopy.config.setup_config(url, download_loc, project, **kwargs)
+    # done!
+
+    # Now check
+    >>> pywebcopy.config.get('project_url')
+    'http://example-site.com/index.html'
+
+    >>> pywebcopy.config.get('project_folder')
+    'path/to/downloads'
+
+    >>> pywebcopy.config.get('project_name')
+    'example-site.com'
+
+    ## You can also change any config even after
+    ## the `setup_config` call
+
+    pywebcopy.config['url'] = 'http://url-changed.com'
+    # rest of config remains unchanged
+
+
+    Done!
+
+- Passing in the config vars directly to the 
+
+    global apis e.g. `.save_webpage`
+
+    To change any configuration, just pass it to the `api` call.
+
+    Example:
+
+    ```Python
+    from pywebcopy import save_webpage
+
+    kwargs = {
+        'project_url': 'http://google.com',
+        'project_folder': '/home/pages/',
+        'project_name': 
+        ...
+    }
+
+    save_webpage(**kwargs)
+
+    ```
+
+    #### List of available `configurations`
+
+    below is the list of `config` keys with their `default` values :
+
+    ```Python
+
+    # writes the trace output and log file content to console directly
+    'DEBUG': False  
+
+    # make zip archive of the downloaded content
+    'zip_project_folder': True
+
+    # delete the project folder after making zip archive of it
+    'delete_project_folder': False
+
+    # to download css file or not
+    'LOAD_CSS': True
+
+    # to download images or not
+    'LOAD_IMAGES': True
+
+    # to download js file or not
+    'LOAD_JAVASCRIPT': True
+
+
+    # to overwrite the existing files if found
+    'OVER_WRITE': False
+
+    # list of allowed file extensions
+    # shortend for readability
+    'ALLOWED_FILE_EXT': ['.html', '.css', ...]
+
+    # log file path
+    'LOG_FILE': None
+
+    # name of the mirror project
+    'PROJECT_NAME': website-name.com
+
+    # define the base directory to store all copied sites data
+    'PROJECT_FOLDER': None
+
+
+    # DANGER ZONE
+    # CHANGE THESE ON YOUR RESPONSIBILITY
+    # NOTE: Do not change unless you know what you're doing
+
+    # requests headers to be shown on requests made to server
+    'http_headers': {...}
+
+    # bypass the robots.txt restrictions
+    'BYPASS_ROBOTS' : False
+
+    ```
+
+## 4.1 Contribution
 
 You can contribute in many ways
 
-- reporting bugs on github repo: <https://github.com/rajatomar788/pywebcopy/> or my email.
+- give it a star on github repo
+- reporting bugs on github repo: <https://github.com/rajatomar788/pywebcopy/> or at my email.
 - creating pull requests on github repo: <https://github.com/rajatomar788/pywebcopy/>
 - sending a thanks mail
 
 If you have any suggestions or fixes or reports feel free to mail me :)
 
-## 1.3 Configuration
-
-`pywebcopy` is highly configurable.
-
-### 1.3.1 APIS
-
-To change any configuration, just pass it to the `api` call.
-
-Example:
-
-```Python
-from pywebcopy import save_webpage
-
-kwargs = {
-    'key1': 'value1',
-    ...
-}
-
-save_webpage(
-
-    url='http://some-site.com/', # required
-    download_loc='path/to/downloads/', # required
-
-    kwargs=kwargs
-
-    ...
-
-    # add many as you want :)
-)
-
-```
-
-### 1.3.2 `config.setup_config` Method
-
-
-You can manually configure every configuration by using a 
-`config.setup_config` call.
-
-```Python
-
-from pywebcopy import config
-
-url = 'http://example-site.com/index.html'
-download_loc = 'path/to/downloads/'
-
-pywebcopy.config.setup_config(url, download_loc)
-
-# done!
-
->>> pywebcopy.config['url']
-'http://example-site.com/index.html'
-
->>> pywebcopy.config['mirrors_dir']
-'path/to/downloads'
-
->>> pywebcopy.config['project_name']
-'example-site.com'
-
-
-## You can also change any of these by just adding param to
-## `setup_config` call
-
->>> pywebcopy.config.setup_config(url, 
-        download_loc,project_name='Your-Project', ...)
-
-## You can also change any config even after
-## the `setup_config` call
-
-pywebcopy.config.config['url'] = 'http://url-changed.com'
-# rest of config remains unchanged
-
-```
-
-Done!
-
-### 1.3.3 List of available `configurations`
-
-below is the list of `config` keys with their `default` values :
-
-```Python
-# writes the trace output and log file content to console directly
-'DEBUG': False  
-
-# make zip archive of the downloaded content
-'zip_project_folder': True
-
-# delete the project folder after making zip archive of it
-'delete_project_folder': False
-
-# to download css file or not
-'LOAD_CSS': True
-
-# to download images or not
-'LOAD_IMAGES': True
-
-# to download js file or not
-'LOAD_JAVASCRIPT': True
-
-
-# to overwrite the existing files if found
-'OVER_WRITE': False
-
-# list of allowed file extensions
-'ALLOWED_FILE_EXT': ['.html', '.css', ...]
-
-# log file path
-'LOG_FILE': None
-
-# name of the mirror project
-'PROJECT_NAME': website-name.com
-
-# define the base directory to store all copied sites data
-'PROJECT_FOLDER': None
-
-
-# DANGER ZONE
-# CHANGE THESE ON YOUR RESPONSIBILITY
-# NOTE: Do not change unless you know what you're doing
-
-# requests headers to be shown on requests made to server
-'http_headers': {
-    "Accept-Language": "en-US,en;q=0.9",
-    'User-Agent': "Mozilla/5.0 (Windows NT 10.0; Win64; x64; PyWebcopyBot/{};) AppleWebKit/604.1.38 (KHTML, like Gecko) Chrome/68.0.3325.162".format(VERSION)
-}
-
-# bypass the robots.txt restrictions
-'BYPASS_ROBOTS' : False
-
-```
-
-told you there were plenty of `config` vars available!
-
-## 1.5 Undocumented Features
+## 5.1 Undocumented Features
 
 I built many utils and classes in this project to ease
 the tasks I was trying to do.
@@ -466,9 +595,17 @@ But,
 these task are also suitable for general purpose use.
 
 So,
-if you want, you can help in generating suitable `documentation` for these undocumented ones, then you can always email me.
+if you want, you can help in generating suitable `documentation` for these undocumented ones,
+then you can always create and pull request or email me.
 
-## 1.6 Changelog
+## 6.1 Changelog
+
+### [version 6.0.0]
+
+- `WebPage` class now doesn't take any argument **(breaking change)**
+- `WebPage` class has new methods `WebPage.get` and `WebPage.set_source`
+- Queuing of downloads is replaced with a barrier to manage active threads
+
 
 ### [version 5.x]
 
