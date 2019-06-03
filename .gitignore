@@ -6,3 +6,4 @@ site/*
 pywebcopy.egg-info/*
 *.pyc
 *.pyc
+obsolute/*

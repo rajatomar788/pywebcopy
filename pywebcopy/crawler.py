@@ -122,15 +122,14 @@ class Crawler(WebPage):
     :type url: str
     :param url: url of the website to clone
     """
-
     def __init__(self, **kwargs):
+        super(Crawler, self).__init__(**kwargs)
+
         if 'scan_level' in kwargs:
             warnings.warn(
                 "The scan_level setting has been deprecated and"
                 "is now not supported. Thus leave it as is."
             )
-
-        super(Crawler, self).__init__(**kwargs)
 
         wrapper = SubPage
         setattr(wrapper, 'eMap', self._element_map)
