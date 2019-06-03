@@ -35,7 +35,7 @@ import os
 import threading
 from operator import attrgetter
 
-from .configs import SESSION
+from .configs import SESSION, config
 from .elements import _ElementFactory, LinkTag, ScriptTag, ImgTag, AnchorTag, TagBase
 from .exceptions import ParseError
 from .parsers import Parser
@@ -78,14 +78,14 @@ class WebPage(Parser, _ElementFactory):
     def __init__(self, **kwargs):
         super(WebPage, self).__init__()
 
-        # if not config.is_set():
-        #     import warnings
-        #     warnings.warn(
-        #         UserWarning(
-        #             "Global Configuration is not setup. You can ignore this if you are going manual."
-        #             "This is just one time warning regarding some unexpected behavior."
-        #         )
-        #     )
+        if not config.is_set():
+            import warnings
+            warnings.warn(
+                UserWarning(
+                    "Global Configuration is not setup. You can ignore this if you are going manual."
+                    "This is just one time warning regarding some unexpected behavior."
+                )
+            )
 
         # Some scripts might have apis specific to previous version
         # which this doesn't support now and would definitely remove
@@ -98,8 +98,8 @@ class WebPage(Parser, _ElementFactory):
                 "Arguments will be completely removed in later versions."
             )
 
-        self.url = None
-        self.path = None
+        self.url = config.get('project_url', None)
+        self.path = config.get('project_folder', None)
         self._url_obj = None
         self._element_map = {
             'link': LinkTag,

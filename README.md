@@ -353,9 +353,28 @@ wp = MultiParser(html, encoding)
     >>> [<Element 'a' href='http://kennethreitz.com/pages'>, ...]
     ```
 
-## `Crawler` class in `pywebcopy`
-Class on which website cloning depends upon.
+## `Crawler` object
+This is a subclass of `WebPage` class and can be used to mirror any website.
 
+```python
+>>> from pywebcopy import Crawler, config
+>>> url = 'http://some-url.com/some-page.html'
+>>> project_folder = '/home/desktop/'
+>>> project_name = 'my_project'
+>>> kwargs = {'bypass_robots': True}
+# You should always start with setting up the config or use apis
+>>> config.setup_config(url, project_folder, project_name, **kwargs)
+
+# Create a instance of the webpage object
+>>> wp = Crawler()
+
+# If you want to you can use `requests` to fetch the pages
+>>> wp.get(url, **{'auth': ('username', 'password')})
+
+# Then you can access several methods like
+>>> wp.crawl()
+
+```
 
 
 ## Common Settings and Errors
@@ -434,7 +453,7 @@ This use case is slightly more powerful as it can provide every functionallity o
 >>> config.setup_config(url, project_folder, project_name, **kwargs)
 
 # Create a instance of the webpage object
->>> wp = Webpage()
+>>> wp = WebPage()
 
 # If you want to use `requests` to fetch the page then
 >>> wp.get(url)
@@ -500,9 +519,10 @@ By creating a Crawler() object which provides several other functions as well.
 ```python
 >>> from pywebcopy import Crawler, config
 
->>> config.setup_config(project_url='http://localhost:5000/', project_folder='e://tests/', project_name='LocalHost')
+>>> config.setup_config(project_url='http://localhost:5000/', 
+project_folder='e://tests/', project_name='LocalHost')
 
->>> crawler = Crawler('http://localhost:5000/')
+>>> crawler = Crawler()
 >>> crawler.crawl()
 
 ```
