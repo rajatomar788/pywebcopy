@@ -1,21 +1,15 @@
 # -*- coding: utf-8 -*-
-
 """
-pywebcopy_tests
-~~~~~~~~~~~~~~~
+
+pywebcopy
+~~~~~~~~~
 
 Tests for pywebcopy components.
 """
 
-from tests.structures_test import *
-from tests.config_test import *
-from tests.parsers_test import *
-
-
-def main():
-    import unittest
-    unittest.main()
-
+from .test_basic import *
+from .test_advanced import *
 
 if __name__ == '__main__':
-    main()
+    import unittest
+    unittest.main()

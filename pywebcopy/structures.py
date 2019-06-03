@@ -39,6 +39,9 @@ class CaseInsensitiveDict(MutableMapping):
     def __setitem__(self, key, value):
         self._store[key.lower()] = value
 
+    def set(self, k, v):
+        self.__setitem__(k, v)
+
     def __getitem__(self, key):
         return self._store[key.lower()]
 
@@ -80,15 +83,11 @@ class RobotsTxtParser(RobotFileParser):
         >>> True
 
     """
+    user_agent = '*'
+    _get = None
 
-    def __init__(self, user_agent, url):
-        self.url = url
-        self.user_agent = user_agent
-        RobotFileParser.__init__(self, self.url)
-
-    @staticmethod
-    def _get(url):
-        return requests.get(url)
+    def set_ua(self, ua):
+        self.user_agent = ua
 
     def read(self):
         """Modify the read method to use the inbuilt http session instead
@@ -111,5 +110,5 @@ class RobotsTxtParser(RobotFileParser):
         else:
             self.parse(f.text.splitlines())
 
-    def can_fetch(self, url, useragent=None):
-        RobotFileParser.can_fetch(self, useragent=useragent or self.user_agent, url=url)
+    def can_fetch(self, url, user_agent=None):
+        return super(RobotsTxtParser, self).can_fetch(user_agent or self.user_agent, url)

@@ -1,12 +1,16 @@
 # -*- coding: utf-8 -*-
-
+import os
 import re
 import textwrap
+import threading
 
 from . import __version__
 
-
-VERSION = "v%d.%d.%d %s %d" % __version__
+# This makes sure the number of thread working remains
+# under control so that the resource overloading could
+# be prevented and the program remains memory efficient
+#: new in version: 6.0.0
+POOL_LIMIT = threading.Semaphore((os.cpu_count() or 1) * 4)
 
 MARK = textwrap.dedent("""
         {0}
@@ -16,7 +20,6 @@ MARK = textwrap.dedent("""
         * At UTC time: {3}
         {4}
         """)
-
 
 CSS_URLS_RE = re.compile(b'''url\\(['"]?([^)]*)["']?\\)''', re.I)
 """Matches any url() declaration in a css file."""
@@ -30,7 +33,6 @@ CSS_FILES_RE = re.compile(b'''(?:url\\(['"]?([^)]*)["']?\\))|(?:@import\\s*['"](
 DATA_URL_RE = re.compile(r'^data:image/.+;base64', re.I)
 """Matches any base64 encoded image data url."""
 
-"""Attributes which only contains single link."""
 SINGLE_LINK_ATTRIBS = frozenset([
     'action', 'archive', 'background', 'cite', 'classid',
     'codebase', 'data', 'href', 'longdesc', 'profile', 'src',
@@ -39,12 +41,13 @@ SINGLE_LINK_ATTRIBS = frozenset([
     'dynsrc', 'lowsrc',
     # Extras
     'data-src',
-    ])
+])
+"""Attributes which only contains single link."""
 
 LIST_LINK_ATTRIBS = frozenset([
-    'srcset', 'data-srcset'
+    'srcset', 'data-srcset', 'src-set'
 ])
-
+"""Attributes which contains multiple links."""
 
 safe_file_exts = [
     '.html',
@@ -74,8 +77,8 @@ safe_file_exts = [
 
 safe_http_headers = {
     "Accept-Language": "en-US,en;q=0.9",
-    'User-Agent': "Mozilla/5.0 (Windows NT 10.0; Win64; x64;"
-                  "PyWebcopyBot/{};)"
-                  "AppleWebKit/604.1.38 (KHTML, like Gecko) "
-                  "Chrome/68.0.3325.162".format(VERSION),
+    'User-Agent':
+        "Mozilla/5.0 (Windows NT 10.0; Win64; x64;PyWebCopyBot/{};)"
+        "AppleWebKit/604.1.38 (KHTML, like Gecko) "
+        "Chrome/72.0.3325.162".format(__version__),
 }

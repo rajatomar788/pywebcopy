@@ -22,11 +22,11 @@ Why it's great? because it -
 - custom html tags handler support
 - lots of configuration for many custom needs
 - provides several scraping packages in one objects for scraping under one class
-  - beautifulsoup4
   - lxml
   - requests
-  - requests_html
+  - beautifulsoup4
   - pyquery
+  - requests_html
 
 Email me at `rajatomar788@gmail.com` of any query :)
 
@@ -94,8 +94,58 @@ Just run this command from root directory of pywebcopy package.
 
 
 ```shell
-$ python -m unittest pywebcopy.tests
+$ python -m pywebcopy run-tests
 ```
+
+### 1.4 Command Line Interface
+`pywebcopy` have a very easy to use command-line interface which
+can help you do task without having to worrying about the inner
+long way.
+- #### Getting list of commands
+    ```shell
+    $ python -m pywebcopy -- --help
+    ```
+- #### Using apis
+    ```shell
+    $ python -m pywebcopy save_webpage http://google.com E://store// --bypass_robots=True
+    or
+    $ python -m pywebcopy save_website http://google.com E://store// --bypass_robots
+    ``` 
+- #### Running tests
+    ```shell
+    $ python -m pywebcopy run_tests
+    ```
+
+
+### 1.5 Authentication and Cookies
+Most of the time authentication is needed to access a certain page.
+Its real easy to authenticate with `pywebcopy` because it usage an 
+`requests.Session` object for base http activity which can be accessed 
+through `pywebcopy.SESSION` attribute. And as you know there
+are ton of tutorials on setting up authentication with `requests.Session`.
+
+Here is a basic example of simple http auth -
+```python
+import pywebcopy
+
+# Update the headers with suitable data
+
+pywebcopy.SESSION.headers.update({
+    'auth': {'username': 'password'},
+    'form': {'key1': 'value1'},
+})
+
+# Rest of the code is as usual
+kwargs = {
+    'url': 'http://localhost:5000',
+    'project_folder': 'e://saved_pages//',
+    'project_name': 'my_site'
+}
+pywebcopy.config.setup_config(**kwargs)
+pywebcopy.save_webpage(**kwargs)
+
+```
+
 
 ### 2.1 `WebPage` class
 
@@ -227,7 +277,7 @@ through any method described above
 Multiple scraping packages are wrapped up in one object 
 which you can use to unlock the best of all those libraries
 at one go without having to go through the hassle of 
-instanciating each one of those libraries
+instantiating each one of those libraries
 
 > To use all the methods and properties documented below
 > just create a object once as described
@@ -602,8 +652,10 @@ then you can always create and pull request or email me.
 ## 6.1 Changelog
 
 ### [version 6.0.0]
-
-- `WebPage` class now doesn't take any argument **(breaking change)**
+- **Breaking Change** New command-line interface using `Python Fire` library.
+- Implemented type checks and path normalising in the `config.setup_paths`.
+- added new dynamic `pywebcopy.__all__` attr generation.
+- `WebPage` class now doesnt take any argument **(breaking change)**
 - `WebPage` class has new methods `WebPage.get` and `WebPage.set_source`
 - Queuing of downloads is replaced with a barrier to manage active threads
 
@@ -615,7 +667,7 @@ then you can always create and pull request or email me.
 
 ### [version 4.x]
 
-- *A complete rewrite and restructing of core functionality.*
+- *A complete rewrite and restructuring of core functionality.*
 
 ### [version 2.0.0]
 
