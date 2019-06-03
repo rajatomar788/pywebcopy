@@ -11,17 +11,20 @@ from shutil import rmtree
 
 from setuptools import setup, Command
 
+import pywebcopy
+
 # Package meta-data.
 NAME = 'pywebcopy'
 DESCRIPTION = 'Python package for cloning complete webpages and websites to local storage.'
 URL = 'https://github.com/rajatomar788/pywebcopy/'
+LICENSE = 'Apache License 2.0'
 EMAIL = 'rajatomar788@gmail.com'
 AUTHOR = 'Raja Tomar'
-VERSION = '6.0.0rc1'
+VERSION = pywebcopy.__version__
 
 # What packages are required for this module to be executed?
 REQUIRED = [
-    'requests', 'lxml', 'pyquery', 'parse', 'w3lib', 'bs4'
+    'requests', 'lxml', 'pyquery', 'parse', 'w3lib', 'bs4', 'fire'
 ]
 
 
@@ -94,7 +97,7 @@ setup(
 
     install_requires=REQUIRED,
     include_package_data=True,
-    license='Apache License 2.0',
+    license=LICENSE,
     classifiers=[
         # Trove classifiers
         # Full list: https://pypi.python.org/pypi?%3Aaction=list_classifiers

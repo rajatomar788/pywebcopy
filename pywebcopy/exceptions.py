@@ -10,9 +10,8 @@ Exceptions which can occur in pywebcopy.
 
 class PywebcopyError(IOError):
     """Pywebcopy has come across an error which could be safe or critical."""
-    def __init__(self, *args, **kwargs):
-        self.reason = self.__doc__
-        IOError.__init__(self, *args, **kwargs)
+    def __init__(self, *args):
+        IOError.__init__(self, *args)
 
 
 class InvalidUrlError(PywebcopyError, ValueError):

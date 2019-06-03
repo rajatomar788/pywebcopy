@@ -7,22 +7,20 @@ pywebcopy.config
 Modifies the behaviour of pywebcopy.
 
 """
-
 import logging
 import os
-import warnings
+from io import BytesIO
 
 import requests
 
-from . import LOGGER
 from .compat import urlparse, urljoin
 from .exceptions import AccessError
 from .globals import safe_file_exts, safe_http_headers
-from .logger import new_file_logger, new_console_logger
 from .structures import CaseInsensitiveDict, RobotsTxtParser
 
 __all__ = ['default_config', 'config', 'SESSION', 'AccessAwareSession']
 
+LOGGER = logging.getLogger('config')
 
 """Default configuration with preconfigured values."""
 default_config = {
@@ -61,47 +59,91 @@ class ConfigHandler(CaseInsensitiveDict):
         self._store = {}
         CaseInsensitiveDict.__init__(self)
 
-    def setup_paths(self, project_folder, project_name):
-        """ Easiest way to auto configure config keys for error free usage.
-        Just provide the params and every other config key is automatically
-        configured.
+    def is_set(self):
+        """Tells whether the configuration has been setup or not."""
 
-        Project name and project folder will be set as provided and
-        rest of the configuration will also be updated if given.
+        try:
+            assert self.get('project_folder') is not None
+            assert self.get('project_name') is not None
+            assert self.get('log_file') is not None
+        except AssertionError:
+            return False
+        else:
+            return True
+
+    def reset_key(self, key):
+        """Resets a specific key to its default state.
+
+        .. new in version :: 6.0.0
+
+        """
+        self[key] = default_config.get(key)
+
+    def setup_paths(self, project_folder, project_name):
+        """Fills the project_name, project_name and its
+        dependent keys after evaluation.
+
+        .. version changed :: 6.0.0
+            Added string type checks and os based path normalising.
 
         :param project_name: new name of the project
         :param project_folder: folder where to store all the downloaded files
         """
 
-        if not self['project_name']:
-            assert isinstance(project_name, str)
-            self['project_name'] = project_name
+        if not isinstance(project_name, str):
+            raise TypeError("project_name value must be a string")
 
-        if not self['project_folder']:
-            assert isinstance(project_folder, str), "Project folder path not valid!"
-            assert project_folder.find(os.path.sep) > -1, \
-                "Project_folder path doesn't seem to be a valid path."
-            self['project_folder'] = os.path.realpath(
-                os.path.join(project_folder, self['project_name'])
-            )
+        if not isinstance(project_folder, str):
+            raise TypeError("project_folder value must be a string!")
 
-        if not os.path.exists(self['project_folder']):
-            os.makedirs(self['project_folder'])
+        if os.altsep:
+            project_folder = project_folder.replace(os.altsep, os.sep)
+
+        if not project_folder.find(os.sep) > -1:
+            TypeError("Project_folder path doesn't seem to be a valid path.")
+
+        norm_p = os.path.join(
+            os.path.normpath(project_folder),
+            os.path.normpath(project_name)
+        )
+
+        self.__setitem__('project_name', project_name)
+        self.__setitem__('project_folder', norm_p)
+        # print(norm_p)
+
+        if not os.path.exists(norm_p):
+            os.makedirs(norm_p)
 
         # change the working directory so that no file is misplaced
-        os.chdir(self['project_folder'])
+        os.chdir(norm_p)
 
-        if not self['log_file']:
-            self['log_file'] = os.path.join(self['project_folder'],
-                                            self['project_name'] + '_log.log')
+        lf = os.path.join(norm_p, 'pywebcopy_log.log')
 
-        level = (logging.DEBUG if self.get('debug', None) else logging.WARNING)
-        LOGGER.addHandler(new_console_logger(level=level))
-        LOGGER.addHandler(new_file_logger(self['log_file'], 'w'))
+        if os.path.exists(lf):
+            try:
+                os.unlink(lf)
+            except OSError:
+                # Just gonna leave it for default logger to figure out
+                pass
 
-        # XXX: Do we need a html logger?
-        # LOGGER.addHandler(new_html_logger(filename=os.path.join(
-        # self['project_folder'], self['project_name'] + '_log.html')))
+        self.__setitem__('log_file', lf)
+
+        # Console loggers (StreamHandlers) levels would be tuned
+        if self.get('debug') is True:
+            for handler in logging.root.handlers:
+                if isinstance(handler, logging.StreamHandler):
+                    handler.setLevel(logging.DEBUG)
+
+        # Add a new file logger to the root logger
+        f_stream = logging.FileHandler(lf, 'w')
+        f_stream.setLevel(logging.DEBUG)
+        f_stream.setFormatter(
+            logging.Formatter(
+                "%(asctime)s - %(levelname)s - %(name)s.%(funcName)s:%(lineno)d - %(message)s",
+                "%d-%b-%Y %H:%M:%S"
+            )
+        )
+        logging.root.addHandler(f_stream)
 
     def setup_config(self, project_url=None, project_folder=None, project_name=None,
                      over_write=False, bypass_robots=False, zip_project_folder=True,
@@ -119,117 +161,113 @@ class ConfigHandler(CaseInsensitiveDict):
         #: if external configuration is provided then
         #: the config dict will update its configuration
         #: values for global usages
-        self._store.update(
-            project_url=project_url, project_name=project_name, project_folder=project_folder,
+        self.update(
+            project_url=project_url,
             over_write=over_write, bypass_robots=bypass_robots, zip_project_folder=zip_project_folder,
             delete_project_folder=delete_project_folder, load_css=load_css, load_javascript=load_javascript,
             load_images=load_images, join_timeout=join_timeout, debug=debug, log_file=log_file
         )
+
+        #: Default base paths configuration is done right away so
+        #: it at least sets base files and folder for downloading files
+        if not project_name:
+            project_name = urlparse(project_url).hostname
+
+        self.setup_paths(project_folder, project_name)
+
+        #: Log this new configuration to the log file for debug purposes
+        LOGGER.debug(str(dict(self)))
+
         #: Updates the headers of the requests object, it is set to
         #: reflect this package as a copy bot
         #: by default which lets the server distinguish it from other
         #: requests and can help the maintainer to optimize the access
-        SESSION.headers.update(self['http_headers'])
-
-        #: Default base paths configuration is done right away so
-        #: it at least sets base files and folder for downloading files
-        self.setup_paths(project_folder, project_name or urlparse(project_url).hostname)
-
+        SESSION.headers.update(self.get('http_headers'))
+        SESSION.set_bypass(self.get('bypass_robots'))
         #: Update the website access rules object which decide
         #: whether to access a site or not
         #: if you want to skip the checks then override the `bypass_robots` key
         # XXX user_agent = self['http_headers'].get('User-Agent', '*')
-        user_agent = '*'  # for robots txt, a general useragent is better
         # prepared_robots_txt = RobotsTxtParser(user_agent, urljoin(project_url, '/robots.txt'))
-        SESSION.set_robots_txt(user_agent, urljoin(project_url, '/robots.txt'))
-        # self['robots_txt'] = prepared_robots_txt  # global ease access point
+        getattr(SESSION, '_setup_parser')(urljoin(project_url, '/robots.txt'))
 
-        #: Log this new configuration to the log file for debug purposes
-        LOGGER.debug(str(dict(self)))
         return self
 
-    def is_set(self):
-        """Tells whether the configuration has been setup or not."""
 
-        try:
-            assert self.get('project_folder') is not None
-            assert self.get('project_name') is not None
-            assert self.get('log_file') is not None
-        except AssertionError:
-            return False
-        else:
-            return True
-
-
-class DefaultConfig(ConfigHandler):
-    """Config class with default configuration pre-populated.
-
-    Use instance of this class if you want to customise the
-    configuration.
-    """
-
-    __attrs__ = [
-        'debug',
-        'log_file',
-        'project_name',
-        'project_folder',
-        'over_write',
-        'bypass_robots',
-        'zip_project_folder',
-        'delete_project_folder',
-        'allowed_file_ext',
-        'http_headers',
-        'load_css',
-        'load_javascript',
-        'load_images',
-        'download_size',
-        'join_timeout'
-    ]
-
-    def __init__(self):
-        super(DefaultConfig, self).__init__()
-
-        #: Store default values of the keys for
-        #: easing purposes
-        for k, v in default_config.items():
-            self.setdefault(k, v)
-
-    def reset_config(self):
-        super(DefaultConfig, self).reset_config()
-        for k, v in default_config.items():
-            self.setdefault(k, v)
-
-
-config = DefaultConfig()
+config = ConfigHandler(**default_config)
 """Global configuration instance."""
 
 
-class AccessAwareSession(requests.Session):
+class AccessAwareSession(RobotsTxtParser, requests.Session):
     """
     Session object which consults robots.txt before
     accessing a resource.
     """
 
     def __init__(self):
-        super(AccessAwareSession, self).__init__()
+        RobotsTxtParser.__init__(self)
+        requests.Session.__init__(self)
         self.stream = True
-        self.robots_txt = None
 
-    def set_robots_txt(self, user_agent, robot_txt_url):
+        self._bypass = False
+        self._parser = None
+        self._parser_ready = False
+        self._parser_broken = False
+        self._bytes = 0  # total data transfer
+        self.hooks['response'] = self.log_response
 
-        assert user_agent and robot_txt_url, "Please pass in valid arguments!"
-        robots_parser = RobotsTxtParser(user_agent, robot_txt_url)
-        #: We need the super method otherwise it will get stuck in a infinite loop
-        setattr(robots_parser, '_get', super(AccessAwareSession, self).get)
-        self.robots_txt = robots_parser
-        self.robots_txt.read()
+    def get(self, url, **kwargs):
+        self._access_check(url)
+        return self._get(url, **kwargs)
 
-    def get(self, url, **param):
+    def get_or_dummy(self, url, **kwargs):
+        self._access_check(url)
+        try:
+            resp = super(AccessAwareSession, self).get(url, **kwargs)
+        except requests.exceptions.RequestException as err:
+            LOGGER.error("Failed to access url at address [%s] exception \n %s" % (url, err))
+            resp = self._dummy_resp(err)
+        return resp
+
+    def _setup_parser(self, robots_txt_url):
+        assert isinstance(robots_txt_url, str), "Please pass in valid arguments!"
+
+        self.set_url(robots_txt_url)
+        self.read()
+        self._parser_ready = True
+
+    def set_bypass(self, bypass):
+        self._bypass = bool(bypass)
+
+    def log_response(self, resp, **_kwargs):
+        LOGGER.info('Got response %r from %s', resp, resp.url)
+        self._bytes += int(resp.headers.get('Content-length', 0))
+
+    @staticmethod
+    def _dummy_resp(err):
+        """
+        Return dummy data so that a dummy file will always be downloaded
+        """
+        resp = requests.Response()
+        resp.raw = BytesIO(
+            ('[This File could not be downloaded.]\n'
+             '[Reason: ] \n\n %r \n\n' % str(err)).encode()
+        )
+        resp.encoding = 'utf-8'  # plain encoding
+        resp.status_code = 200  # fake the status
+        resp.is_dummy = True  # but leave a mark
+        resp.reason = str(err)  # fail reason
+        return resp
+
+    def _get(self, url, **kwargs):
+        """
+        Raw get method.
+        """
+        return self.request('GET', url, **kwargs)
+
+    def _access_check(self, url):
         if not self._can_access(url):
             raise AccessError("Access is not allowed by the site of url %s" % url)
-        return super(AccessAwareSession, self).get(url, **param)
-
-    get.__doc__ = requests.Session.get.__doc__
 
     def _can_access(self, url):
         """ Determines if the site allows certain url to be accessed.
@@ -237,17 +275,18 @@ class AccessAwareSession(requests.Session):
 
         # If the robots class is not declared or is just empty instance
         # always return true
-
-        if not self.robots_txt:
-            warnings.warn("Robots Parser not set up!")
+        if self._parser_broken:
             return True
-        if self.robots_txt.can_fetch(url):
+        if not self._parser_ready:
+            # warnings.warn("Robots Parser not set up!")
+            # self._parser_broken = True
+            return True
+        if self.can_fetch(url):
             return True
         # Website may have restricted access to the certain url and if not in bypass
         # mode access would be denied
         else:
-
-            if config.get('bypass_robots', False):
+            if self._bypass:
                 # if explicitly declared to bypass robots then the restriction will be ignored
                 LOGGER.warning("Forcefully Accessing restricted website part %s" % url)
                 return True

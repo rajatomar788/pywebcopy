@@ -6,148 +6,130 @@ pywebcopy.parsers
 Parsing of the html and Element generation factory.
 
 """
-import collections
+
+
+__all__ = ['Parser', 'MultiParser']
+
+
+import logging
 import re
 from datetime import datetime
-from functools import lru_cache
-from threading import current_thread
 
 from bs4 import BeautifulSoup
 from bs4.dammit import UnicodeDammit
-from lxml.etree import Comment, HTMLParser
-from lxml.html import _unquote_match, _archive_re, _nons, _iter_css_imports, \
-    _iter_css_urls, _parse_meta_refresh_url, fromstring, tostring
-from lxml.html import parse as lxml_parse
-from lxml.html.clean import Cleaner
-from parse import findall, search as parse_search
+
 from pyquery import PyQuery
 from w3lib.encoding import html_to_unicode
+from parse import findall, search as parse_search
 
-from . import LOGGER, config as global_config, SESSION
-from .compat import urljoin, pathname2url
-from .elements import LinkTag, AnchorTag, ScriptTag, ImgTag, TagBase
-from .exceptions import UrlRefusedByTagHandlerError, UrlTransformerNotSetup
-from .globals import SINGLE_LINK_ATTRIBS, VERSION, MARK, LIST_LINK_ATTRIBS
-from .urls import relate
+from lxml.etree import Comment, HTMLParser
+from lxml.html import parse as lxml_parse, fromstring, tostring
+from lxml.html.clean import Cleaner
+# noinspection PyProtectedMember
+from lxml.html import (
+    _unquote_match, _archive_re, _nons, _iter_css_imports,
+    _iter_css_urls, _parse_meta_refresh_url
+)
+
+from .compat import urljoin
+from .exceptions import ParseError
+from .globals import SINGLE_LINK_ATTRIBS, LIST_LINK_ATTRIBS, MARK, __version__
+
 
 utc_now = datetime.utcnow
-link_attrs = SINGLE_LINK_ATTRIBS
-list_link_attrs = LIST_LINK_ATTRIBS
-_iter_srcset_urls = re.compile(r'((?:https?://)?[^\s,]+)[\s]+').finditer
-element_map = {
-    'link': LinkTag,
-    'style': LinkTag,
-    'script': ScriptTag,
-    'img': ImgTag,
-    'a': AnchorTag,
-    'form': AnchorTag,
-}
+# _iter_srcset_urls = re.compile(r'((?:https?://)?[^\s,]+)[\s]+').finditer
+# _iter_srcset_urls = re.compile(r'((?:https?://)?(?:[\w\\/.]+))(?:.*?,)?').finditer
+# _iter_srcset_urls = re.compile(r"((?:[^\s,]+))(?:.*?,)?").finditer
+_iter_srcset_urls = re.compile(r"([^\s,]{5,})", re.MULTILINE).finditer
 
 
-def register_tag_handler(tag, handler):
-    """Register a handler for the specified tag.
+LOGGER = logging.getLogger('parsers')
 
-    :param tag: the tag for which to register the handler
-    :type handler: TagBase, AnchorTag, LinkTag, ImgTag
-    :param handler: Tag handler for the tag
+
+class Parser(object):
     """
-    assert isinstance(tag, str), "Tag must of string type."
-    assert issubclass(handler, TagBase), "Handler must be subclassed from TagBase."
-    global element_map
-    element_map[tag] = handler
-
-
-def deregister_tag_handler(tag):
-    """Removes the handler for a specified html tag."""
-    assert isinstance(tag, str), "Tag must be of string type."
-    global element_map
-    element_map.pop(tag, None)
-
-
-@lru_cache(maxsize=500)
-def cached_path2url_relate(target_file, start_file):
-    return pathname2url(relate(target_file, start_file))
-
-
-class BaseIncrementalParser(object):
-    """Base Parser which builds tree and generates file elements
+    Base Parser which builds tree and generates file elements
     and also handles these file elements.
 
-    :param encoding: Specified encoding type of the provided data.
+    Built upon the lxml library power.
     """
+    __slots__ = '_stack', 'root', '_tree', 'encoding', '_source', \
+                '_parseComplete', '_parseBroken'
 
-    def __init__(self, encoding=None):
-
+    def __init__(self):
         self.root = None
-        self.encoding = encoding
+        self._tree = None
+        self.encoding = 'iso-8859-1'
         self._source = None
-        self._stack = set()
-
-        if not global_config.is_set():
-            import warnings
-            warnings.warn(
-                "Global Configuration is not setup. This could lead to "
-                "files being saved at unexpected places."
-            )
-
-    def __repr__(self):
-        return '<IncrementalParser: %s>' % current_thread().name
+        self._stack = list()
+        self._parseComplete = False
+        self._parseBroken = False
 
     def __iter__(self):
         if self.root is None:
-            self.__parse__()
+            self.parse()
         return self._stack.__iter__()
+
+    __next__ = __iter__
 
     def __len__(self):
         return len(self._stack)
 
-    def files(self, tags=None):
-        if self.root is None:
-            self.__parse__()
-
-        if not tags:
-            for elem in self._stack:
-                yield elem
-        else:
-            if isinstance(tags, str):
-                tags = [tags]
-            if not isinstance(tags, collections.Iterable):
-                raise TypeError("A iterable with tag strings is required!")
-
-            for elem in self._stack:
-                if elem.tag in tags:
-                    yield elem
-
-    def __getitem__(self, item):
-        assert isinstance(item, str), "Expected str, got %r!" % type(item)
-        tag = item.lower().strip()
-        return self.files(tag)
-
-    #######################
-    # Override-ables
-    #######################
-
     @property
-    def utx(self):
-        """UrlTransformer dispatch.
-        :rtype: UrlTransformer
+    def elements(self):
         """
-        raise UrlTransformerNotSetup()
+        List of all the elements generated by the parser.
+        It can check and invoke the parsing itself if not done in prior.
+
+        :returns: List of Elements
+        """
+        if not self._parseComplete and self.root is None:
+            raise RuntimeError("Synchronising error between parse flag and actual parsing.")
+
+        if not self._parseComplete:
+            self.parse()
+        # if still no parsing
+        if self.root is None:
+            raise ParseError("Tree not parsed yet!")
+        return self._stack
 
     def get_source(self):
-        """Returns the resources set for this object.
-        This method can be overridden to provide alternate way of source loading."""
-        pass
+        """
+        Returns the resources set for this object.
+        This method can be overridden to provide alternate way of source loading.
+        """
+        if not self._source or not hasattr(self._source, 'read'):
+            raise ParseError("Source is not defined or doesn't have a read method!")
+        return self._source
 
-    def set_source(self, source, encoding=None, base_url=None):
-        """Sets up the resource for this object."""
-        pass
+    def set_source(self, source, encoding=None):
+        """Sets up the resource for this object.
 
-    #########################
-    # Internal Handling
-    #########################
+        Use a file like object as source which has a `.read` method or
+        you can put in file path if you like.
 
-    def __parse__(self):
+        :param source: file_like_object or file path
+        :param encoding: source encoding
+        """
+        if isinstance(source, str) and len(source) < 256:
+            try:
+                source = open(source, 'rb', encoding=encoding)
+            except OSError:
+                pass
+        if not hasattr(source, 'read'):
+            raise ParseError(
+                "Provided source neither have a read method "
+                "nor is a file path."
+                "Provide a file like object with `read` method!"
+                "or provide a correct file name."
+            )
+        self._source = source
+        self.encoding = encoding
+
+    def _get_utx(self):
+        return getattr(self, 'utx', None)
+
+    def parse(self, parser=None, base_url=None):
         """Parses the underlying html source using `lxml` library.
 
         This parsed tree is stored in :attr:`root` of this object.
@@ -157,37 +139,68 @@ class BaseIncrementalParser(object):
         -------
             ElementTree
         """
-        assert self.utx is not None, "UrlTransformer not Implemented."  # internal error
-        assert self.utx.base_path is not None, "Base Path is not set!"
-        assert self.utx.base_url is not None, "Base url is not Set!"
+        utx = self._get_utx()
+
+        assert utx is not None, "UrlTransformer not Implemented."  # internal error
+        assert utx.base_path is not None, "Base Path is not set!"
+        assert utx.base_url is not None, "Base url is not Set!"
+        if not isinstance(parser, HTMLParser):
+            TypeError("Expected instance of <%r>, got <%r>" % (HTMLParser, parser))
+
+        if not parser:
+            parser = HTMLParser(encoding=self.encoding, collect_ids=False)
 
         source = self.get_source()
 
         assert source is not None, "Source is not Set!"
         assert hasattr(source, 'read'), "File like object is required!"
+        # assert self._element_factory is not None
+        # assert hasattr(self._element_factory, 'make_element')
+        LOGGER.info(
+            'Parsing tree with source: <%r> encoding <%s> and parser <%r>'
+            % (self._source, self.encoding, parser)
+        )
 
-        parser = HTMLParser(encoding=self.encoding, collect_ids=False)
-        context_tree = lxml_parse(source, parser=parser, base_url=self.utx.url)
-
-        del source
-        del parser
-
+        context_tree = lxml_parse(source, parser=parser, base_url=base_url)
         # The tree generated by the parse is stored in the self.root
         # variable and can be utilised further for any number of use cases
+        self._tree = context_tree
         self.root = context_tree.getroot()
 
-        # WaterMarking :)
-        self.root.insert(0, Comment(MARK.format('', VERSION, self.utx.url, utc_now(), '')))
+        if self.root is not None:
+            # WaterMarking :)
+            self.root.insert(0, Comment(MARK.format('', __version__, utx.url, utc_now(), '')))
 
         # Modify the tree elements
         for el in context_tree.iter():
-            self._handle_lxml_elem(el)
+            # A element can contain multiple urls
+            for pack in self._handle_lxml_elem(el):
 
+                if pack is not None:
+                    elem, attr, url, pos = pack
+                else:
+                    continue
+
+                # There are internal links present on the html page which are files
+                # that includes `#` and `javascript:` and 'data:base64;` type links
+                # or a simple `/` url referring anchor tag
+                # thus these links needs to be left as is.
+                factory = getattr(self, 'make_element', None)
+                assert callable(factory), "Element generator is not callable!"
+
+                if elem is not None:
+                    o = factory(elem, attr, url, pos)
+                    if o is not None:
+                        self._stack.append(o)
+
+        self._parseComplete = True
         return self.root
 
-    def _handle_lxml_elem(self, el):
+    @staticmethod
+    def _handle_lxml_elem(el):
         """
         From source code of `lxml.html.iter_links` function.
+        With added refactoring of multi-urls attributes, i.e. src-set
 
         Yielding and internally handling (element, attribute, link, pos),
         where attribute may be None
@@ -208,31 +221,33 @@ class BaseIncrementalParser(object):
             codebase = None
             if 'codebase' in attribs:
                 codebase = el.get('codebase')
-                self.handle(el, 'codebase', codebase, 0)
+                yield el, 'codebase', codebase, 0
             for attrib in ('classid', 'data'):
                 if attrib in attribs:
                     value = el.get(attrib)
                     if codebase is not None:
                         value = urljoin(codebase, value)
-                    self.handle(el, attrib, value, 0)
+                    yield el, attrib, value, 0
             if 'archive' in attribs:
                 for match in _archive_re.finditer(el.get('archive')):
                     value = match.group(0)
                     if codebase is not None:
                         value = urljoin(codebase, value)
-                    self.handle(el, 'archive', value, match.start())
+                    yield el, 'archive', value, match.start()
         else:
-            for attrib in link_attrs:
+            for attrib in SINGLE_LINK_ATTRIBS:
                 if attrib in attribs:
-                    self.handle(el, attrib, attribs[attrib], 0)
-            for attrib in list_link_attrs:
+                    yield el, attrib, attribs[attrib], 0
+
+            # XXX Patch for multi-url detection
+            for attrib in LIST_LINK_ATTRIBS:
                 if attrib in attribs:
                     urls = list(_iter_srcset_urls(attribs[attrib]))
                     if urls:
-                        # return in reversed order to simplify in-place modifications
+                        # yield in reversed order to simplify in-place modifications
                         for match in urls[::-1]:
                             url, start = _unquote_match(match.group(1).strip(), match.start(1))
-                            self.handle(el, attrib, url, start)
+                            yield el, attrib, url, start
         if tag == 'meta':
             http_equiv = attribs.get('http-equiv', '').lower()
             if http_equiv == 'refresh':
@@ -240,15 +255,15 @@ class BaseIncrementalParser(object):
                 match = _parse_meta_refresh_url(content)
                 url = (match.group('url') if match else content).strip()
                 # unexpected content means the redirect won't work, but we might
-                # as well be permissive and return the entire string.
+                # as well be permissive and yield the entire string.
                 if url:
                     url, pos = _unquote_match(
                         url, match.start('url') if match else content.find(url))
-                    self.handle(el, 'content', url, pos)
+                    yield el, 'content', url, pos
         elif tag == 'param':
             valuetype = el.get('valuetype') or ''
             if valuetype.lower() == 'ref':
-                self.handle(el, 'value', el.get('value'), 0)
+                yield el, 'value', el.get('value'), 0
         elif tag == 'style' and el.text:
             urls = [
                        # (start_pos, url)
@@ -264,74 +279,14 @@ class BaseIncrementalParser(object):
                 # modifications
                 urls.sort(reverse=True)
                 for start, url in urls:
-                    self.handle(el, None, url, start)
+                    yield el, None, url, start
         if 'style' in attribs:
             urls = list(_iter_css_urls(attribs['style']))
             if urls:
-                # return in reversed order to simplify in-place modifications
+                # yield in reversed order to simplify in-place modifications
                 for match in urls[::-1]:
                     url, start = _unquote_match(match.group(1), match.start(1))
-                    self.handle(el, 'style', url, start)
-
-    def handle(self, elem, attr, url, pos):
-        """Handles elements of the lxml tree and creates files from them.
-
-        Note: Default handler function structures makes use of .rel_path attribute
-        which is completely internal and any usage depending on this attribute
-        may not work properly.
-        """
-
-        # There are internal links present on the html page which are files
-        # that includes `#` and `javascript:` and 'data:base64;` type links
-        # or a simple `/` url referring anchor tag
-        # thus these links needs to be left as is.
-        if url[:1] == u'#' or url[:4] in [u'java', u'data'] or url[1:] == '':
-            LOGGER.debug('Url was not valid : %s' % url)
-            return
-
-        LOGGER.info('Handling url %s' % url)
-
-        try:
-
-            assert self.utx is not None, "WebPage utx not set."
-            assert self.utx.file_path is not None, "WebPage file_path is not generated by utx!"
-
-            tag = elem.tag
-
-            klass = element_map.get(tag, TagBase)
-            # Populate the object with basic properties
-            obj = klass(url, base_url=self.utx.base_url, base_path=self.utx.base_path)
-            obj.tag = tag  # A tag specifier is required
-
-            assert obj.file_path is not None, "File Path was not generated by the handler."
-
-            #: Calculate a path relative from the parent WebPage object
-            obj.rel_path = cached_path2url_relate(obj.file_path, self.utx.file_path)
-
-            assert obj.rel_path is not None, "Relative Path was not generated by the handler."
-
-        except (AssertionError, UrlRefusedByTagHandlerError) as e:
-            LOGGER.exception(e)
-            return
-
-        # Remove integrity or cors check from the file
-        elem.attrib.pop('integrity', None)
-        elem.attrib.pop('crossorigin', None)
-
-        # Change the url in the object depending on the  case
-        if attr is None:
-            new = elem.text[:pos] + obj.rel_path + elem.text[len(url) + pos:]
-            elem.text = new
-        else:
-            cur = elem.get(attr)
-            if not pos and len(cur) == len(url):
-                new = obj.rel_path  # most common case
-            else:
-                new = cur[:pos] + obj.rel_path + cur[pos + len(url):]
-            elem.set(attr, new)
-
-        LOGGER.info("Remapped url of the file: %s to the path: %s " % (url, obj.rel_path))
-        self._stack.add(obj)
+                    yield el, 'style', url, start
 
 
 # HTML style and script tags cleaner
@@ -362,7 +317,7 @@ class MultiParser(object):
         self._encoding = encoding  # represents your provided encoding
         self.element = element  # internal lxml element
         self._decoded_html = False  # internal switch to tell if html has been decoded
-        self.default_encoding = 'iso-8859-1'  # a standard encoding defined by wwwc
+        self.default_encoding = 'iso-8859-1'  # a standard encoding defined by www
 
     @property
     def raw_html(self):
@@ -674,22 +629,3 @@ class Element(MultiParser):
                     self._attrs[attr] = tuple(self._attrs[attr].split())
 
         return self._attrs
-
-
-def parse(url, parser='html5lib', **kwargs):
-    """Factory function parses to BeautifulSoup object.
-    Parser for the bs4 is defaulted to 'html5lib'.
-
-    Example:
-    >>> parsed_html = parse('http://some-site.com/')
-    """
-    return BeautifulSoup(SESSION.get(url).content, features=parser, **kwargs)
-
-
-def parse_content(content, parser='html5lib', **kwargs):
-    """Returns the parsed content from provided markup.
-
-    Example:
-        >>> parsed_html = parse_content('<html><body>Hello!</body></html>')
-    """
-    return BeautifulSoup(content, features=parser, **kwargs)

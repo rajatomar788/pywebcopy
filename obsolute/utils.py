@@ -9,13 +9,13 @@ Utils easing pywebcopy.
 
 import os
 import re
-
+import logging
 from six.moves.urllib.parse import urljoin, urlsplit, urlparse
 from six.moves.urllib.request import pathname2url, url2pathname
 
-from pywebcopy import LOGGER
 from configs import config
 
+LOGGER = logging.getLogger('utils')
 DEBUG = config['DEBUG']
 
 

@@ -8,11 +8,11 @@ Usage:
 - HTMLLogger instance with name, level, title, mode, version etc.
 - call log, debug, info etc. on the instance
 """
-
+from __future__ import absolute_import
 import time
 import logging
 
-from .globals import VERSION
+from . import __version__
 
 
 #: HTML header starts the document
@@ -189,7 +189,7 @@ logging.addLevelName(actionLevelNum, "ACTION")
 logging.Logger.action = action
 
 
-def new_html_logger(title="PywebCopy Log", version=VERSION, filename='log.html', mode='w'):
+def new_html_logger(title="PywebCopy Log", version=__version__, filename='log.html', mode='w'):
     """Creates a new html file logging handler for use in logger.
 
     :rtype: HTMLFileHandler
@@ -214,7 +214,7 @@ def new_console_logger(level=logging.WARNING):
     """
     c_logger = logging.StreamHandler()
     c_logger.setLevel(level)
-    c_logger.setFormatter(logging.Formatter("%(levelname)s - %(message)s"))
+    c_logger.setFormatter(logging.Formatter("%(levelname)-8s - %(message)s"))
     return c_logger
 
 

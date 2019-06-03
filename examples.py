@@ -35,6 +35,7 @@ pywebcopy.config['bypass_robots'] = True
 # page_url = 'https://www.w3schools.com/'
 # page_url = 'https://test-domain.com/'
 page_url = 'http://localhost:5000'
+
 handle = open(os.path.join(os.getcwd(), 'tests', 'test.html'), 'rb')
 # page_url = 'https://getbootstrap.com/'
 

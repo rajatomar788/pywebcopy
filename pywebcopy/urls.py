@@ -8,7 +8,7 @@ Parses urls.
 
 """
 
-
+import logging
 import hashlib
 import itertools
 import os
@@ -19,10 +19,8 @@ from .compat import (
     unquote,
     urldefrag,
     urlsplit,
-    url2pathname
-)
-from . import LOGGER
-
+    url2pathname,
+    basestring)
 
 __all__ = ['URLTransformer', 'filename_present', 'url2path', 'relate']
 
@@ -41,6 +39,9 @@ URL_FRAG = re.compile(r'(?:[#?;=]\S+)?')  # query strings
 
 # Matches any relative path declaration i.e. '../', './' etc.
 RELATIVE_PATHS = re.compile(r'(?:\.+/+)+?')  # relative paths
+
+
+LOGGER = logging.getLogger('urls')
 
 
 def filename_present(url):
@@ -103,7 +104,7 @@ def url2path(url, base_url=None, base_path=None, default_filename=None):
     return path
 
 
-# Counter for generating distinguisable file names.
+# Counter for generating distinguishable file names.
 counter = itertools.count().__next__
 
 
@@ -121,51 +122,77 @@ class URLTransformer(object):
     """
 
     __attrs__ = [
-        'url', 'default_filename', 'filename', 'filepath',
-        'chech_fileext', 'clean_url', 'clean_fn',
+        'url', 'default_suffix', 'file_path',
+        'enforce_suffix', 'default_stem',
         'parsed_url', 'hostname', 'port', 'url_path', 'scheme',
-        'base_url', 'base_path', 'to_path', 'get_filename_and_pos',
-        'get_fileext_and_pos',
+        'base_url', 'base_path', 'to_path',
     ]
 
-    __slots__ = (
-        'default_filename', 'filename',
-        'chech_fileext', 'original_url', '_url', '_parsed',
-        '_base_url', '_base_path', 'default_fileext', 'check_fileext'
-    )
+    __slots__ = 'default_stem', 'default_suffix', 'enforce_suffix', '_id', \
+                '_base_url', '_base_path', '_default_fn', '_url',
 
     def __init__(self, url, base_url=None, base_path=None, default_fn=None):
 
-        self.original_url = url
-        self._url = None
-        self._parsed = None
-        self._base_url = base_url
-        self._base_path = base_path
+        # manual type checking for url
+        if not isinstance(url, basestring):
+            raise TypeError("Url must be of string type!")
+        try:
+            url = unquote(url)
+        except AttributeError:
+            raise
 
-        self.default_filename = default_fn or "file_%d.pwcf" % counter()
+        # default place holders
+        self._url = url
+        self._base_url = None
+        self._base_path = None
+        self._id = self._hex()
+        self.default_stem = "file_" + self._id
+        self.default_suffix = 'pwc'
+        self.enforce_suffix = False
+        self._default_fn = default_fn
 
-        LOGGER.debug('URLTransformer {} has been set to self.base_url {} '
-                     'and self.url is {}'.format(self, self.base_url, self.url))
+        # properties with type checks
+        if base_url is not None:
+            self.base_url = base_url
+        if base_path is not None:
+            self.base_path = base_path
 
-        # special tweaks for url to path conversion
-        self.default_fileext = 'pwcf'
-        self.check_fileext = False
+    def __new__(cls, *args, **kwargs):
+        obj = object.__new__(cls)
+        obj.__init__(*args, **kwargs)
+        # using it here instead of __init__ will get the subclasses
+        # attribute overrides correct
+        LOGGER.debug('Making new <UrlTransformer> with values: ' + str(obj))
+        return obj
 
     def __str__(self):
-        return self.url
+        return {a: getattr(self, a) for a in self.__attrs__}.__str__()
 
     def __repr__(self):
-        return "<URLTransformer({})>".format(self.original_url)
+        return "<URLTransformer(%r, %r, %r, %r)>" % (
+            self._url, self.base_url, self.base_path, self._default_fn
+        )
 
-    def __hash(self):
+    def __reduce__(self):
+        return self.__class__.__name__, {a: getattr(self, a) for a in self.__slots__}
+
+    @property
+    def default_filename(self):
+        """Makes a unique default name based on suffix."""
+        if not self._default_fn:
+            return "%s.%s" % (self.default_stem, self.default_suffix)
+        return self._default_fn
+
+    @default_filename.setter
+    def default_filename(self, o):
+        assert isinstance(o, str)
+        self._default_fn = o
+
+    def _hex(self):
         """8 chars long hash of url for unique identity.
-        :rtype: int
         :return: hash of the url
         """
-        # Another type of hashing which returns 8 digit integer
-        # return int(hashlib.sha1(self.url.encode('utf-8')).hexdigest(), 16) % (10 ** 8)
-
-        return hashlib.sha1(self.url.encode("UTF-8")).hexdigest()[:8]
+        return hashlib.sha512(self.url.encode("UTF-8")).hexdigest()[:8]
 
     @property
     def url(self):
@@ -173,18 +200,26 @@ class URLTransformer(object):
         :rtype: str
         :return: url calculated using all the factors
         """
-
         if self.base_url:
-            new_url = urljoin(self.base_url, self.original_url)
+            url = unquote(urljoin(self.base_url, self._url))
         else:
-            new_url = self.original_url
-        return RELATIVE_PATHS.sub('', unquote(new_url))
+            url = unquote(self._url)
+        # Fixes a bug in urljoin which leaves relative path notations
+        # inside the joined urls
+        url = RELATIVE_PATHS.sub('', url)
+        return url
+
+    @url.setter
+    def url(self, u):
+        if not isinstance(u, basestring):
+            raise TypeError("Expected <%r>, got <%r>." % (basestring, type(u)))
+        self._url = u
 
     @staticmethod
     def clean_url(url):
-        """Cleans any url of relative paths remaining after urljoins.
+        """Cleans any url of relative paths remaining after urljoin.
 
-        :param url: any url containing relative path contaimination
+        :param url: any url containing relative path contamination
         :type url: str
         :rtype: str
         :returns: cleaned url
@@ -193,7 +228,7 @@ class URLTransformer(object):
             >>> clean_url('http://google.com/../../url/path/#frag')
             'http://google.com/url/path/'
             >>> clean_url('../../url/path')
-            '/url/path'
+            'url/path'
             >>> clean_url('./same/dir/')
             'same/dir/'
 
@@ -213,13 +248,12 @@ class URLTransformer(object):
     @property
     def parsed_url(self):
         """Parses the url in six part tuple."""
-        if not self._parsed:
-            self._parsed = urlsplit(self.clean_url(self.url))
-        return self._parsed
+        return urlsplit(self.clean_url(self.url))
 
     @property
     def hostname(self):
-        return self.parsed_url.hostname
+        # must return empty string in None cases
+        return self.parsed_url.hostname or ''
 
     @property
     def port(self):
@@ -248,10 +282,9 @@ class URLTransformer(object):
         :param str new_base: absolute url of the domain
         :rtype: None
         """
+        if not isinstance(new_base, basestring):
+            raise TypeError("Base url must be of string type!")
         self._base_url = new_base
-        # reset
-        self._url = None
-        self._parsed = None
 
     @property
     def base_path(self):
@@ -262,8 +295,15 @@ class URLTransformer(object):
 
     @base_path.setter
     def base_path(self, new_base_path):
-        """Base file which would be prepended to the new path generated via url."""
-        self._base_path = new_base_path or ''
+        """Base file which would be prepended to the new path generated via url.
+
+        ..version changed:: 6.0.0
+            Added path normalising and type checks
+
+        """
+        if not isinstance(new_base_path, basestring):
+            raise TypeError("Path must be of string type!")
+        self._base_path = os.path.normpath(new_base_path) or ''
 
     @property
     def to_path(self):
@@ -277,8 +317,8 @@ class URLTransformer(object):
         return self._path_from_url()
 
     def _path_from_url(self):
-        """Returns a feasable path extracted from the url converted to disk style convention."""
-        return url2pathname(self.clean_fn(self.hostname + self.url_path))
+        """Returns a feasible path extracted from the url converted to disk style convention."""
+        return os.path.normpath(url2pathname(self.clean_fn(self.hostname + self.url_path)))
 
     @property
     def file_name(self):
@@ -350,22 +390,30 @@ class URLTransformer(object):
         fe = fn[i:]
         return fe, len(path) - len(fn) + i
 
-    def _refactor_filename(self, path):
+    def _refactor_filename(self, path, prefix=None, sep=None):
         """Refactors a filename in a path and modifies it according to need.
 
         NOTE : internal use only
-        NOTE : specially designed for webpages and not files
+        NOTE : specially designed for url addresses and not file addresses
 
 
         :param path: path from which the filename to be extracted
         :return: two-tuple containing refactored filename and its start position
         """
+        if prefix:
+            assert isinstance(prefix, basestring)
+        else:
+            prefix = str(self._hex())
+        if sep:
+            assert isinstance(sep, basestring)
+        else:
+            sep = '__'
+
         fn, pos = self.get_filename_and_pos(path)
 
         if fn:
-            new_fn = str(self.__hash()) + '__' + fn
             # new_fn = fn
-
+            new_fn = prefix + sep + fn
         else:
             new_fn = self.default_filename
 
@@ -376,10 +424,10 @@ class URLTransformer(object):
         fe, ext_pos = self.get_fileext_and_pos(new_fn)
 
         if ext_pos == 0:  # if not present then add a default file extension
-            new_fn += '.' + self.default_fileext
+            new_fn += '.' + self.default_suffix
         else:
-            if self.check_fileext:  # if forced extension conversion is requested
-                new_fn = new_fn[:ext_pos] + self.default_fileext
+            if self.enforce_suffix:  # if forced extension conversion is requested
+                new_fn = new_fn[:ext_pos] + self.default_suffix
 
         # replace original filename with unique filename
         return path[:pos] + new_fn, pos
@@ -391,14 +439,36 @@ class URLTransformer(object):
         :rtype: str
         :return: disk compatible path
         """
-        upath, _ = self._refactor_filename(self.url_path)
+        path, _ = self._refactor_filename(self.url_path)
+        hostname = self.hostname
+
+        assert isinstance(path, basestring)
+        assert isinstance(hostname, basestring)
 
         # clean the url and prepend hostname to make it complete
-        upath = url2pathname(self.hostname + upath)
+        path = url2pathname(hostname + path)
 
         if self.base_path:
-            upath = os.path.join(self.base_path, upath)
-        return upath
+            path = os.path.join(self.base_path, path)
+        return path
+
+    def relative_to(self, path):
+        """
+        Returns path relative to the given path.
+
+        :param path: Path to which relative have to be generated
+        """
+        if not isinstance(path, basestring):
+            raise TypeError
+
+        path = os.path.normpath(path)
+        start = os.path.dirname(path)
+
+        head, tail = os.path.split(self.file_path)
+
+        rel_path = os.path.relpath(head, start)
+
+        return os.path.join(rel_path, tail)
 
 
 def relate(target_file, start_file):
@@ -406,7 +476,7 @@ def relate(target_file, start_file):
     Returns relative path of target-file from start-file.
     """
 
-    # Default os.path.relpath takes directories as argument, thus we need strip the filename
+    # Default os.path.rel_path takes directories as argument, thus we need strip the filename
     # if present in the path else continue as is.
     target_dir = os.path.dirname(target_file)
     start_dir = os.path.dirname(start_file)

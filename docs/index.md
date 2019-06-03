@@ -93,6 +93,56 @@ Just run this command from root directory of pywebcopy package.
 
 
 ```shell
-$ python -m unittest pywebcopy.tests
+$ python -m unittest tests
 ```
 
+
+
+### Command Line Interface
+`pywebcopy` have a very easy to use command-line interface which
+can help you do task without having to worrying about the inner
+long way.
+- #### Getting list of commands
+    ```shell
+    $ python -m pywebcopy -- --help
+    ```
+- #### Using apis
+    ```shell
+    $ python -m pywebcopy save_webpage http://google.com E://store// --bypass_robots=True
+    or
+    $ python -m pywebcopy save_website http://google.com E://store// --bypass_robots
+    ``` 
+- #### Running tests
+    ```shell
+    $ python -m pywebcopy run_tests
+    ```
+
+
+### Authentication and Cookies
+Most of the time authentication is needed to access a certain page.
+Its real easy to authenticate with `pywebcopy` because it usage an 
+`requests.Session` object for base http activity which can be accessed 
+through `pywebcopy.SESSION` attribute. And as you know there
+are ton of tutorials on setting up authentication with `requests.Session`.
+
+Here is a basic example of simple http auth -
+```python
+import pywebcopy
+
+# Update the headers with suitable data
+
+pywebcopy.SESSION.headers.update({
+    'auth': {'username': 'password'},
+    'form': {'key1': 'value1'},
+})
+
+# Rest of the code is as usual
+kwargs = {
+    'url': 'http://localhost:5000',
+    'project_folder': 'e://saved_pages//',
+    'project_name': 'my_site'
+}
+pywebcopy.config.setup_config(**kwargs)
+pywebcopy.save_webpage(**kwargs)
+
+```
