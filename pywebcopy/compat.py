@@ -25,9 +25,9 @@ is_py3 = (_ver[0] == 3)
 
 if is_py2:
     from urllib import (
-        quote, unquote, quote_plus, unquote_plus, urlencode,
+        quote, unquote, quote_plus, unquote_plus, urlencode,url2pathname, pathname2url
         )
-    from urlparse import urlparse, urlunparse, urljoin, urlsplit, urldefrag, url2pathname, pathname2url
+    from urlparse import urlparse, urlunparse, urljoin, urlsplit, urldefrag
     from robotparser import *
 
     builtin_str = str
