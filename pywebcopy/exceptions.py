@@ -27,6 +27,10 @@ class ConnectError(PywebcopyError):
     error or http error. """
 
 
+class DependencyNotFoundError(ModuleNotFoundError):
+    """A module or library required to use some feature is not installed."""
+
+
 class AccessError(PywebcopyError):
     """Requested url is flagged private by the Site owner."""
 

@@ -35,6 +35,7 @@ import os
 import threading
 from operator import attrgetter
 
+from .globals import POOL_LIMIT
 from .configs import SESSION, config
 from .elements import _ElementFactory, LinkTag, ScriptTag, ImgTag, AnchorTag, TagBase
 from .exceptions import ParseError
@@ -71,9 +72,7 @@ class WebPage(Parser, _ElementFactory):
         >>> wp.save_assets()
 
     """
-
-    __slots__ = 'url', '_url_obj', '_element_map', '_stack', 'root', '_tree', \
-                'encoding', '_source', '_parseComplete', '_parseBroken'
+    __slots__ = 'url', 'path', '_threads', '_utx'
 
     def __init__(self, **kwargs):
         super(WebPage, self).__init__()
@@ -100,7 +99,7 @@ class WebPage(Parser, _ElementFactory):
 
         self.url = config.get('project_url', None)
         self.path = config.get('project_folder', None)
-        self._url_obj = None
+        self._utx = None
         self._element_map = {
             'link': LinkTag,
             'style': LinkTag,
@@ -130,15 +129,15 @@ class WebPage(Parser, _ElementFactory):
         :rtype: URLTransformer
         :returns: prepared URLTransformer object
         """
-        if self._url_obj is None:
-            self._url_obj = self._new_utx()
-        return self._url_obj
+        if self._utx is None:
+            self._utx = self._new_utx()
+        return self._utx
 
     @utx.setter
     def utx(self, o):
         assert isinstance(o, URLTransformer), TypeError
         assert hasattr(o, 'url'), AttributeError
-        self._url_obj = o
+        self._utx = o
         self.url = getattr(o, 'url')
         self.path = getattr(o, 'to_path')
 
@@ -203,6 +202,18 @@ class WebPage(Parser, _ElementFactory):
         req.raw.decode_content = True
         self.set_source(req.raw, req.encoding)
 
+    def shutdown(self, timeout=10):
+        """
+        Shuts down the working threads.
+        :param timeout: timeout per thread before raising error.
+        :return: None
+        *New in 6.1.0*
+        """
+        for i in self._threads:
+            if i.is_alive():
+                i.join(timeout=timeout)
+        del self._threads[:]
+
     def save_assets(self):
         """Save only the linked files to the disk.
         """
@@ -217,10 +228,10 @@ class WebPage(Parser, _ElementFactory):
         LOGGER.log(100, "Queueing download of <%d> asset files." % len(elms))
 
         for elem in elms:
-            t = threading.Thread(name=repr(elem), target=elem.run)
-            t.start()
-            self._threads.append(t)
-            # elem.run()
+            with POOL_LIMIT:
+                t = threading.Thread(name=repr(elem), target=elem.run)
+                t.start()
+                self._threads.append(t)
 
     def save_html(self, file_name=None, raw_html=False):
         """Saves the html of the page to a default or specified file.

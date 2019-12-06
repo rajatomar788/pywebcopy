@@ -12,33 +12,23 @@ import logging
 import hashlib
 import itertools
 import os
-import re
+import abc
 
-from .compat import (
+from six.moves.urllib.parse import (
     urljoin,
     unquote,
     urldefrag,
-    urlsplit,
-    url2pathname,
-    basestring)
+    urlsplit)
+from six.moves.urllib.request import url2pathname
+from six import string_types as basestring
+
+from .globals import (
+    SPECIAL_CHARS,
+    URL_FRAG,
+    RELATIVE_PATHS,
+)
 
 __all__ = ['URLTransformer', 'filename_present', 'url2path', 'relate']
-
-
-# Removes the non-fileSystem compatible letters or patterns from a file path
-FILENAME_CLEANER = re.compile(r'[*":<>|?]+?\.\.?[/|\\]+')
-
-# Cleans query params or fragments from url to make it look like a path
-URL_CLEANER = re.compile(r'[*"<>|]?\.\.?[/|\\]+(?:[#]\S+)')
-
-# Matches any special character like #, : etc.
-SPECIAL_CHARS = re.compile(r'(?:[*\"<>|!$&:?])+?')  # any unwanted char
-
-# Matches any fragment or query data in url
-URL_FRAG = re.compile(r'(?:[#?;=]\S+)?')  # query strings
-
-# Matches any relative path declaration i.e. '../', './' etc.
-RELATIVE_PATHS = re.compile(r'(?:\.+/+)+?')  # relative paths
 
 
 LOGGER = logging.getLogger('urls')
@@ -50,69 +40,21 @@ def filename_present(url):
     :param str url: url string to check the file name in.
     :return boolean: True if present, else False
     """
-
-    if not url:
-        return False
-    if url.startswith(u'#'):
-        return False
-
-    url_obj = urlsplit(url)
-    url = url_obj.path
-    if url_obj.hostname == u'data' or not url:
-        return False
-
-    i = len(url)
-    while i and url[i - 1] not in '/\\':
-        i -= 1
-    fn = url[i:]
-
-    if fn.strip() == '':
-        return False
-    if i == 0:
-        return False
-
-    return True
+    utx = URLTransformer(url)
+    return utx.get_fileext_and_pos(utx.to_path)
 
 
 def url2path(url, base_url=None, base_path=None, default_filename=None):
-    """Converts urls to disk style file paths. """
-
-    if not url:
-        return
-
-    if base_url:
-        url = urljoin(base_url or '', url)
-
-    if not filename_present(url):
-        url = urljoin(url, default_filename)
-
-    url_obj = urlsplit(url)
-
-    if url_obj.hostname == 'data':
-        return
-
-    url = "%s%s" % (url_obj.hostname, url_obj.path)
-
-    if not url:
-        return
-
-    path = FILENAME_CLEANER.sub('_', url)
-
-    if base_path:
-        path = os.path.join(base_path or '', path)
-
-    return path
+    """Converts urls to disk style file paths.
+    """
+    return URLTransformer(url, base_url, base_path, default_filename).file_path
 
 
 # Counter for generating distinguishable file names.
 counter = itertools.count().__next__
 
 
-def make_path_from_url(url, base_url=None, base_path=None, default_fn=None):
-    return URLTransformer(url, base_url, base_path, default_fn).file_path
-
-
-class URLTransformer(object):
+class URLTransformer(abc.ABC):
     """Transforms url into various types and subsections.
 
     :param str url: a url to perform transform operations on
@@ -128,11 +70,18 @@ class URLTransformer(object):
         'base_url', 'base_path', 'to_path',
     ]
 
-    __slots__ = 'default_stem', 'default_suffix', 'enforce_suffix', '_id', \
-                '_base_url', '_base_path', '_default_fn', '_url',
+    __slots__ = ('_url', '_base_url', '_base_path', '_id', '_default_fn',
+                 'default_stem', 'default_suffix', 'enforce_suffix')
+
+    def __new__(cls, *args, **kwargs):
+        obj = object.__new__(cls)
+        obj.__init__(*args, **kwargs)
+        # using it here instead of __init__ will get the subclasses
+        # attribute overrides correct
+        LOGGER.debug('Making new <UrlTransformer> with values: ' + str(obj))
+        return obj
 
     def __init__(self, url, base_url=None, base_path=None, default_fn=None):
-
         # manual type checking for url
         if not isinstance(url, basestring):
             raise TypeError("Url must be of string type!")
@@ -149,21 +98,21 @@ class URLTransformer(object):
         self.default_stem = "file_" + self._id
         self.default_suffix = 'pwc'
         self.enforce_suffix = False
+
+        if default_fn is not None:
+            if not isinstance(default_fn, str) or '.' not in default_fn:
+                raise ValueError("Invalid filename: [%r]" % default_fn)
+            else:
+                self.default_stem, self.default_suffix = default_fn.rsplit('.', 1)
+        else:
+            default_fn = str.join('.', [self.default_stem, self.default_suffix])
+
         self._default_fn = default_fn
 
-        # properties with type checks
         if base_url is not None:
             self.base_url = base_url
         if base_path is not None:
             self.base_path = base_path
-
-    def __new__(cls, *args, **kwargs):
-        obj = object.__new__(cls)
-        obj.__init__(*args, **kwargs)
-        # using it here instead of __init__ will get the subclasses
-        # attribute overrides correct
-        LOGGER.debug('Making new <UrlTransformer> with values: ' + str(obj))
-        return obj
 
     def __str__(self):
         return {a: getattr(self, a) for a in self.__attrs__}.__str__()

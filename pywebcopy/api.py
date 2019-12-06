@@ -10,7 +10,7 @@ The complete ease of access collection.
 from __future__ import print_function
 from webbrowser import open_new_tab
 
-from . import config
+from .configs import config
 from .core import zip_project
 from .crawler import Crawler
 from .webpage import WebPage

@@ -11,7 +11,8 @@ Structures powering pywebcopy.
 from collections import MutableMapping
 
 import requests
-from .compat import OrderedDict, RobotFileParser
+from requests.structures import OrderedDict
+from six.moves.urllib.robotparser import RobotFileParser
 
 
 __all__ = ['CaseInsensitiveDict', 'RobotsTxtParser']
@@ -39,9 +40,6 @@ class CaseInsensitiveDict(MutableMapping):
     def __setitem__(self, key, value):
         self._store[key.lower()] = value
 
-    def set(self, k, v):
-        self.__setitem__(k, v)
-
     def __getitem__(self, key):
         return self._store[key.lower()]
 
@@ -51,10 +49,10 @@ class CaseInsensitiveDict(MutableMapping):
     def __iter__(self):
         return (key for key, value in self._store.items())
 
-    def __len__(self):
+    def __len__(self):  # pragma: no cover
         return len(self._store)
 
-    def __copy__(self):
+    def __copy__(self):  # pragma: no cover
         return CaseInsensitiveDict(self._store)
 
     def lower_case_items(self):
@@ -65,7 +63,7 @@ class CaseInsensitiveDict(MutableMapping):
     def __eq__(self, other):
         if isinstance(other, MutableMapping):
             other = CaseInsensitiveDict(other)
-        else:
+        else:   # pragma: no cover
             raise NotImplementedError
 
         return dict(self.lower_case_items()) == dict(other.lower_case_items())

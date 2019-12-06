@@ -17,17 +17,28 @@
 pywebcopy
 ~~~~~~~~~
 
-Python library to clone web-pages and websites with all its peripheral files.
+Python library to clone web-pages and web-sites with all its peripheral files.
 
 .. version changed :: 6.0.0
     1. **Breaking Change** New command-line interface using `Python Fire` library.
-    2. Implemented type checks and path normalising in the `config.setup_paths`.
+    2. **Breaking change** `WebPage` class now doesnt take any argument
+    3. FIX: Implemented type checks and path normalising in the `config.setup_paths`.
+    4. Added new dynamic `pywebcopy.__all__` attr generation.
+    5. NEW: `WebPage` class has new methods `WebPage.get` and `WebPage.set_source`
+    6. FIX: Queuing of downloads is replaced with a barrier to manage active threads
+
+.. version changed :: 6.1.0
+    1. FIX: url when refactored was sometimes different from actual file path generated.
+    2. FIX: fixed path issue when using relative path for project_folder
+    3. FIX: Some tests were not running due to bad path detection
+    4. NEW: Added command `version` which prints current version
 
 """
+
 __author__ = 'Raja Tomar'
 __email__ = 'rajatomar788@gmail.com'
 __license__ = 'Apache License 2.0'
-__version__ = '6.0.0'
+__version__ = '6.1.0'
 
 import logging
 
@@ -42,9 +53,11 @@ __all__ = [
     'save_webpage', 'save_website',
     'config', 'SESSION',
     'Parser', 'MultiParser',
+    __author__, __email__,
+    __license__, __version__,
 ]
 
-#: optimisations
+#: logging optimisations
 logging.logThreads = 0
 logging.logProcesses = 0
 logging._srcfile = None

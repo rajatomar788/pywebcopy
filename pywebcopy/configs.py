@@ -10,19 +10,21 @@ Modifies the behaviour of pywebcopy.
 import logging
 import os
 from io import BytesIO
+from collections import UserDict
+from six.moves.urllib.parse import urlparse, urljoin
 
 import requests
 
-from .compat import urlparse, urljoin
 from .exceptions import AccessError
 from .globals import safe_file_exts, safe_http_headers
-from .structures import CaseInsensitiveDict, RobotsTxtParser
+from .structures import RobotsTxtParser
 
 __all__ = ['default_config', 'config', 'SESSION', 'AccessAwareSession']
 
-LOGGER = logging.getLogger('config')
 
-"""Default configuration with preconfigured values."""
+LOGGER = logging.getLogger(__name__)
+
+
 default_config = {
     'debug': False,
     'log_file': None,
@@ -37,27 +39,43 @@ default_config = {
     'load_css': True,
     'load_javascript': True,
     'load_images': True,
-    'download_size': 0,
     'join_timeout': None,
-    'robots_txt': None,
 }
+"""Default configuration with preconfigured values."""
 
 
-class ConfigHandler(CaseInsensitiveDict):
+class ConfigHandler(UserDict):
     """Provides functionality to the config instance which
     stores and provides configuration values in every module.
     """
-
     def __init__(self, *args, **kwargs):
         super(ConfigHandler, self).__init__(*args, **kwargs)
 
-    def __repr__(self):
+    def __setitem__(self, key, value):
+        self.data[key.lower()] = value
+
+    def __getitem__(self, key):
+        return self.data[key.lower()]
+
+    def __delitem__(self, key):
+        del self.data[key.lower()]
+
+    def __iter__(self):
+        return (key for key, value in self.data.items())
+
+    def __len__(self):
+        return len(self.data)
+
+    def __copy__(self):
+        return UserDict(self.data)
+
+    def __repr__(self):     # pragma: no cover
         return '<ConfigHandler: %s>' % self.get('project_name') or 'Default'
 
     def reset_config(self):
         """ Resets all to configuration to default state. """
-        self._store = {}
-        CaseInsensitiveDict.__init__(self)
+        self.data = {}
+        super(ConfigHandler, self).__init__(self)
 
     def is_set(self):
         """Tells whether the configuration has been setup or not."""
@@ -86,6 +104,9 @@ class ConfigHandler(CaseInsensitiveDict):
         .. version changed :: 6.0.0
             Added string type checks and os based path normalising.
 
+        .. version changed :: 6.1.0
+            FIX: fixed path issue when using relative path for project_folder
+
         :param project_name: new name of the project
         :param project_folder: folder where to store all the downloaded files
         """
@@ -99,8 +120,10 @@ class ConfigHandler(CaseInsensitiveDict):
         if os.altsep:
             project_folder = project_folder.replace(os.altsep, os.sep)
 
-        if not project_folder.find(os.sep) > -1:
+        if not project_folder.find(os.sep) > -1:    # pragma: no cover
             TypeError("Project_folder path doesn't seem to be a valid path.")
+
+        project_folder = os.path.abspath(project_folder)
 
         norm_p = os.path.join(
             os.path.normpath(project_folder),
@@ -122,7 +145,7 @@ class ConfigHandler(CaseInsensitiveDict):
         if os.path.exists(lf):
             try:
                 os.unlink(lf)
-            except OSError:
+            except OSError:     # pragma: no cover
                 # Just gonna leave it for default logger to figure out
                 pass
 
@@ -189,7 +212,7 @@ class ConfigHandler(CaseInsensitiveDict):
         #: if you want to skip the checks then override the `bypass_robots` key
         # XXX user_agent = self['http_headers'].get('User-Agent', '*')
         # prepared_robots_txt = RobotsTxtParser(user_agent, urljoin(project_url, '/robots.txt'))
-        getattr(SESSION, '_setup_parser')(urljoin(project_url, '/robots.txt'))
+        SESSION.load_rules_from_url(urljoin(project_url, '/robots.txt'))
 
         return self
 
@@ -198,17 +221,16 @@ config = ConfigHandler(**default_config)
 """Global configuration instance."""
 
 
-class AccessAwareSession(RobotsTxtParser, requests.Session):
+class AccessAwareSession(requests.Session, RobotsTxtParser):
     """
     Session object which consults robots.txt before
     accessing a resource.
     """
 
     def __init__(self):
-        RobotsTxtParser.__init__(self)
         requests.Session.__init__(self)
+        RobotsTxtParser.__init__(self)
         self.stream = True
-
         self._bypass = False
         self._parser = None
         self._parser_ready = False
@@ -217,20 +239,21 @@ class AccessAwareSession(RobotsTxtParser, requests.Session):
         self.hooks['response'] = self.log_response
 
     def get(self, url, **kwargs):
-        self._access_check(url)
-        return self._get(url, **kwargs)
+        if self._parser_ready and not self._can_access(url):
+            raise AccessError("Access is not allowed by the site of url %s" % url)
+        return super(AccessAwareSession, self).get(url, **kwargs)
 
     def get_or_dummy(self, url, **kwargs):
-        self._access_check(url)
         try:
-            resp = super(AccessAwareSession, self).get(url, **kwargs)
+            resp = self.get(url, **kwargs)
         except requests.exceptions.RequestException as err:
             LOGGER.error("Failed to access url at address [%s] exception \n %s" % (url, err))
             resp = self._dummy_resp(err)
         return resp
 
-    def _setup_parser(self, robots_txt_url):
+    def load_rules_from_url(self, robots_txt_url):
         assert isinstance(robots_txt_url, str), "Please pass in valid arguments!"
+        assert robots_txt_url.endswith('/robots.txt'), "Not a valid rules url!"
 
         self.set_url(robots_txt_url)
         self.read()
@@ -240,34 +263,16 @@ class AccessAwareSession(RobotsTxtParser, requests.Session):
         self._bypass = bool(bypass)
 
     def log_response(self, resp, **_kwargs):
-        LOGGER.info('Got response %r from %s', resp, resp.url)
+        """:type resp: requests.Response"""
+        LOGGER.info('Got response %r from %s', resp.status_code, resp.url)
         self._bytes += int(resp.headers.get('Content-length', 0))
-
-    @staticmethod
-    def _dummy_resp(err):
-        """
-        Return dummy data so that a dummy file will always be downloaded
-        """
-        resp = requests.Response()
-        resp.raw = BytesIO(
-            ('[This File could not be downloaded.]\n'
-             '[Reason: ] \n\n %r \n\n' % str(err)).encode()
-        )
-        resp.encoding = 'utf-8'  # plain encoding
-        resp.status_code = 200  # fake the status
-        resp.is_dummy = True  # but leave a mark
-        resp.reason = str(err)  # fail reason
-        return resp
 
     def _get(self, url, **kwargs):
         """
         Raw get method.
         """
+        kwargs.setdefault('allow_redirects', True)
         return self.request('GET', url, **kwargs)
-
-    def _access_check(self, url):
-        if not self._can_access(url):
-            raise AccessError("Access is not allowed by the site of url %s" % url)
 
     def _can_access(self, url):
         """ Determines if the site allows certain url to be accessed.
@@ -293,6 +298,22 @@ class AccessAwareSession(RobotsTxtParser, requests.Session):
             else:
                 LOGGER.error("Website doesn't allow access to the url %s" % url)
                 return False
+
+    @staticmethod
+    def _dummy_resp(err):
+        """
+        Return dummy data so that a dummy file will always be downloaded
+        """
+        resp = requests.Response()
+        resp.raw = BytesIO(
+            ('[This File could not be downloaded.]\n'
+             '[Reason: ] \n\n %r \n\n' % str(err)).encode()
+        )
+        resp.encoding = 'utf-8'  # plain encoding
+        resp.status_code = 200  # fake the status
+        resp.is_dummy = True  # but leave a mark
+        resp.reason = str(err)  # fail reason
+        return resp
 
 
 SESSION = AccessAwareSession()
