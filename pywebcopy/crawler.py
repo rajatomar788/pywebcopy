@@ -12,7 +12,7 @@ usage::
     >>> project_name = 'google_clone'
     >>> kwargs = {'bypass_robots': True}
     >>> config.setup_config(url, project_folder, project_name, **kwargs)
-    >>> crawler = Crawler(url)
+    >>> crawler = Crawler()
     >>> crawler.run()
 
 """
@@ -53,7 +53,7 @@ class SubPage(TagBase):
     def _get_sub_page(self):
         if self._sub_page is not None:
             if isinstance(self._sub_page, (WebPage, Parser)):
-                if not getattr(self._sub_page, '_url_obj'):
+                if not getattr(self._sub_page, '_utx'):
                     self._sub_page.utx = self
                 if not getattr(self._sub_page, '_source'):
                     self._sub_page.get(self.url)
@@ -82,7 +82,7 @@ class SubPage(TagBase):
         """Creates a WebPage object to download the page at the url.
 
         :rtype: WebPage
-        :returns : used webpage
+        :returns : used web page
         """
         if not self.url.startswith(self.base_url) or \
                 os.path.exists(self.file_path):

@@ -10,6 +10,7 @@ Asset elements of a web page.
 
 import logging
 import os.path
+from abc import ABC
 from io import BytesIO
 from datetime import datetime
 from functools import lru_cache
@@ -17,7 +18,8 @@ from mimetypes import guess_all_extensions
 from shutil import copyfileobj
 from typing import IO
 
-from .compat import bytes, pathname2url
+from six import binary_type
+from six.moves.urllib.request import pathname2url
 from .configs import config, SESSION
 from .core import is_allowed
 from .globals import CSS_FILES_RE, CSS_IMPORTS_RE, CSS_URLS_RE, POOL_LIMIT, MARK, __version__
@@ -238,7 +240,7 @@ class LinkTag(TagBase):
         :rtype: str
         :return: processed url
         """
-        url = match_obj.group(1)
+        url = match_obj.group(2)
 
         # url can be base64 encoded content which is not required to be stored
         if url[:4] == b'data':
@@ -281,7 +283,7 @@ class LinkTag(TagBase):
         if hasattr(css_string, 'read'):
             css_string = css_string.read()
 
-        assert isinstance(css_string, bytes), "Provide string type contents."
+        assert isinstance(css_string, binary_type), "Provide string type contents."
         assert callable(repl), "Repl must be callable type which returns binary strings."
 
         # the regex matches all those with double mix-match
@@ -300,7 +302,6 @@ class LinkTag(TagBase):
         as usual.
         """
         with POOL_LIMIT:
-
             if os.path.exists(self.file_path):
                 if not config['over_write']:
                     LOGGER.info("File already exists at location: [%r]" % self.file_path)
@@ -399,7 +400,7 @@ def cached_path2url_relate(target_file, start_file):
     return pathname2url(relate(target_file, start_file))
 
 
-class _ElementFactory(object):
+class _ElementFactory(ABC):
 
     def __init__(self):
         self._element_map = {}

@@ -6,10 +6,9 @@ pywebcopy.parsers
 Parsing of the html and Element generation factory.
 
 """
-
+from abc import ABC
 
 __all__ = ['Parser', 'MultiParser']
-
 
 import logging
 import re
@@ -31,10 +30,9 @@ from lxml.html import (
     _iter_css_urls, _parse_meta_refresh_url
 )
 
-from .compat import urljoin
+from six.moves.urllib.parse import urljoin
 from .exceptions import ParseError
 from .globals import SINGLE_LINK_ATTRIBS, LIST_LINK_ATTRIBS, MARK, __version__
-
 
 utc_now = datetime.utcnow
 # _iter_srcset_urls = re.compile(r'((?:https?://)?[^\s,]+)[\s]+').finditer
@@ -42,11 +40,10 @@ utc_now = datetime.utcnow
 # _iter_srcset_urls = re.compile(r"((?:[^\s,]+))(?:.*?,)?").finditer
 _iter_srcset_urls = re.compile(r"([^\s,]{5,})", re.MULTILINE).finditer
 
-
 LOGGER = logging.getLogger('parsers')
 
 
-class Parser(object):
+class Parser(ABC):
     """
     Base Parser which builds tree and generates file elements
     and also handles these file elements.
@@ -83,7 +80,7 @@ class Parser(object):
 
         :returns: List of Elements
         """
-        if not self._parseComplete and self.root is None:
+        if self._parseComplete and self.root is None:
             raise RuntimeError("Synchronising error between parse flag and actual parsing.")
 
         if not self._parseComplete:
@@ -171,6 +168,13 @@ class Parser(object):
             # WaterMarking :)
             self.root.insert(0, Comment(MARK.format('', __version__, utx.url, utc_now(), '')))
 
+        # There are internal links present on the html page which are files
+        # that includes `#` and `javascript:` and 'data:base64;` type links
+        # or a simple `/` url referring anchor tag
+        # thus these links needs to be left as is.
+        factory = getattr(self, 'make_element', None)
+        assert callable(factory), "Element generator is not callable!"
+
         # Modify the tree elements
         for el in context_tree.iter():
             # A element can contain multiple urls
@@ -178,15 +182,8 @@ class Parser(object):
 
                 if pack is not None:
                     elem, attr, url, pos = pack
-                else:
+                else:  # pragma: no cover
                     continue
-
-                # There are internal links present on the html page which are files
-                # that includes `#` and `javascript:` and 'data:base64;` type links
-                # or a simple `/` url referring anchor tag
-                # thus these links needs to be left as is.
-                factory = getattr(self, 'make_element', None)
-                assert callable(factory), "Element generator is not callable!"
 
                 if elem is not None:
                     o = factory(elem, attr, url, pos)
@@ -217,7 +214,7 @@ class Parser(object):
         """
         attribs = el.attrib
         tag = _nons(el.tag)
-        if tag == 'object':
+        if tag == 'object':  # pragma: no cover
             codebase = None
             if 'codebase' in attribs:
                 codebase = el.get('codebase')
@@ -295,7 +292,7 @@ cleaner.javascript = True
 cleaner.style = True
 
 
-class MultiParser(object):
+class MultiParser(object):  # pragma: no cover
     """Provides apis specific to scraping or data searching purposes.
 
     This contains the apis from the requests-html module.
@@ -594,7 +591,7 @@ class MultiParser(object):
         return [r for r in findall(template, self.html)]
 
 
-class Element(MultiParser):
+class Element(MultiParser):  # pragma: no cover
     """An element of HTML.
 
     :param element: The element from which to base the parsing upon.

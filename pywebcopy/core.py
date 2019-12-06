@@ -9,19 +9,15 @@ pywebcopy.core
 Core functionality of the pywebcopy engine.
 """
 from __future__ import absolute_import
+
+import logging
 import os
 import shutil
-import logging
 import zipfile
 from datetime import datetime
 from functools import lru_cache
 from threading import enumerate, main_thread
 
-from requests import Response
-from requests.exceptions import HTTPError, ConnectionError
-
-# from . import __version__, SESSION
-from .compat import BytesIO
 from .configs import config, SESSION
 from .globals import MARK, __version__
 
@@ -68,7 +64,7 @@ def zip_project(timeout=10):
     if config['delete_project_folder']:
         shutil.rmtree(config['project_folder'])
 
-    LOGGER.info("Downloaded Contents Size :: %s KB's" % str(SESSION._bytes // 1024))
+    LOGGER.info("Downloaded Contents Size :: {} KB's".format(getattr(SESSION, '_bytes')//1024))
 
     return zip_fn
 
@@ -262,7 +258,7 @@ def is_allowed(ext):
 #         # Files can throw an IOError or similar when failed to open or write in that
 #         LOGGER.debug("Making path for the file at location %s" % location)
 #         if not os.path.exists(os.path.dirname(location)):
-#             os.makedirs(os.path.dirname(location))
+#             os.make dirs(os.path.dirname(location))
 #
 #     except OSError as e:
 #         LOGGER.critical(e)
