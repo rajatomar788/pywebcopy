@@ -36,11 +36,11 @@ CSS_URLS_RE = re.compile(rb'''url\((?!['"]?(?:https?:|//))(['"]?)([^'")])\1\)'''
 CSS_IMPORTS_RE = re.compile(rb'''@import.?"'["'].?''', re.I)
 
 """Both urls and imports combined."""
-CSS_FILES_RE = re.compile(rb'''(?:url\((?!['"]?(?:https?:|//))(['"]?)([^'")])\1\))|(?:@import.?"'["'].*?)''', re.I)
+# CSS_FILES_RE = re.compile(rb'''(?:url\((?!['"]?(?:https?:|//))(['"]?)([^'")])\1\))|(?:@import.?"'["'].*?)''', re.I)
 
 # CSS_URLS_RE = re.compile(b'''url\\(['"]?([^)]*)["']?\\)''', re.I)
 # CSS_IMPORTS_RE = re.compile(b'''@import\\s*['"](.*?)['"]\\s*''', re.I)
-# CSS_FILES_RE = re.compile(b'''(?:url\\(['"]?([^)]*)["']?\\))|(?:@import\\s*['"](.*?)['"]\\s*)''', re.I)
+CSS_FILES_RE = re.compile(b'''(?:url\\(['"]?([^)"']*)["']?\\))|(?:@import\\s*['"](.*?)['"]\\s*)''', re.I)
 
 
 DATA_URL_RE = re.compile(r'^data:image/.+;base64', re.I)

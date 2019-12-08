@@ -33,12 +33,16 @@ Python library to clone web-pages and web-sites with all its peripheral files.
     3. FIX: Some tests were not running due to bad path detection
     4. NEW: Added command `version` which prints current version
 
+.. version changed :: 6.1.1
+    1. FIX: Css linked files were not being recognised See issue #19
+    2. FIX: Sometimes %22 was being appended to the url and response was error 403
+
 """
 
 __author__ = 'Raja Tomar'
 __email__ = 'rajatomar788@gmail.com'
 __license__ = 'Apache License 2.0'
-__version__ = '6.1.0'
+__version__ = '6.1.1'
 
 import logging
 

@@ -240,7 +240,7 @@ class LinkTag(TagBase):
         :rtype: str
         :return: processed url
         """
-        url = match_obj.group(2)
+        url = match_obj.group(1)
 
         # url can be base64 encoded content which is not required to be stored
         if url[:4] == b'data':
