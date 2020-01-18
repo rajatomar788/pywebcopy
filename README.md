@@ -496,7 +496,7 @@ One feature is that the raw html is now also accepted.
 >>> wp = WebPage()
 >>> wp.set_source(HTML)
 >>> wp.url = base_url
->>> wp.save_webpage()
+>>> wp.save_complete()
 
 ```
 
