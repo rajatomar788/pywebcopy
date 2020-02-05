@@ -28,7 +28,7 @@ MARK = textwrap.dedent("""
 """Matches any url() declaration in a css file."""
 # https://www.regextester.com/106463
 # CSS_URLS_RE = re.compile(b'''url\(['"]?([^)])["']?\)''', re.I)
-CSS_URLS_RE = re.compile(rb'url\(('+b'["][^"]*["]|'+b"['][^']*[']|"+rb'[^)]*)\)', re.I)
+CSS_URLS_RE = re.compile(rb'url\((' + rb'["][^"]*["]|' + rb"['][^']*[']|" +rb'[^)]*)\)', re.I)
 
 """Matches any @import declaration in a css file."""
 # https://regex101.com/r/lC1hO3/2
