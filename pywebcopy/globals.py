@@ -1,5 +1,4 @@
 # -*- coding: utf-8 -*-
-import os
 import re
 import textwrap
 import threading
@@ -10,7 +9,7 @@ from . import __version__
 # under control so that the resource overloading could
 # be prevented and the program remains memory efficient
 #: new in version: 6.0.0
-POOL_LIMIT = threading.Semaphore((os.cpu_count() or 1) * 4)
+POOL_LIMIT = threading.Semaphore(5)
 
 MARK = textwrap.dedent("""
         {0}
