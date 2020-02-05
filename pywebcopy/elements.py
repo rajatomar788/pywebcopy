@@ -12,7 +12,6 @@ import logging
 import os.path
 from io import BytesIO
 from datetime import datetime
-from functools import lru_cache
 from mimetypes import guess_all_extensions
 from shutil import copyfileobj
 from typing import IO
@@ -21,7 +20,7 @@ from six import binary_type
 from six.moves.urllib.request import pathname2url
 from .configs import config, SESSION
 from .core import is_allowed
-from .globals import CSS_IMPORTS_RE, CSS_URLS_RE, POOL_LIMIT, MARK, __version__
+from .globals import CSS_IMPORTS_RE, CSS_URLS_RE, POOL_LIMIT, MARK, __version__, lru_cache
 from .urls import URLTransformer, relate
 
 __all__ = ['TagBase', 'AnchorTag', 'ImgTag', 'ScriptTag', 'LinkTag', '_ElementFactory']
