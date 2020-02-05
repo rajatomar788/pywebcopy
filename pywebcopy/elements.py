@@ -10,7 +10,6 @@ Asset elements of a web page.
 
 import logging
 import os.path
-from abc import ABC
 from io import BytesIO
 from datetime import datetime
 from functools import lru_cache
@@ -400,7 +399,7 @@ def cached_path2url_relate(target_file, start_file):
     return pathname2url(relate(target_file, start_file))
 
 
-class _ElementFactory(ABC):
+class _ElementFactory(object):
 
     def __init__(self):
         self._element_map = {}
