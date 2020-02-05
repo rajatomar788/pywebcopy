@@ -15,11 +15,10 @@ import os
 import shutil
 import zipfile
 from datetime import datetime
-from functools import lru_cache
 from threading import enumerate, main_thread
 
 from .configs import config, SESSION
-from .globals import MARK, __version__
+from .globals import MARK, __version__, lru_cache
 
 
 LOGGER = logging.getLogger('core')
