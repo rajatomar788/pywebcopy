@@ -49,7 +49,7 @@ class ConfigHandler(UserDict):
     stores and provides configuration values in every module.
     """
     def __init__(self, *args, **kwargs):
-        super(ConfigHandler, self).__init__(*args, **kwargs)
+        UserDict.__init__(self, *args, **kwargs)
 
     def __setitem__(self, key, value):
         self.data[key.lower()] = value
@@ -75,7 +75,7 @@ class ConfigHandler(UserDict):
     def reset_config(self):
         """ Resets all to configuration to default state. """
         self.data = {}
-        super(ConfigHandler, self).__init__(self)
+        UserDict.__init__(self)
 
     def is_set(self):
         """Tells whether the configuration has been setup or not."""
