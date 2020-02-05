@@ -22,7 +22,7 @@ from six import binary_type
 from six.moves.urllib.request import pathname2url
 from .configs import config, SESSION
 from .core import is_allowed
-from .globals import CSS_FILES_RE, CSS_IMPORTS_RE, CSS_URLS_RE, POOL_LIMIT, MARK, __version__
+from .globals import CSS_IMPORTS_RE, CSS_URLS_RE, POOL_LIMIT, MARK, __version__
 from .urls import URLTransformer, relate
 
 __all__ = ['TagBase', 'AnchorTag', 'ImgTag', 'ScriptTag', 'LinkTag', '_ElementFactory']
@@ -327,7 +327,7 @@ class LinkTag(TagBase):
             # Extracts urls from `url()` and `@imports` rules in the css file.
             # the regex matches all those with double mix-match quotes and normal ones
             # all the linked files will be saved and file paths would be replaced accordingly
-            contents = BytesIO(CSS_FILES_RE.sub(self.repl, req.content))
+            contents = self.replace_urls(req.content, self.repl)
 
             # log amount of links found
             LOGGER.info('[%d] CSS linked files are found in file [%s]'
