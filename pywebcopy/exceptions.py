@@ -27,7 +27,7 @@ class ConnectError(PywebcopyError):
     error or http error. """
 
 
-class DependencyNotFoundError(ModuleNotFoundError):
+class DependencyNotFoundError(ImportError):
     """A module or library required to use some feature is not installed."""
 
 
