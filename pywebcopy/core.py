@@ -15,7 +15,7 @@ import os
 import shutil
 import zipfile
 from datetime import datetime
-from threading import enumerate, main_thread
+import threading
 
 from .configs import config, SESSION
 from .globals import MARK, __version__, lru_cache
@@ -30,11 +30,10 @@ def zip_project(timeout=10):
     :rtype: str
     :returns: location of the zipped project_folder file.
     """
-    _mainThread = main_thread()
     # wait for the threads to finish downloading files
 
-    for thread in enumerate():
-        if not thread or thread is _mainThread:
+    for thread in threading.enumerate():
+        if not thread or isinstance(thread, threading._MainThread):
             continue
         if thread.is_alive():
             thread.join(timeout=timeout)
