@@ -28,19 +28,20 @@ MARK = textwrap.dedent("""
 """Matches any url() declaration in a css file."""
 # https://www.regextester.com/106463
 # CSS_URLS_RE = re.compile(b'''url\(['"]?([^)])["']?\)''', re.I)
-CSS_URLS_RE = re.compile(rb'''url\((?!['"]?(?:https?:|//))(['"]?)([^'")])\1\)''', re.I)
+CSS_URLS_RE = re.compile(rb'url\(('+b'["][^"]*["]|'+b"['][^']*[']|"+rb'[^)]*)\)', re.I)
 
 """Matches any @import declaration in a css file."""
 # https://regex101.com/r/lC1hO3/2
 # CSS_IMPORTS_RE = re.compile(b'''@import\s*'"['"]\s*''', re.I)
-CSS_IMPORTS_RE = re.compile(rb'''@import.?"'["'].?''', re.I)
+CSS_IMPORTS_RE = re.compile(rb'@import "(.*?)"')
 
 """Both urls and imports combined."""
 # CSS_FILES_RE = re.compile(rb'''(?:url\((?!['"]?(?:https?:|//))(['"]?)([^'")])\1\))|(?:@import.?"'["'].*?)''', re.I)
 
 # CSS_URLS_RE = re.compile(b'''url\\(['"]?([^)]*)["']?\\)''', re.I)
 # CSS_IMPORTS_RE = re.compile(b'''@import\\s*['"](.*?)['"]\\s*''', re.I)
-CSS_FILES_RE = re.compile(b'''(?:url\\(['"]?([^)"']*)["']?\\))|(?:@import\\s*['"](.*?)['"]\\s*)''', re.I)
+# XXX Not Needed
+# CSS_FILES_RE = re.compile(b'''(?:url\\(['"]?([^)"']*)["']?\\))|(?:@import\\s*['"](.*?)['"]\\s*)''', re.I)
 
 
 DATA_URL_RE = re.compile(r'^data:image/.+;base64', re.I)
