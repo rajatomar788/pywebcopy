@@ -6,7 +6,6 @@ pywebcopy.parsers
 Parsing of the html and Element generation factory.
 
 """
-from abc import ABC
 
 __all__ = ['Parser', 'MultiParser']
 
@@ -43,7 +42,7 @@ _iter_srcset_urls = re.compile(r"([^\s,]{5,})", re.MULTILINE).finditer
 LOGGER = logging.getLogger('parsers')
 
 
-class Parser(ABC):
+class Parser(object):
     """
     Base Parser which builds tree and generates file elements
     and also handles these file elements.
