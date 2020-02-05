@@ -10,7 +10,7 @@ Modifies the behaviour of pywebcopy.
 import logging
 import os
 from io import BytesIO
-from collections import UserDict
+from six.moves import UserDict
 from six.moves.urllib.parse import urlparse, urljoin
 
 import requests
