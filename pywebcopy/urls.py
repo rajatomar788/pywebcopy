@@ -12,8 +12,8 @@ import logging
 import hashlib
 import itertools
 import os
-import abc
 
+from six import PY2
 from six.moves.urllib.parse import (
     urljoin,
     unquote,
@@ -51,10 +51,13 @@ def url2path(url, base_url=None, base_path=None, default_filename=None):
 
 
 # Counter for generating distinguishable file names.
-counter = itertools.count().__next__
+if PY2:
+    counter = itertools.count().next
+else:
+    counter = itertools.count().__next__
 
 
-class URLTransformer(abc.ABC):
+class URLTransformer(object):
     """Transforms url into various types and subsections.
 
     :param str url: a url to perform transform operations on
