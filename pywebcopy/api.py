@@ -25,7 +25,7 @@ def webpage():
 
 
 def save_webpage(url, project_folder, html=None, project_name=None,
-                 encoding=None, reset_config=False, **kwargs):
+                 encoding=None, reset_config=False, popup=False, **kwargs):
     """Easiest way to save any single webpage with images, css and js.
 
     usage::
@@ -50,6 +50,8 @@ def save_webpage(url, project_folder, html=None, project_name=None,
     :param reset_config: whether to reset the config after saving the web page; could be useful if
     you are saving different web pages which are located on different servers.
     :type reset_config: bool
+    :param popup: whether or not to open a new tab after saving the webpage.
+    :type popup: bool
     """
 
     #: Set up the global configuration
@@ -95,8 +97,10 @@ def save_webpage(url, project_folder, html=None, project_name=None,
         # reset the config so that it does not mess up any con-current calls to
         # the different web pages
         config.reset_config()
-
-    open_new_tab(wp.utx.file_path)
+    
+    # Open recently saved webpage
+    if popup:
+        open_new_tab(wp.utx.file_path)
 
 
 def save_website(url, project_folder, project_name=None, **kwargs):
