@@ -31,4 +31,4 @@ twine==1.11.0
 urllib3==1.24.2
 w3lib==1.19.0
 webencodings==0.5.1
-typing; python_version<"3.5"
+typing==3.7.4.1; python_version<"3.5"
