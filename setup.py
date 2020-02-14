@@ -24,7 +24,7 @@ VERSION = pywebcopy.__version__
 
 # What packages are required for this module to be executed?
 REQUIRED = [
-    'requests', 'lxml', 'pyquery', 'parse', 'w3lib', 'bs4', 'fire', 'typing; python_version<"3.5",
+    'requests', 'lxml', 'pyquery', 'parse', 'w3lib', 'bs4', 'fire', 'typing; python_version<\"3.5\"',
 ]
 
 
