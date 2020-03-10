@@ -287,7 +287,7 @@ class TestSubPage(unittest.TestCase):
 
     def test_run_when_file_exists(self):
         os.makedirs(os.path.dirname(self.utx.file_path))
-        open(self.utx.file_path, 'x').close()
+        open(self.utx.file_path, 'w').close()
         self.assertIsNone(self.utx.run())
         os.unlink(self.utx.file_path)
 
