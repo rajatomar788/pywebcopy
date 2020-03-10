@@ -8,6 +8,7 @@ Asset elements of a web page.
 
 """
 
+import errno
 import logging
 import os.path
 from io import BytesIO
@@ -99,8 +100,9 @@ class FileMixin(URLTransformer):
             #: Make the directories
             try:
                 os.makedirs(os.path.dirname(file_path))
-            except FileExistsError:
-                pass
+            except OSError as e:
+                if e.errno == errno.EEXIST:
+                    pass
 
         req = SESSION.get(url, stream=True)
         req.raw.decode_content = True
@@ -185,8 +187,9 @@ class FileMixin(URLTransformer):
             #: Make the directories
             try:
                 os.makedirs(os.path.dirname(file_path))
-            except FileExistsError:
-                pass
+            except OSError as e:
+                if e.errno == errno.EEXIST:
+                    pass
 
         if not is_allowed(file_ext):
             LOGGER.error("File of type %r at url %r is not allowed to be "
