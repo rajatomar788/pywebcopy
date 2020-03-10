@@ -1,10 +1,10 @@
-import io
 import logging
 import os
 import shutil
 import tempfile
 import unittest
 
+import six
 import requests
 # import path lib
 import pywebcopy
@@ -50,7 +50,7 @@ class TestParser(unittest.TestCase):
             self.p.set_source('')
 
     def test_source_loading(self):
-        stream = io.BytesIO()
+        stream = six.BytesIO()
         self.p._source = stream
         self.assertEqual(self.p.get_source(), stream)
 
@@ -108,7 +108,7 @@ class TestWebPage(unittest.TestCase):
         self.p = wp.WebPage()
         self.url = 'http://test-site.com'
         self.path = tempfile.mkdtemp()
-        self.source = io.StringIO(html)
+        self.source = six.StringIO(html)
         self.file_name = 'index.html'
         self.utx = urls.URLTransformer(self.url, self.url, self.path, self.file_name)
 
@@ -153,7 +153,7 @@ class TestWebPage(unittest.TestCase):
 
     def test_parsing_source_checks(self):
         # Objective is parsing without any errors
-        self.p.set_source(io.StringIO())
+        self.p.set_source(six.StringIO())
         self.p.utx = urls.URLTransformer(self.url, self.url, self.path)
         self.p.parse()
 
@@ -218,7 +218,7 @@ class TestWebPageElements(unittest.TestCase):
         self.w = wp.WebPage()
         self.url = 'http://webpage2.com'
         self.path = str(tempfile.mkdtemp())
-        self.source = io.StringIO(html_2)
+        self.source = six.StringIO(html_2)
         self.file_name = 'index.html'
         self.utx = urls.URLTransformer(self.url, self.url, self.path, self.file_name)
         self.w.set_source(self.source)
@@ -254,7 +254,7 @@ class TestSubPage(unittest.TestCase):
         self.path = tempfile.mkdtemp()
         self.file_name = 'index.html'
         self.utx = cr.SubPage(self.url, self.url, self.path, self.file_name)
-        self.source = io.StringIO(html)
+        self.source = six.StringIO(html)
         self.w = wp.WebPage()
 
     def tearDown(self):
@@ -311,7 +311,7 @@ class TestCrawler(unittest.TestCase):
         self.w = cr.Crawler()
         self.url = 'http://webpage2.com'
         self.path = tempfile.mkdtemp()
-        self.source = io.StringIO(html)
+        self.source = six.StringIO(html)
         self.file_name = 'index.html'
         self.utx = urls.URLTransformer(self.url, self.url, self.path, self.file_name)
 
