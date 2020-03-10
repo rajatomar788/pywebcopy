@@ -27,7 +27,6 @@ LOGGER = logging.getLogger(__name__)
 
 default_config = {
     'debug': False,
-    'log_file': None,
     'project_name': None,
     'project_folder': None,
     'over_write': False,
@@ -137,36 +136,11 @@ class ConfigHandler(UserDict):
         if not os.path.exists(norm_p):
             os.makedirs(norm_p)
 
-        # change the working directory so that no file is misplaced
-        os.chdir(norm_p)
-
-        lf = os.path.join(norm_p, 'pywebcopy_log.log')
-
-        if os.path.exists(lf):
-            try:
-                os.unlink(lf)
-            except OSError:     # pragma: no cover
-                # Just gonna leave it for default logger to figure out
-                pass
-
-        self.__setitem__('log_file', lf)
-
         # Console loggers (StreamHandlers) levels would be tuned
         if self.get('debug') is True:
             for handler in logging.root.handlers:
                 if isinstance(handler, logging.StreamHandler):
                     handler.setLevel(logging.DEBUG)
-
-        # Add a new file logger to the root logger
-        f_stream = logging.FileHandler(lf, 'w')
-        f_stream.setLevel(logging.DEBUG)
-        f_stream.setFormatter(
-            logging.Formatter(
-                "%(asctime)s - %(levelname)s - %(name)s.%(funcName)s:%(lineno)d - %(message)s",
-                "%d-%b-%Y %H:%M:%S"
-            )
-        )
-        logging.root.addHandler(f_stream)
 
     def setup_config(self, project_url=None, project_folder=None, project_name=None,
                      over_write=False, bypass_robots=False, zip_project_folder=True,
