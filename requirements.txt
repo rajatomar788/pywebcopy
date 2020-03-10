@@ -10,7 +10,7 @@ cssutils==1.0.2
 funcsigs==1.0.2
 html5lib==1.0.1
 idna==2.7
-lxml==4.2.5
+lxml>=4.2.5
 more-itertools==4.3.0
 parse==1.8.4
 pathlib2==2.3.2
