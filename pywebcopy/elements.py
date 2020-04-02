@@ -293,7 +293,7 @@ class LinkTag(TagBase):
         contents = CSS_IMPORTS_RE.sub(repl, contents)
 
         # return the rewritten bytes contents
-        return contents
+        return BytesIO(contents)
 
     def run(self):
         """
