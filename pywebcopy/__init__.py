@@ -42,7 +42,7 @@ Python library to clone web-pages and web-sites with all its peripheral files.
 __author__ = 'Raja Tomar'
 __email__ = 'rajatomar788@gmail.com'
 __license__ = 'Apache License 2.0'
-__version__ = '6.1.1'
+__version__ = '6.3.0'
 
 import logging
 

@@ -276,10 +276,10 @@ class TestUrl3(unittest.TestCase):
         self.path = None
 
     def test_utx_url(self):
-        self.assertEqual(urljoin(self.base_url, self.url), self.utx.url)
+        self.assertEqual("http://some-site.com:80/some/rel/path/", self.utx.url)
 
     def test_url_split(self):
-        self.assertEqual(urlsplit(urljoin(self.base_url, self.url)), self.utx.parsed_url)
+        self.assertEqual(urlsplit("http://some-site.com:80/some/rel/path/"), self.utx.parsed_url)
 
     def test_utx_base_url(self):
         self.assertEqual(self.base_url, self.utx.base_url)
@@ -291,7 +291,7 @@ class TestUrl3(unittest.TestCase):
         self.assertEqual(self.file_name, self.utx.file_name)
 
     def test_url_path(self):
-        self.assertEqual(urlparse(urljoin(self.base_url, self.url)).path, self.utx.url_path)
+        self.assertEqual("/some/rel/path/", self.utx.url_path)
 
     def test_to_path(self):
         pass
