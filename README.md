@@ -142,7 +142,7 @@ pywebcopy.SESSION.headers.update({
 
 # Rest of the code is as usual
 kwargs = {
-    'url': 'http://localhost:5000',
+    'project_url': 'http://localhost:5000',
     'project_folder': 'e://saved_pages//',
     'project_name': 'my_site'
 }
