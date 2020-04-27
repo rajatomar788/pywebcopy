@@ -1,4 +1,3 @@
-#!/usr/bin/env python3
 # -*- coding: utf-8 -*-
 
 """
@@ -16,7 +15,6 @@ import os
 import time
 import platform
 
-import pywebcopy
 
 if platform.system() == 'Windows':
     try:  # Python 3.3+
@@ -26,24 +24,11 @@ if platform.system() == 'Windows':
 else:
     preferred_clock = time.time
 
-
-# pywebcopy.DEBUG = True
-pywebcopy.config['bypass_robots'] = True
-# page_url = 'https://bing.com/'
-# page_url = 'https://google.com/'
-# page_url = 'https://codeburst.io/building-beautiful-command-line-interfaces-with-python-26c7e1bb54df'
-# page_url = 'https://www.w3schools.com/'
-# page_url = 'https://test-domain.com/'
-page_url = 'http://localhost:5000'
-
-handle = open(os.path.join(os.getcwd(), 'tests', 'test.html'), 'rb')
-# page_url = 'https://getbootstrap.com/'
-
-download_folder = os.path.join(os.path.dirname(os.getcwd()), 'saved')
-
 start = preferred_clock()
 
-pywebcopy.save_webpage(page_url, download_folder, html=handle, bypass_robots=True)
+
+# Import the library
+import pywebcopy
 '''
 If you are getting `pywebcopy.exceptions.AccessError` Exception.
 then check if website allows scraping of its content.
@@ -88,28 +73,44 @@ For `pywebcopy.exceptions.AccessError` use the code provided on top sections.
 choose and uncomment the method which you like to use.
 """
 
-# method_1()
-# pywebcopy.save_webpage(project_url='http://google.com', project_folder='c://Saved_Webpages/',)
+# method 1 Best practice 
 
-# :Deprecated in version > 2.x : method 2:
-# pywebcopy.config.config['bypass_robots'] = True
-# wp = pywebcopy.generators.AssetsGenerator('https://www.bing.com/', 'e://tests/')
-# wp.generate_style_map()
-# wp.save_to_disk()
+from pywebcopy import WebPage
+from pywebcopy import config
 
-# method 3:
-# pywebcopy.WebPage(page_url, download_folder).save_complete()
 
-# Advanced Features in Test Phase
+def scrape(url, folder, timeout=1):
+  
+    config.setup_config(url, folder)
 
-# :New in version 4: method 4:
+    wp = WebPage()
+    wp.get(url)
 
-# raw html is now also accepted
-# HTML = open('c:/users/raja/desktop/test.html').read()
+    # start the saving process
+    wp.save_complete()
 
-# pywebcopy.WebPage(url='https://google.com/', project_folder='e://tests/pwc4/',
-# HTML=HTML, over_write=True).save_complete()
+    # join the sub threads
+    for t in wp._threads:
+        if t.is_alive():
+           t.join(timeout)
 
+    # location of the html file written 
+    return wp.file_path
+
+
+# method 2
+'''
+pywebcopy.save_webpage('http://www.google.com', project_folder='c://Saved_Webpages/',)
+'''
+
+# method 3 using local html
+'''
+page_url = 'http://localhost:5000/'
+handle = open(os.path.join(os.getcwd(), 'tests', 'test.html'), 'rb')
+download_folder = os.path.join(os.path.dirname(os.getcwd()), 'saved')
+pywebcopy.save_webpage(page_url, download_folder, html=handle, bypass_robots=True)
+
+'''
 
 '''
 Whole Websites
@@ -122,31 +123,35 @@ you proceed.
 choose method and uncomment the method which you like.
 '''
 
-# method 1:
-'''
-pywebcopy.config.setup_config(project_url='http://localhost:5000/', 'project_folder='e://tests/', project_name='LocalHost')
-crawler = pywebcopy.Crawler('http://localhost:5000/')
-crawler.crawl()
-'''
 
-# method 2:
+# method 1:  Best Practise
+
+from pywebcopy import Crawler
+from pywebcopy import config
+
+
+def crawl(url, folder, timeout=1):
+  
+    config.setup_config(url, folder)
+
+    cr = Crawler()
+    cr.get(url)
+
+    # start the saving process
+    cr.save_complete()
+
+    # join the sub threads
+    for t in cr._threads:
+        if t.is_alive():
+           t.join(timeout)
+
+    # location of the html file written 
+    return cr.file_path
+
+
+# method 2: Using simple method
 '''
 pywebcopy.save_website(page_url, download_folder)
 '''
-# pywebcopy.save_webpage(page_url, download_folder)
-# pywebcopy.WebPage(page_url, html).save_html('e://tests//index.html')
-# wp = pywebcopy.webpage.WebPage()
-# wp.url = 'http://localhost:5000'
-# wp.get('http://google.com/')
-# wp.set_source(handle)
-# pywebcopy.config.setup_config(wp.url, download_folder, 'LocalHost')
-# wp.save_complete()
-'''
-for thread in threading.enumerate():
-    if thread == threading.main_thread():
-        continue
-    else:
-        thread.join()
-'''
-print("Execution time : ", preferred_clock() - start)
 
+print("Execution time : ", preferred_clock() - start)
