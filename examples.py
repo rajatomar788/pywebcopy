@@ -138,7 +138,7 @@ def crawl(url, folder, timeout=1):
     cr.get(url)
 
     # start the saving process
-    cr.save_complete()
+    cr.crawl()
 
     # join the sub threads
     for t in cr._threads:
