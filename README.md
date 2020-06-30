@@ -54,7 +54,7 @@ You should always check if the latest pywebcopy is installed successfully.
 
 ```python
 >>> import pywebcopy
->>> pywebcopy.__version___
+>>> pywebcopy.__version__
 6.0.0
 
 ```
