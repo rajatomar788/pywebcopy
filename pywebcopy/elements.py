@@ -257,6 +257,28 @@ class LinkTag(TagBase):
 
         # decode the url
         str_url = url.decode()
+        
+        # stash head and tail quotes/apostrophes
+        apostrophe_check = False  # True in case of quote in the head of string
+        url_was_with_head_quote = str_url[0] == '"'
+        if not url_was_with_head_quote:
+            apostrophe_check = url_was_with_head_quote = str_url[0] == "'"
+        url_was_with_tail_quote = str_url[-1] == ("'" if apostrophe_check else '"')
+        if url_was_with_head_quote ^ url_was_with_tail_quote:
+            import warnings
+            positions = ["head", "tail"]
+            if url_was_with_tail_quote:
+                positions = reversed(positions)
+            raise UserWarning(
+                "There is {0} in the {1} of the string and no {0} in the {2}."
+                " The considered line: {3}".format(
+                    "'" if apostrophe_check else '"', *positions, str_url
+                )
+            )
+        # The case of not equal url_was_with_*_quotes is considered above
+        url_was_enquoted = url_was_with_head_quote
+        if url_was_enquoted:
+            str_url = str_url[1:-1]
 
         # If the url is also a css file then it that file also
         # needs to be scanned for urls.
@@ -271,6 +293,10 @@ class LinkTag(TagBase):
 
         # generate a relative path for this downloaded file
         url = pathname2url(relate(new_element.file_path, self.file_path))
+
+        # unstash head and tail quotes/apostrophes
+        if url_was_enquoted:
+            url = "{0}{1}{0}".format("'" if apostrophe_check else '"', url)
 
         return "url({})".format(url).encode()
 
