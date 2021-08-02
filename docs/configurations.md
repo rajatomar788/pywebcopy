@@ -87,7 +87,7 @@ below is the list of `config` keys with their `default` values :
 
     # list of allowed file extensions
     # shortend for readability
-    'ALLOWED_FILE_EXT': ['.html', '.css', ...]
+    'ALLOWED_FILE_EXT': {'.html', '.css', ...}
 
     # log file path
     'LOG_FILE': None
