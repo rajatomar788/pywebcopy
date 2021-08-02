@@ -268,11 +268,11 @@ class LinkTag(TagBase):
             import warnings
             positions = ["head", "tail"]
             if url_was_with_tail_quote:
-                positions = list((reversed(positions)))  # list() for the support by Py2.7
+                positions = reversed(positions)
             raise UserWarning(
-                "There is {0} in the {1} of the string and no {0} in the {2}."
-                " The considered line: {3}".format(
-                    "'" if apostrophe_check else '"', *positions, str_url
+                "There is {0} in the {2} of the string and no {0} in the {3}."
+                " The considered line: {1}".format(
+                    "'" if apostrophe_check else '"', str_url, *positions
                 )
             )
         # The case of not equal url_was_with_*_quotes is considered above
