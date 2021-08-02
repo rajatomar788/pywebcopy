@@ -268,7 +268,7 @@ class LinkTag(TagBase):
             import warnings
             positions = ["head", "tail"]
             if url_was_with_tail_quote:
-                positions = reversed(positions)
+                positions = list((reversed(positions)))  # list() for the support by Py2.7
             raise UserWarning(
                 "There is {0} in the {1} of the string and no {0} in the {2}."
                 " The considered line: {3}".format(
