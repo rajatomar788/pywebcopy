@@ -26,7 +26,6 @@ LOGGER = logging.getLogger(__name__)
 
 
 default_config = {
-    'debug': False,
     'project_name': None,
     'project_folder': None,
     'over_write': False,
@@ -39,6 +38,8 @@ default_config = {
     'load_javascript': True,
     'load_images': True,
     'join_timeout': None,
+    'log_file': None,
+    'debug': False,
 }
 """Default configuration with preconfigured values."""
 
@@ -82,10 +83,13 @@ class ConfigHandler(UserDict):
         try:
             assert self.get('project_folder') is not None
             assert self.get('project_name') is not None
-            assert self.get('log_file') is not None
         except AssertionError:
             return False
         else:
+            if self.get('log_file') is None:
+                raise UserWarning(
+                    "Setting log_file in the global configuration is recommended"
+                )
             return True
 
     def reset_key(self, key):
@@ -162,7 +166,7 @@ class ConfigHandler(UserDict):
             project_url=project_url,
             over_write=over_write, bypass_robots=bypass_robots, zip_project_folder=zip_project_folder,
             delete_project_folder=delete_project_folder, load_css=load_css, load_javascript=load_javascript,
-            load_images=load_images, join_timeout=join_timeout, debug=debug, log_file=log_file
+            load_images=load_images, join_timeout=join_timeout, log_file=log_file, debug=debug
         )
 
         #: Default base paths configuration is done right away so
