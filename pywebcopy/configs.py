@@ -33,12 +33,12 @@ default_config = {
     'bypass_robots': False,
     'zip_project_folder': True,
     'delete_project_folder': False,
-    'allowed_file_ext': safe_file_exts,
-    'http_headers': safe_http_headers,
     'load_css': True,
     'load_javascript': True,
     'load_images': True,
     'join_timeout': None,
+    'allowed_file_ext': safe_file_exts,
+    'http_headers': safe_http_headers,
 }
 """Default configuration with preconfigured values."""
 
@@ -145,7 +145,8 @@ class ConfigHandler(UserDict):
     def setup_config(self, project_url=None, project_folder=None, project_name=None,
                      over_write=False, bypass_robots=False, zip_project_folder=True,
                      delete_project_folder=False, load_css=True, load_javascript=True,
-                     load_images=True, join_timeout=None, log_file=None, debug=False):
+                     load_images=True, join_timeout=None, log_file=None, debug=False,
+                     allowed_file_ext=safe_file_exts, http_headers=safe_http_headers):
         """Sets up the complete config parts which requires a project_url to be present.
 
         Complete configuration is done here and subject to change according to application structure
@@ -162,7 +163,8 @@ class ConfigHandler(UserDict):
             project_url=project_url,
             over_write=over_write, bypass_robots=bypass_robots, zip_project_folder=zip_project_folder,
             delete_project_folder=delete_project_folder, load_css=load_css, load_javascript=load_javascript,
-            load_images=load_images, join_timeout=join_timeout, debug=debug, log_file=log_file
+            load_images=load_images, join_timeout=join_timeout, debug=debug, log_file=log_file,
+            allowed_file_ext=allowed_file_exts, http_headers=http_headers
         )
 
         #: Default base paths configuration is done right away so
