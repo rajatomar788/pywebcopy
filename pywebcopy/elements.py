@@ -269,7 +269,7 @@ class LinkTag(TagBase):
             positions = ["head", "tail"]
             if url_was_with_tail_quote:
                 positions = reversed(positions)
-            raise UserWarning(
+            LOGGER.error(
                 "There is {0} in the {2} of the string and no {0} in the {3}."
                 " The considered line: {1}".format(
                     "'" if apostrophe_check else '"', str_url, *positions
