@@ -87,8 +87,11 @@ class ConfigHandler(UserDict):
             return False
         else:
             if self.get('log_file') is None:
-                raise UserWarning(
-                    "Setting log_file in the global configuration is recommended"
+                import warnings
+                warnings.warn(
+                    UserWarning(
+                        "Setting log_file in the global configuration is recommended"
+                    )
                 )
             return True
 
