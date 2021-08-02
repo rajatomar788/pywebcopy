@@ -97,7 +97,7 @@ class ConfigHandler(UserDict):
         self[key] = default_config.get(key)
 
     def setup_paths(self, project_folder, project_name):
-        """Fills the project_name, project_name and its
+        """Fills the project_folder, project_name and its
         dependent keys after evaluation.
 
         .. version changed :: 6.0.0
@@ -106,12 +106,12 @@ class ConfigHandler(UserDict):
         .. version changed :: 6.1.0
             FIX: fixed path issue when using relative path for project_folder
 
-        :param project_name: new name of the project
         :param project_folder: folder where to store all the downloaded files
+        :param project_name: new name of the project
         """
 
         if not isinstance(project_name, str):
-            raise TypeError("project_name value must be a string")
+            raise TypeError("project_name value must be a string!")
 
         if not isinstance(project_folder, str):
             raise TypeError("project_folder value must be a string!")
@@ -120,7 +120,7 @@ class ConfigHandler(UserDict):
             project_folder = project_folder.replace(os.altsep, os.sep)
 
         if not project_folder.find(os.sep) > -1:    # pragma: no cover
-            TypeError("Project_folder path doesn't seem to be a valid path.")
+            TypeError("project_folder path doesn't seem to be a valid path.")
 
         project_folder = os.path.abspath(project_folder)
 
