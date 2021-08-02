@@ -162,7 +162,7 @@ LIST_LINK_ATTRIBS = frozenset([
 ])
 """Attributes which contains multiple links."""
 
-safe_file_exts = [
+safe_file_exts = {
     '.html',
     '.php',
     '.asp',
@@ -186,7 +186,7 @@ safe_file_exts = [
     '.woff',
     '.woff2',
     '.pwcf',  #: Default file extension
-]
+}
 
 safe_http_headers = {
     "Accept-Language": "en-US,en;q=0.9",
