@@ -18,6 +18,7 @@ from shutil import copyfileobj
 from typing import IO
 
 from six import binary_type
+from six.moves.urllib.parse import urlsplit
 from six.moves.urllib.request import pathname2url
 from .configs import config, SESSION
 from .core import is_allowed
