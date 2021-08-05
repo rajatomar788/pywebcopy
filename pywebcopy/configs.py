@@ -26,7 +26,6 @@ LOGGER = logging.getLogger(__name__)
 
 
 default_config = {
-    'debug': False,
     'project_name': None,
     'project_folder': None,
     'over_write': False,
@@ -37,6 +36,8 @@ default_config = {
     'load_javascript': True,
     'load_images': True,
     'join_timeout': None,
+    'log_file': None,
+    'debug': False,
     'allowed_file_ext': safe_file_exts,
     'http_headers': safe_http_headers,
 }
@@ -82,10 +83,16 @@ class ConfigHandler(UserDict):
         try:
             assert self.get('project_folder') is not None
             assert self.get('project_name') is not None
-            assert self.get('log_file') is not None
         except AssertionError:
             return False
         else:
+            if self.get('log_file') is None:
+                import warnings
+                warnings.warn(
+                    UserWarning(
+                        "Setting log_file in the global configuration is recommended"
+                    )
+                )
             return True
 
     def reset_key(self, key):
@@ -97,7 +104,7 @@ class ConfigHandler(UserDict):
         self[key] = default_config.get(key)
 
     def setup_paths(self, project_folder, project_name):
-        """Fills the project_name, project_name and its
+        """Fills the project_folder, project_name and its
         dependent keys after evaluation.
 
         .. version changed :: 6.0.0
@@ -106,12 +113,12 @@ class ConfigHandler(UserDict):
         .. version changed :: 6.1.0
             FIX: fixed path issue when using relative path for project_folder
 
-        :param project_name: new name of the project
         :param project_folder: folder where to store all the downloaded files
+        :param project_name: new name of the project
         """
 
         if not isinstance(project_name, str):
-            raise TypeError("project_name value must be a string")
+            raise TypeError("project_name value must be a string!")
 
         if not isinstance(project_folder, str):
             raise TypeError("project_folder value must be a string!")
@@ -120,7 +127,7 @@ class ConfigHandler(UserDict):
             project_folder = project_folder.replace(os.altsep, os.sep)
 
         if not project_folder.find(os.sep) > -1:    # pragma: no cover
-            TypeError("Project_folder path doesn't seem to be a valid path.")
+            TypeError("project_folder path doesn't seem to be a valid path.")
 
         project_folder = os.path.abspath(project_folder)
 
@@ -163,7 +170,7 @@ class ConfigHandler(UserDict):
             project_url=project_url,
             over_write=over_write, bypass_robots=bypass_robots, zip_project_folder=zip_project_folder,
             delete_project_folder=delete_project_folder, load_css=load_css, load_javascript=load_javascript,
-            load_images=load_images, join_timeout=join_timeout, debug=debug, log_file=log_file,
+            load_images=load_images, join_timeout=join_timeout, log_file=log_file, debug=debug,
             allowed_file_ext=allowed_file_ext, http_headers=http_headers
         )
 

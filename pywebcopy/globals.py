@@ -162,6 +162,16 @@ LIST_LINK_ATTRIBS = frozenset([
 ])
 """Attributes which contains multiple links."""
 
+WEB_PAGE_FILE_EXTS = {
+    '.html',
+    '.php',
+    '.asp',
+    '.aspx',
+    '.htm',
+    '.xhtml',
+}
+"""Despite of the file extension existance, the file with such an extension is not an asset"""
+
 safe_file_exts = {
     '.html',
     '.php',
