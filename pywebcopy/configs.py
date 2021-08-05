@@ -171,7 +171,7 @@ class ConfigHandler(UserDict):
             over_write=over_write, bypass_robots=bypass_robots, zip_project_folder=zip_project_folder,
             delete_project_folder=delete_project_folder, load_css=load_css, load_javascript=load_javascript,
             load_images=load_images, join_timeout=join_timeout, log_file=log_file, debug=debug,
-            allowed_file_ext=allowed_file_exts, http_headers=http_headers
+            allowed_file_ext=allowed_file_ext, http_headers=http_headers
         )
 
         #: Default base paths configuration is done right away so
