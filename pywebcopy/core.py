@@ -30,13 +30,13 @@ def zip_project(timeout=10):
     :rtype: str
     :returns: location of the zipped project_folder file.
     """
-    # wait for the threads to finish downloading files
-
-    for thread in threading.enumerate():
-        if not thread or isinstance(thread, threading._MainThread):
-            continue
-        if thread.is_alive():
-            thread.join(timeout=timeout)
+    if config['multithreading']:
+        # wait for the threads to finish downloading files
+        for thread in threading.enumerate():
+            if not thread or isinstance(thread, threading._MainThread):
+                continue
+            if thread.is_alive():
+                thread.join(timeout=timeout)
 
     zip_fn = os.path.abspath(config['project_folder']) + '.zip'
 

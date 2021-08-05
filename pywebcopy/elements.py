@@ -53,7 +53,10 @@ class FileMixin(URLTransformer):
 
     def run(self):
         # XXX: This could wait for any condition
-        with POOL_LIMIT:
+        if config['multithreading']:
+            with POOL_LIMIT:
+                self.download_file()
+        else:
             self.download_file()
 
     save_file = run
@@ -302,7 +305,7 @@ class LinkTag(TagBase):
         Thus css file content needs to be searched for urls and then it will proceed
         as usual.
         """
-        with POOL_LIMIT:
+        def _run():
             if os.path.exists(self.file_path):
                 if not config['over_write']:
                     LOGGER.info("File already exists at location: [%r]" % self.file_path)
@@ -340,6 +343,12 @@ class LinkTag(TagBase):
             # Also invoke the files stored in sub-files stack
             for f in self._stack:
                 f.run()
+                
+        if config['multithreading']:
+            with POOL_LIMIT:
+                _run()
+        else:
+            _run()
 
 
 class NullTag(TagBase):

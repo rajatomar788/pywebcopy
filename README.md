@@ -649,6 +649,9 @@ Ways to change the global configurations are below -
     # bypass the robots.txt restrictions
     'BYPASS_ROBOTS' : False
 
+    # Toggle multithreading (5 concurrent threads when enabled for downloading resources)
+    'MULTITHREADING' : False
+
     ```
 
 ## 4.1 Contribution

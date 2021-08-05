@@ -23,6 +23,7 @@ import warnings
 from .elements import TagBase
 from .parsers import Parser
 from .webpage import WebPage
+from .configs import config
 
 
 INDEX = set()
@@ -93,13 +94,19 @@ class SubPage(TagBase):
         if _sub_page is None or not getattr(_sub_page, '_stack'):
             return
 
-        with INDEX_LOCK:
+        def _add_elements_to_index():
             elements = list(_sub_page.elements)
             for elem in elements:
                 if elem.url not in INDEX:
                     INDEX.add(elem.url)
                 else:
                     _sub_page.elements.remove(elem)
+
+        if config['multithreading']:
+            with INDEX_LOCK:
+                _add_elements_to_index()
+        else:
+            _add_elements_to_index()
 
         _sub_page.save_complete()
 
@@ -150,7 +157,12 @@ class Crawler(WebPage):
 
         self.parse()
 
-        with INDEX_LOCK:
+        if config['multithreading']:
+            with INDEX_LOCK:
+                elements = list(self.elements)
+                for elem in elements:
+                    INDEX.add(elem.url)
+        else:
             elements = list(self.elements)
             for elem in elements:
                 INDEX.add(elem.url)
