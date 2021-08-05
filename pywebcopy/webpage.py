@@ -163,14 +163,6 @@ class WebPage(Parser, _ElementFactory):
         o.enforce_suffix = True
         return o
 
-    def _make_element(self, tag):
-        # print(self._element_map)
-        elem = self._element_map.get(tag)
-        if not elem:
-            elem = self._element_map.get('default')
-        LOGGER.debug('Element: <%r> selected for the tag: <%r>' % (elem, tag))
-        return elem
-
     def get(self, url, **params):
         """Fetches the Html content from Internet using the requests.
         You can any requests params which will be passed to the library
