@@ -32,6 +32,7 @@ from lxml.html import (
 from six.moves.urllib.parse import urljoin
 from .exceptions import ParseError
 from .globals import SINGLE_LINK_ATTRIBS, LIST_LINK_ATTRIBS, MARK, __version__
+from .elements import AnchorTag
 
 utc_now = datetime.utcnow
 # _iter_srcset_urls = re.compile(r'((?:https?://)?[^\s,]+)[\s]+').finditer
@@ -88,6 +89,14 @@ class Parser(object):
         if self.root is None:
             raise ParseError("Tree not parsed yet!")
         return self._stack
+
+    @property
+    def links_to_pages(self):
+        result = []
+        for element in self.elements:
+            if isinstance(element, AnchorTag):
+                result.append(element.url)
+        return result
 
     def get_source(self):
         """

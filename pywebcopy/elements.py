@@ -18,10 +18,19 @@ from shutil import copyfileobj
 from typing import IO
 
 from six import binary_type
+from six.moves.urllib.parse import urlsplit
 from six.moves.urllib.request import pathname2url
 from .configs import config, SESSION
 from .core import is_allowed
-from .globals import CSS_IMPORTS_RE, CSS_URLS_RE, POOL_LIMIT, MARK, __version__, lru_cache
+from .globals import (
+    CSS_IMPORTS_RE,
+    CSS_URLS_RE,
+    POOL_LIMIT,
+    MARK,
+    WEB_PAGE_FILE_EXTS,
+    __version__,
+    lru_cache
+)
 from .urls import URLTransformer, relate
 
 __all__ = ['TagBase', 'AnchorTag', 'ImgTag', 'ScriptTag', 'LinkTag', '_ElementFactory']
@@ -353,7 +362,7 @@ class LinkTag(TagBase):
 
 class NullTag(TagBase):
     """
-    Anchor tag contains links to different pages or even different websites.
+    Anchor tag can contains links to different pages or even different websites.
     Thus they doesn't need to saved by default but this class can be overridden to
     provide custom support for anchor tag links.
 
@@ -375,7 +384,7 @@ class NullTag(TagBase):
 
 
 class AnchorTag(NullTag):
-    """Anchor tag does nothing.
+    """Anchor tag with a link to a page does nothing.
     Otherwise it will go on a infinite websites download spree.
     """
 
@@ -418,8 +427,19 @@ class _ElementFactory(object):
     def _get_utx(self):
         return getattr(self, 'utx', None)
 
-    def _make_element(self, k):
-        return self._element_map.get(k)
+    def _make_element(self, tag, url):
+        # print(self._element_map)
+        elem = self._element_map.get(tag)
+        if elem is AnchorTag:
+            # Check whether url is a link to a page or a file
+            _, ext = os.path.splitext(urlsplit(url).path)
+            if ext not in WEB_PAGE_FILE_EXTS and is_allowed(ext):
+                # A link to a allowed file, fallback to unknownn element
+                elem = None
+        if not elem:
+            elem = self._element_map.get('default')
+        LOGGER.debug('Element: <%r> selected for the tag: <%r>' % (elem, tag))
+        return elem
 
     @staticmethod
     def _validate_url(url):
@@ -449,7 +469,7 @@ class _ElementFactory(object):
 
         tag = getattr(elem, 'tag', 'default')
 
-        klass = self._make_element(tag)
+        klass = self._make_element(tag, url)
 
         if klass is None:
             return
