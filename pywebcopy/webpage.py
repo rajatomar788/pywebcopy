@@ -255,7 +255,7 @@ class WebPage(Parser, _ElementFactory):
             self.ensure_parse_is_completed()
             self.ensure_root_is_generated()
 
-            root.getroottree().write(file_name, method="html")
+            self.root.getroottree().write(file_name, method="html")
             LOGGER.info("WebPage saved successfully to %s" % file_name)
 
     def save_complete(self):
