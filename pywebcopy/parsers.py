@@ -315,6 +315,8 @@ class MultiParser(object):  # pragma: no cover
     """
 
     def __init__(self, html=None, encoding=None, element=None):
+        if not html is None and not isinstance(html, bytes):
+            raise TypeError("MultiParser requires bytes and not " + str(type(html)))
         self._lxml = None
         self._pq = None
         self._soup = None
