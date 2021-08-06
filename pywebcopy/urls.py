@@ -107,8 +107,6 @@ class URLTransformer(object):
                 raise ValueError("Invalid filename: [%r]" % default_fn)
             else:
                 self.default_stem, self.default_suffix = default_fn.rsplit('.', 1)
-        else:
-            default_fn = str.join('.', [self.default_stem, self.default_suffix])
 
         self._default_fn = default_fn
 
