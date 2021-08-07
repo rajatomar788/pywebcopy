@@ -380,10 +380,11 @@ class AnchorTag(NullTag):
     """
 
     def __init__(self, *args, **kwargs):
-        super(AnchorTag, self).__init__(*args, **kwargs)
-        self.default_stem = 'index' + self._id
+        new_kwargs = {'default_fn': 'index.html'}
+        new_kwargs.update(kwargs)
+        super(AnchorTag, self).__init__(*args, **new_kwargs)
         self.default_suffix = 'html'
-        self.enforce_suffix = False
+        self.enforce_suffix = True
 
 
 class ScriptTag(TagBase):
