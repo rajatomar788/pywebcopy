@@ -57,8 +57,7 @@ class SubPage(TagBase):
                     self._sub_page.utx = self
                 if not getattr(self._sub_page, '_source'):
                     self._sub_page.get(self.url)
-                if not getattr(self._sub_page, '_parseComplete'):
-                    self._sub_page.parse()
+                self._sub_page.ensure_parse_is_completed()
             else:
                 raise TypeError(
                     "Unknown SubPage handler! Expected <%r>, got <%r>."
