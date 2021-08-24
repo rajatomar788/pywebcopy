@@ -161,7 +161,7 @@ class Parser(object):
             parser = HTMLParser(encoding=self.encoding, collect_ids=False)
 
         if not base_url:
-            base_url = utx.base_url
+            base_url = utx.url
 
         source = self.get_source()
 
