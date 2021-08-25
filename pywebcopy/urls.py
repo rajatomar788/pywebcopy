@@ -355,7 +355,7 @@ class URLTransformer(object):
         if prefix:
             assert isinstance(prefix, basestring)
         else:
-            prefix = str(self._hex())
+            prefix = str(self._id)
         if sep:
             assert isinstance(sep, basestring)
         else:
