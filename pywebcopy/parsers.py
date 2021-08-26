@@ -160,6 +160,9 @@ class Parser(object):
         if not parser:
             parser = HTMLParser(encoding=self.encoding, collect_ids=False)
 
+        if not base_url:
+            base_url = utx.url
+
         source = self.get_source()
 
         assert source is not None, "Source is not Set!"
