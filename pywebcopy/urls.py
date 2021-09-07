@@ -116,7 +116,6 @@ class URLTransformer(object):
 
         self._default_fn = default_fn
 
-
     def __str__(self):
         return {a: getattr(self, a) for a in self.__attrs__}.__str__()
 
