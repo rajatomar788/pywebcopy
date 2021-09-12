@@ -96,7 +96,11 @@ class URLTransformer(object):
         # default place holders
         self._url = url
         self._base_url = None
+        if base_url is not None:
+            self.base_url = base_url
         self._base_path = None
+        if base_path is not None:
+            self.base_path = base_path
         self._id = self._hex()
         self.default_stem = "file_" + self._id
         self.default_suffix = 'pwc'
@@ -111,11 +115,6 @@ class URLTransformer(object):
             default_fn = str.join('.', [self.default_stem, self.default_suffix])
 
         self._default_fn = default_fn
-
-        if base_url is not None:
-            self.base_url = base_url
-        if base_path is not None:
-            self.base_path = base_path
 
     def __str__(self):
         return {a: getattr(self, a) for a in self.__attrs__}.__str__()
