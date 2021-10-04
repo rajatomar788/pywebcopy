@@ -330,7 +330,7 @@ class URLTransformer(object):
         fn, _ = self.get_filename_and_pos(path)
 
         i = len(fn)  # pointer to the end of string
-        # iter until first slash found and stop before it
+        # iter until a dot found and stop before it
         while i and fn[i - 1] != '.':
             i -= 1
 
