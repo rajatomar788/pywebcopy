@@ -163,6 +163,30 @@ class WebPage(Parser, _ElementFactory):
         o.enforce_suffix = True
         return o
 
+    def process_web_response(self, response):
+        """Processes the response retrieved externally
+        while ``get`` performs the request internally
+        and then processes it in the same way.
+
+        usage::
+
+            >>> # It is equal to result of the `get` usage example
+            >>> wp = WebPage()
+            >>> response = pywebcopy.SESSION.get(url, proxies=proxies, headers=headers, auth=auth, ...)
+            >>> wp.process_web_response(response)
+            >>> wp.save_complete()
+
+        :param response: requests.Response obtained for the target webpage
+        """
+        # Set some information about the content being loaded so
+        # that the parser has a better idea about
+        self.url = response.url
+        # The internal parser assumes a read() method to be
+        # present on the source, thus we need to pass the raw stream
+        # io object which serves the purpose
+        response.raw.decode_content = True
+        self.set_source(response.raw, response.encoding)
+
     def get(self, url, **params):
         """Fetches the Html content from Internet using the requests.
         You can any requests params which will be passed to the library
@@ -183,16 +207,9 @@ class WebPage(Parser, _ElementFactory):
         :param url: url of the page to fetch
         :param params: keyword arguments which `requests` module may accept.
         """
-        req = SESSION.get(url, **params)
-        req.raise_for_status()
-        # Set some information about the content being loaded so
-        # that the parser has a better idea about
-        self.url = req.url
-        # The internal parser assumes a read() method to be
-        # present on the source, thus we need to pass the raw stream
-        # io object which serves the purpose
-        req.raw.decode_content = True
-        self.set_source(req.raw, req.encoding)
+        response = SESSION.get(url, **params)
+        response.raise_for_status()
+        self.process_web_response(response)
 
     def shutdown(self, timeout=10):
         """
