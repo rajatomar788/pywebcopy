@@ -1,286 +1,266 @@
-# -*- coding: utf-8 -*-
-
-"""
-pywebcopy.core
-~~~~~~~~~~~~~~
-
-* DO NOT TOUCH *
-
-Core functionality of the pywebcopy engine.
-"""
-from __future__ import absolute_import
-
+# Copyright 2020; Raja Tomar
+# See license for more details
 import logging
+import operator
 import os
-import shutil
-import zipfile
-from datetime import datetime
-import threading
 
-from .configs import config, SESSION
-from .globals import MARK, __version__, lru_cache
+from lxml.html import HTMLParser
+from lxml.html import XHTML_NAMESPACE
+from lxml.html import parse
+from requests.models import Response
+
+from .elements import HTMLResource
+from .helpers import RewindableResponse
+from .schedulers import crawler_scheduler
+from .schedulers import default_scheduler
+from .schedulers import threading_crawler_scheduler
+from .schedulers import threading_default_scheduler
+
+__all__ = ['WebPage', 'Crawler']
+
+logger = logging.getLogger(__name__)
 
 
-LOGGER = logging.getLogger('core')
-
-
-def zip_project(timeout=10):
-    """Makes zip archive of current project folder and returns the location.
-
-    :rtype: str
-    :returns: location of the zipped project_folder file.
+class WebPage(HTMLResource):
     """
-    # wait for the threads to finish downloading files
+    WebPage built upon HTMLResource element.
+    It provides various utilities like form-filling,
+    external response processing, getting list of links,
+    dumping html and opening the html in the browser.
+    """
+    @classmethod
+    def from_config(cls, config):
+        """It creates a `WebPage` object from a set config object.
+        Under the hood it checks whether the config is set or not,
+        then it creates a `session` using the `config.create_session()` method.
+        It then creates a `scheduler` based on whether the threading is enabled or not.
+        It also defines a `context` object which stores the path metadata for this structure.
+        """
+        if config and not config.is_set():
+            raise AttributeError("Configuration is not setup.")
 
-    for thread in threading.enumerate():
-        if not thread or isinstance(thread, threading._MainThread):
-            continue
-        if thread.is_alive():
-            thread.join(timeout=timeout)
+        session = config.create_session()
+        if config.get('threaded'):
+            scheduler = threading_default_scheduler(
+                timeout=config.get_thread_join_timeout())
+        else:
+            scheduler = default_scheduler()
+        context = config.create_context()
+        ans = cls(session, config, scheduler, context)
+        # XXX: Check connection to the url here?
+        return ans
 
-    zip_fn = os.path.abspath(config['project_folder']) + '.zip'
+    def __repr__(self):
+        """Short representation of this instance."""
+        return '<{}: {}>'.format(self.__class__.__name__, self.url)
 
-    with zipfile.ZipFile(zip_fn, 'w', zipfile.ZIP_DEFLATED) as archive:
+    element_map = property(
+        operator.attrgetter('scheduler.data'),
+        doc="Registry of different handler for different tags."
+    )
 
-        #: Iterate through file tree
-        for folder, _, fn in os.walk(config['project_folder']):
-            # only files will be added to the zip archive instead of empty
-            # folder which might have been created during process
-            for f in fn:
-                try:
-                    new_fn = os.path.join(folder, f)
-                    archive.write(new_fn, new_fn[len(config['project_folder']):])
-                except ValueError:
-                    LOGGER.error("Attempt to use ZIP archive that was already closed")
-                except RuntimeError:
-                    LOGGER.exception("Failed to add file to archive file %s" % f, exc_info=True)
+    def set_response(self, response):
+        """
+        Set an explicit `requests.Response` object directly.
+        It accepts a `requests.Response` object and wraps it in a `RewindableResponse` object.
+        It also enables decoding in the original `urllib3` response object.
 
-    LOGGER.info('Saved the Project as ZIP archive at %s' % (config['project_folder'] + '.zip'))
+        You can use it like this
+            import requests
+            resp = requests.get('https://www.httpbin.org/')
+            wp = WebPage()
+            wp.set_response(resp)
+            wp.get_forms()
+        """
+        if not isinstance(response, Response):
+            raise ValueError("Expected %r, got %r" % (Response, response))
+        response.raw.decode_content = True
+        response.raw = RewindableResponse(response.raw)
+        return super(WebPage, self).set_response(response)
 
-    # Project folder can be automatically deleted after making zip file from it
-    # this is True by default and will delete the complete project folder
-    if config['delete_project_folder']:
-        shutil.rmtree(config['project_folder'])
+    def get_source(self, buffered=False):
+        """Returns the `requests.Response` object
+        in a rewindable io wrapper. Contents can be consumed then
+        the `.rewind()` method should be called to restore the contents
+        of the original response.
 
-    LOGGER.info("Downloaded Contents Size :: {} KB's".format(getattr(SESSION, '_bytes')//1024))
+            wp = WebPage()
+            wp.get('http://httpbin.org/forms/')
+            src = WebPage.get_source(buffered=True)
+            contents = src.read()
+            src.rewind()
 
-    return zip_fn
+        :param buffered: whether to return an Readable file-like object
+            or just a plain string.
+        :rtype: RewindableResponse
+        """
+        raw = getattr(self.response, 'raw', None)
+        if raw is None:
+            raise ValueError(
+                "HTTP Response is not set at the `.response` attribute!"
+                "Use the `.get()` method or `.set_response()` methods to set it.")
+
+        # if raw.closed:
+        #     raise ValueError(
+        #         "I/O operations are closed for the raw source.")
+
+        # Return the raw object which will decode the
+        # buffer while reading otherwise errors will follow
+        raw.decode_content = True
+
+        # fp = getattr(raw, '_fp', None)
+        # assert fp is not None, "Raw source wrapper is missing!"
+        # assert isinstance(fp, CallbackFileWrapper), \
+        #     "Raw source wrapper is missing!"
+        raw.rewind()
+        if buffered:
+            return raw, self.encoding
+        return raw.read(), self.encoding
+
+    def refresh(self):
+        """Re-fetches the resource from the internet using the session."""
+        self.set_response(self.session.get(self.url, stream=True))
+
+    def get_forms(self):
+        """Returns a list of form elements available on the page."""
+        source, encoding = self.get_source(buffered=True)
+        return parse(
+            source, parser=HTMLParser(encoding=encoding, collect_ids=False)
+        ).xpath(
+            "descendant-or-self::form|descendant-or-self::x:form",
+            namespaces={'x': XHTML_NAMESPACE}
+        )
+
+    def submit_form(self, form, **extra_values):
+        """
+        Helper function to submit a `lxml` form.
+
+        Example:
+
+            wp = WebPage()
+            wp.get('http://httpbin.org/forms/')
+            form = wp.get_forms()[0]
+            form.inputs['email'].value = 'bar' # etc
+            form.inputs['password'].value = 'baz' # etc
+            wp.submit_form(form)
+            wp.get_links()
+
+        The action is one of 'GET' or 'POST', the URL is the target URL as a
+        string, and the values are a sequence of ``(name, value)`` tuples
+        with the form data.
+        """
+        values = form.form_values()
+        if extra_values:
+            if hasattr(extra_values, 'items'):
+                extra_values = extra_values.items()
+            values.extend(extra_values)
+
+        if form.action:
+            url = form.action
+        elif form.base_url:
+            url = form.base_url
+        else:
+            url = self.url
+        return self.request(form.method, url, data=values)
+
+    def get_files(self):
+        """
+        Returns a list of urls, css, js, images etc.
+        """
+        return (e[2] for e in self.parse())
+
+    def get_links(self):
+        """
+        Returns a list of urls in the anchor tags only.
+        """
+        return (e[2] for e in self.parse() if e[0].tag == 'a')
+
+    def scrap_html(self, url):
+        """Returns the html of the given url.
+
+        :param url: address of the target page.
+        """
+        response = self.session.get(url)
+        response.raise_for_status()
+        return response.content
+
+    def scrap_links(self, url):
+        """Returns all the links from a given url.
+
+        :param url: address of the target page.
+        """
+        response = self.session.get(url)
+        response.raise_for_status()
+        return response.links()
+
+    def dump_html(self, filename=None):
+        """Saves the html of the page to a default or specified file.
+
+        :param filename: path of the file to write the contents to
+        """
+        filename = filename or self.filepath
+        with open(filename, 'w+b') as fh:
+            source, enc = self.get_source()
+            fh.write(source)
+        return filename
+
+    def save_complete(self, pop=False):
+        """Saves the complete html+assets on page to a file and
+        also writes its linked files to the disk.
+
+        Implements the combined logic of save_assets and save_html in
+        compact form with checks and validation.
+        """
+        if not self.viewing_html():
+            raise TypeError(
+                "Not viewing a html page. Please check the link!")
+
+        self.scheduler.handle_resource(self)
+        if pop:
+            self.open_in_browser()
+        return self.filepath
+
+    def open_in_browser(self):
+        """Open the page in the default browser if it has been saved.
+
+        You need to use the :meth:`~WebPage.save_complete` to make it work.
+        """
+        if not os.path.exists(self.filepath):
+            self.logger.info(
+                "Can't find the file to open in browser: %s" % self.filepath)
+            return False
+
+        self.logger.info(
+            "Opening default browser with file: %s" % self.filepath)
+        import webbrowser
+        return webbrowser.open('file:///' + self.filepath)
+
+    # handy shortcuts
+    run = crawl = save_assets = save_complete
 
 
-#
-# from flask import Flask
-#
-#
-# class PropertiesMixin(object):
-#
-#     def _get_project_folder(self):
-#         if self._static_folder is not None:
-#             return os.path.join(self.root_path, self._static_folder)
-#
-#     def _set_project_folder(self, value):
-#         self._static_folder = value
-#
-#     project_folder = property(
-#         _get_project_folder, _set_project_folder,
-#         doc='The absolute path to the configured static folder.'
-#     )
-#     del _get_project_folder, _set_project_folder
-#
-#     def _get_project_url(self):
-#         if self._project_url is not None:
-#             return self._project_url
-#
-#         if self.static_folder is not None:
-#             return '/' + os.path.basename(self.static_folder)
-#
-#     def _set_project_url(self, value):
-#         self._project_url = value
-#
-#     project_url = property(
-#         _get_project_url, _set_project_url,
-#         doc='The URL prefix that the static route will be registered for.'
-#     )
-#     del _get_project_url, _set_project_url
-#
-#
-# class Manager(PropertiesMixin):
-#
-#     default_config = {}
-#
-#
-# def _dummy_resp(reason=None):
-#     """ Response with dummy data so that a dummy file will always be downloaded """
-#
-#     dummy_resp = Response()
-#
-#     if reason:
-#         _text = (b'This File could not be downloaded.\n'
-#                  b'Reason: \n\n %r \n\n' % reason.encode())
-#     else:
-#         _text = b'This File could not be downloaded.\n\n'
-#
-#     dummy_resp.raw = BytesIO(_text)
-#     dummy_resp.encoding = 'utf-8'  # plain encoding
-#     dummy_resp.status_code = 200  # fake the status
-#     dummy_resp.is_dummy = True  # but leave a mark
-#     dummy_resp.reason = 'Failed to access'  # fail reason
-#     return dummy_resp
-#
-#
-# def get(url, *args, **kwargs):
-#     """ fetches contents from internet using `requests`.
-#
-#     makes http request using custom configs
-#     it returns requests object if request was successful
-#     None otherwise.
-#
-#     :param str url: the url of the page or file to be fetched
-#     :returns object: requests obj or None
-#     """
-#
-#     # Make a check if url is meant for public viewing by checking for
-#     # the url in the robots.txt file provided by site.
-#     try:
-#
-#         # Uses the requests module to make a get request using a persistent session
-#         # object and returns that
-#         # otherwise on fail it returns None
-#         resp = SESSION.get(url, *args, **kwargs)
-#
-#         # log downloaded file size
-#         config['download_size'] += int(resp.headers.get('content-length', 0))
-#
-#     except HTTPError as err:
-#         LOGGER.error(err)
-#
-#         # try to get the default response returned by the `requests`
-#         resp = err.response
-#
-#         if not resp:
-#             resp = _dummy_resp()
-#             resp.request = err.request
-#
-#     except ConnectionError:    # Catches any other exception raised by `requests`
-#         LOGGER.error("Failed to access url at address %s" % url)
-#         resp = _dummy_resp()
-#
-#     return resp
+class Crawler(WebPage):
+    @classmethod
+    def from_config(cls, config):
+        """
+        It creates a `Crawler` object from a set config object.
+        Under the hood it checks whether the config is set or not,
+        then it creates a `session` using the `config.create_session()` method.
+        It then creates a `scheduler` based on whether the threading is enabled or not.
+        The scheduler is different from the `WebPage` objects scheduler due to its
+        ability to process the anchor tags links to different pages.
+        It also defines a `context` object which stores the path metadata for this structure.
+        """
+        if config and not config.is_set():
+            raise AttributeError("Configuration is not setup.")
 
-
-def _watermark(file_path):
-    """Returns a string wrapped in comment characters for specific file type."""
-
-    file_type = os.path.splitext(file_path)[1] or ''
-
-    # Only specific for the html file types So that the comment does not pop up as
-    # content on the page
-    if file_type.lower() in ['.html', '.htm', '.xhtml', '.aspx', '.asp', '.php']:
-        comment_start = '<!--!'
-        comment_end = '-->'
-    elif file_type.lower() in ['.css', '.js', '.xml']:
-        comment_start = '/*!'
-        comment_end = '*/'
-    else:
-        return b''
-
-    return MARK.format(comment_start, __version__, file_path, datetime.utcnow(), comment_end).encode()
-
-
-@lru_cache(maxsize=100)
-def is_allowed(ext):
-    if not ext:
-        return False
-    if ext.strip().lower() in config['allowed_file_ext']:
-        return True
-    return False
-
-
-#
-# def new_file(location, content_url=None, content=None):
-#     """Fail-safe Downloads any file to the disk.
-#
-#     :param str location: path where to save the file
-#
-#     :param bytes content: contents or binary data of the file
-#     :OR:
-#     :param str content_url: download the file from url
-#
-#     :returns str: location of downloaded file on disk if download was successful
-#     None otherwise
-#     """
-#     assert location, "Download location needed to be specified!"
-#     assert isinstance(location, str), "Download location must be a string!"
-#     assert content or content_url, "Either file content or file url is needed!"
-#     if content_url:
-#         assert isinstance(content_url, str), "File url must be a string!"
-#
-#     if content:
-#         assert isinstance(content, bytes), "Expected type bytes, got %r instead" % type(content)
-#
-#     req = None  # type: Response
-#
-#     _file_ext = '.' + location.rsplit('.', 1)[1].lower().strip()
-#
-#     if not is_allowed(_file_ext):
-#         LOGGER.critical('File ext %r is not allowed for file at %r' % (_file_ext, content_url or location))
-#         return
-#
-#     # The file path provided can already be existing so only overwrite the files
-#     # when specifically configured to do so by config key 'over_write'
-#     if os.path.exists(location):
-#
-#         if not config['over_write']:
-#             LOGGER.debug('File already exists at the location %s' % location)
-#             return location
-#
-#         else:
-#             os.remove(location)
-#             LOGGER.info('ReDownloading the file of type %s to %s' % (_file_ext, location))
-#     else:
-#         LOGGER.info('Downloading a new file of type %s to %s' % (_file_ext, location))
-#
-#     # Contents of the files can be supplied or filled by a content url
-#     # function we go online to download content from content url
-#     if not content and content_url is not None:
-#
-#         LOGGER.info('Downloading content of file %s from %s' % (location, content_url))
-#
-#         req = get(content_url, stream=True)
-#         # The file may not be available so will raise an error which will be caught by
-#         # except block an will return None
-#         if req is None or not req.ok:
-#             LOGGER.error('Failed to load the content of file %s from %s' % (location, content_url))
-#             return
-#
-#     try:
-#         # Files can throw an IOError or similar when failed to open or write in that
-#         LOGGER.debug("Making path for the file at location %s" % location)
-#         if not os.path.exists(os.path.dirname(location)):
-#             os.make dirs(os.path.dirname(location))
-#
-#     except OSError as e:
-#         LOGGER.critical(e)
-#         LOGGER.critical("Failed to create path for the file of type %s to location %s" % (_file_ext, location))
-#         return
-#
-#     try:
-#         # case the function will catch it and log it then return None
-#         LOGGER.info("Writing file at location %s" % location)
-#
-#         if isinstance(req, Response):
-#             with open(location, 'wb') as f:
-#                 # should write in chunks to manage ram usages?
-#                 f.write(req.content)
-#                 f.write(_watermark(content_url or location))
-#         else:
-#             with open(location, 'wb') as f:
-#                 f.write(content)
-#                 f.write(_watermark(content_url or location))
-#
-#     except Exception as e:
-#         LOGGER.critical(e)
-#         LOGGER.critical("Download failed for the file of type %s to location %s" % (_file_ext, location))
-#         return
-#     else:
-#         LOGGER.info('File of type %s written successfully to %s' % (_file_ext, location))
-#         return location
+        session = config.create_session()
+        if config.get('threaded'):
+            scheduler = threading_crawler_scheduler(
+                timeout=config.get_thread_join_timeout())
+        else:
+            scheduler = crawler_scheduler()
+        context = config.create_context()
+        ans = cls(session, config, scheduler, context)
+        # XXX: Check connection to the url here?
+        return ans

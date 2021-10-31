@@ -1,69 +1,82 @@
-# encoding: utf8
-"""
-
-pywebcopy
-~~~~~~~~~
-
-Command line usage provider for pywebcopy.
-
-.. version changed :: 6.0.0
-    1. Replaced old manual command processing with `Fire` library.
-    2. Added default command-line config
-        a. `bypass_robots` = True
-
-.. version changed :: 6.1.0
-    1. Added command `version` which prints current version
-    2. FIX: Tests were not running due to bad path detection
-
-"""
-
+# Copyright 2020; Raja Tomar
+# See license for more details
 import os
 import sys
+import optparse
+import six
 
-import fire
+from pywebcopy.__version__ import __title__
+from pywebcopy.__version__ import __version__
+from pywebcopy.__version__ import __description__
+from pywebcopy import save_webpage
+from pywebcopy import save_website
 
-from pywebcopy import (
-    __version__ as ver,
-    save_webpage as swp,
-    save_website as sws,
+
+parser = optparse.OptionParser(
+    usage='%prog [-p|--page|-s|--site|-t|--tests] '
+          '[--url=URL [,--location=LOCATION [,--name=NAME '
+          '[,--pop [,--bypass_robots [,--quite [,--delay=DELAY]]]]]]] ',
+    version=__version__,
+    prog=__title__,
+    description=__description__
 )
 
+#: Multiple saving modes.
+options = optparse.OptionGroup(parser, 'CLI Actions List', 'Primary actions available through cli.')
+options.add_option('-p', '--page', action='store_true', help='Quickly saves a single page.')
+options.add_option('-s', '--site', action='store_true', help='Saves the complete site.')
+options.add_option('-t', '--tests', action='store_true', help='Runs tests for this library.')
 
-class Commands(object):
-    # Defaults to the file documentation
-    __doc__ = __doc__
+parser.add_option_group(options)
 
-    def __repr__(self):
-        return 'Default command-line interface'
+#: Required params
+parser.add_option('--url', type='string', help='url of the entry point to be retrieved.')
+parser.add_option('--location', type='string', help='Location where files are to be stored.')
 
-    # Command-line configuration has some defaults
-    __config__ = {
-        'bypass_robots': True,
-    }
-    __tests__ = os.path.join(os.path.dirname(__name__), 'tests')
+#: Optional params
+parser.add_option('-n', '--name', default=None, type='string', help='Project name of this run.')
+parser.add_option('-d', '--delay', type='float', help="Delay between consecutive requests to the server.")
 
-    def save_webpage(self, *args, **kwargs):
-        kwargs.update(self.__config__)
-        return swp(*args, **kwargs)
+#: Optional flags
+parser.add_option('--bypass_robots', default=True, action='store_true', help='Bypass the robots.txt restrictions.')
+parser.add_option('--threaded', default=False, action='store_true', help='Use threads for faster downloading.')
+parser.add_option('-q', '--quite', default=False, action='store_true', help='Suppress the logging from this library.')
+parser.add_option('--pop', default=False, action='store_true',
+                  help='open the html page in default browser window after finishing the task.')
 
-    def save_website(self, *args, **kwargs):
-        kwargs.update(self.__config__)
-        return sws(*args, **kwargs)
+args, remainder = parser.parse_args()
 
-    @staticmethod
-    def version():
-        sys.stdout.write(ver)
+# type checks
+if bool(args.page) or bool(args.site):
+    if not args.url or not isinstance(args.url, six.string_types):
+        parser.error("--url option requires 1 string type argument")
+    if args.location and not isinstance(args.location, six.string_types):
+        parser.error("--location option requires 1 string type argument")
+    if args.name and not isinstance(args.name, six.string_types):
+        parser.error("--name option requires 1 string type argument")
 
-    def run_tests(self):
-        """
-        Runs tests if available.
-        """
-        if os.path.exists(self.__tests__):
-            os.system('{0} -m unittest {1}'.format(sys.executable, self.__tests__))
-        else:
-            sys.stdout.write('-' * 70)
-            sys.stdout.write('\nNo tests found! Try downloading the package from github!')
-            sys.stdout.flush()
-
-
-fire.Fire(Commands)
+if args.page:
+    save_webpage(
+        url=args.url,
+        project_folder=args.location,
+        bypass_robots=args.bypass_robots,
+        open_in_browser=args.pop,
+        debug=not args.quite,
+        delay=args.delay,
+        threaded=args.threaded,
+    )
+elif args.site:
+    save_website(
+        url=args.url,
+        project_folder=args.location,
+        bypass_robots=args.bypass_robots,
+        open_in_browser=args.pop,
+        debug=not args.quite,
+        delay=args.delay,
+        threaded=args.threaded,
+    )
+elif args.tests:
+    os.system('%s -m unittest discover -s pywebcopy/tests' % sys.executable)
+else:
+    parser.print_help()
+    sys.exit(1)

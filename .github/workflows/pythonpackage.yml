@@ -27,7 +27,7 @@ jobs:
       max-parallel: 4
       matrix:
         os: [ubuntu-latest, windows-latest, macos-latest]
-        python-version: [2.7, 3.6, 3.7, 3.8]
+        python-version: [2.7, 3.8, 3.9, 3.10.0]
         
     steps:
     - uses: actions/checkout@v1
@@ -44,4 +44,4 @@ jobs:
         
     - name: Testing on Python ${{ matrix.python-version }}
       run: |
-        python -m unittest tests
+        python -m pywebcopy --tests

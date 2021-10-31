@@ -1,7 +1,8 @@
-#!/usr/bin/env python
+# Copyright 2019; Raja Tomar
 # -*- coding: utf-8 -*-
 
 # Note: To use the 'upload' functionality of this file, you must:
+#   $ pip install wheel
 #   $ pip install twine
 
 import io
@@ -9,28 +10,31 @@ import os
 import sys
 from shutil import rmtree
 
-from setuptools import setup, Command
+from setuptools import setup
+from setuptools import Command
 
-import pywebcopy
+from pywebcopy import __version__
 
 # Package meta-data.
-NAME = 'pywebcopy'
-DESCRIPTION = 'Python package for cloning complete webpages and websites to local storage.'
-URL = 'https://github.com/rajatomar788/pywebcopy/'
-LICENSE = 'Apache License 2.0'
-EMAIL = 'rajatomar788@gmail.com'
-AUTHOR = 'Raja Tomar'
-VERSION = pywebcopy.__version__
+NAME = __version__.__title__
+DESCRIPTION = __version__.__description__
+URL = __version__.__url__
+LICENSE = __version__.__license__
+EMAIL = __version__.__email__
+AUTHOR = __version__.__author__
+VERSION = __version__.__version__
 
 # What packages are required for this module to be executed?
-REQUIRED = [
-    'requests', 'lxml', 'pyquery', 'parse', 'w3lib', 'bs4', 'fire', 'typing; python_version<\"3.5\"',
-]
+REQUIRED = []
 
 
 # If you do change the License, remember to change the Trove Classifier for that!
 
 here = os.path.abspath(os.path.dirname(__file__))
+
+with open(os.path.join(here, 'requirements.txt')) as r:
+    for rq in r.readlines():
+        REQUIRED.append(rq.strip("\n"))
 
 # Import the README and use it as the long-description.
 # Note: this will only work if 'README.rst' is present in your MANIFEST.in file!
@@ -68,16 +72,16 @@ class UploadCommand(Command):
         self.status('Uploading the package to PyPi via Twine…')
         os.system('twine upload dist/*')
 
-        self.status("Setting up git..")
-        os.system('git init')
-        os.system('git add .')
+        #self.status("Setting up git..")
+        #os.system('git init')
+        #os.system('git add .')
 
-        self.status("Pushing to github master branch..")
-        os.system('git push origin master')
+        #self.status("Pushing to github master branch..")
+        #os.system('git push origin master')
 
-        self.status('Publishing git tags…')
-        os.system('git tag v{0}'.format(VERSION))
-        os.system('git push origin --tags')
+        #self.status('Publishing git tags…')
+        #os.system('git tag v{0}'.format(VERSION))
+        #os.system('git push origin --tags')
 
         sys.exit()
 
@@ -93,7 +97,7 @@ setup(
     author_email=EMAIL,
     url=URL,
     # If your package is a single module, use py_modules instead of 'packages':
-    packages=['pywebcopy', 'tests'],
+    packages=[__version__.__title__],
 
     install_requires=REQUIRED,
     include_package_data=True,
@@ -101,12 +105,15 @@ setup(
     classifiers=[
         # Trove classifiers
         # Full list: https://pypi.python.org/pypi?%3Aaction=list_classifiers
-        'License :: OSI Approved :: Apache 2.0 License',
+        'License :: OSI Approved :: %s' % LICENSE,
         'Programming Language :: Python',
         'Programming Language :: Python :: 2.6',
         'Programming Language :: Python :: 2.7',
         'Programming Language :: Python :: 3.6',
         'Programming Language :: Python :: 3.7',
+        'Programming Language :: Python :: 3.8',
+        'Programming Language :: Python :: 3.9',
+        'Programming Language :: Python :: 3.10',
         'Programming Language :: Python :: Implementation :: CPython',
         'Programming Language :: Python :: Implementation :: PyPy'
     ],
