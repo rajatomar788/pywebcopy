@@ -231,8 +231,7 @@ class GenericResource(object):
         'text/html',
         'text/xhtml'
     ])
-    html_content_types.__doc__ = "Set of valid html mimetypes."
-
+    
     def viewing_html(self):
         """Checks whether the current resource is a html type or not."""
         return self.content_type in self.html_content_types
@@ -240,8 +239,7 @@ class GenericResource(object):
     css_content_types = tuple([
         'text/css',
     ])
-    css_content_types.__doc__ = "Set of valid css mimetypes."
-
+    
     def viewing_css(self):
         """Checks whether the current resource is a css type or not."""
         return self.content_type in self.css_content_types
@@ -250,8 +248,7 @@ class GenericResource(object):
         'text/javascript',
         'application/javascript'
     ])
-    js_content_types.__doc__ = "Set of valid javascript mimetypes."
-
+    
     def viewing_js(self):
         """Checks whether the current resource is a javascript type or not."""
         return self.content_type in self.js_content_types
