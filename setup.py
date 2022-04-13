@@ -2,7 +2,6 @@
 # -*- coding: utf-8 -*-
 
 # Note: To use the 'upload' functionality of this file, you must:
-#   $ pip install wheel
 #   $ pip install twine
 
 import io
@@ -72,16 +71,16 @@ class UploadCommand(Command):
         self.status('Uploading the package to PyPi via Twine…')
         os.system('twine upload dist/*')
 
-        #self.status("Setting up git..")
-        #os.system('git init')
-        #os.system('git add .')
+        self.status("Setting up git..")
+        os.system('git init')
+        os.system('git add .')
 
-        #self.status("Pushing to github master branch..")
-        #os.system('git push origin master')
+        self.status("Pushing to github master branch..")
+        os.system('git push origin master')
 
-        #self.status('Publishing git tags…')
-        #os.system('git tag v{0}'.format(VERSION))
-        #os.system('git push origin --tags')
+        self.status('Publishing git tags…')
+        os.system('git tag v{0}'.format(VERSION))
+        os.system('git push origin --tags')
 
         sys.exit()
 
