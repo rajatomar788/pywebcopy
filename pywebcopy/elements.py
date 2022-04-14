@@ -74,7 +74,7 @@ def make_fd(location, url=None, overwrite=False):
             # raises FileExistsError if file exists
             fd = os.open(location, fd_flags | os.O_EXCL, fd_mode)
 
-    except (OSError, PermissionError) as e:
+    except (OSError, IOError) as e:
         if e.errno == errno.EEXIST:
             logger.debug(
                 "[FILE] <%s> already exists at: <%s>" % (url, location))

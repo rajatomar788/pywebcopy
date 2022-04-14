@@ -1,5 +1,6 @@
 # Copyright 2020; Raja Tomar
 # See license for more details
+import functools
 import inspect
 import logging
 import re
@@ -12,6 +13,7 @@ from lxml.html import tostring
 from lxml.html import XHTML_NAMESPACE
 from lxml.html.clean import Cleaner
 from lxml.html.defs import link_attrs
+from six import next
 from six import integer_types
 from six import string_types
 from six.moves.urllib.parse import urljoin
@@ -119,11 +121,11 @@ def iterparse(source, encoding=None, events=None,
             # #: document in our specified encoding.
             # head.insert(0, parser.makeelement('meta', charset=encoding))
         try:
-            root = parser.close()
+            it.root = parser.close()
         except etree.XMLSyntaxError:
             parser.feed(
                 '<html></html>'.encode(encoding, 'xmlcharrefreplace'))
-            root = parser.close()
+            it.root = parser.close()
 
         # parser could generate end events for html and
         # body tags which the parser itself inserted.
@@ -133,15 +135,15 @@ def iterparse(source, encoding=None, events=None,
         #             continue
         #         yield child
 
-        it.root = root
+        # it.root = root
         # noinspection PyUnusedLocal
-        root = None
+        # root = None
         # XXX No implicit source closing
         # if close_source:
         #     source.close()
 
     class IterParseIterator(Iterator):
-        next = __next__ = iterator().__next__
+        next = __next__ = functools.partial(next, iterator())
 
     it = IterParseIterator()
     it.root = None
