@@ -112,10 +112,10 @@ class TestUrl2Path(unittest.TestCase):
 
     def test_coerce_args_with_non_consistent_types(self):
         with self.assertRaises(TypeError):
-            pywebcopy.urls._coerce_args(b'a', 'b')
+            pywebcopy.urls._coerce_args(b'a', u'b')
 
     def test_coerce_args_of_text_type(self):
-        a, b, enc = pywebcopy.urls._coerce_args('a', None)
+        a, b, enc = pywebcopy.urls._coerce_args(u'a', None)
         self.assertTrue(isinstance(a, six.string_types))
         self.assertTrue(b is None)
         self.assertEqual(enc(a), a)
@@ -124,7 +124,7 @@ class TestUrl2Path(unittest.TestCase):
     def test_coerce_args_of_binary_type(self):
         a, b, enc = pywebcopy.urls._coerce_args(b'a', None)
         self.assertTrue(isinstance(a, six.string_types))
-        self.assertEqual(b, '')
+        self.assertEqual(b, u'')
         self.assertEqual(enc(a), b'a')
         self.assertEqual(enc(b), b'')
 

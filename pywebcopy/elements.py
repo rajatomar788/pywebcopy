@@ -4,7 +4,6 @@ import errno
 import logging
 import os
 import re
-import sys
 import warnings
 from base64 import b64encode
 from contextlib import closing
@@ -67,7 +66,7 @@ def make_fd(location, url=None, overwrite=False):
     try:
 
         # sys.audit("%s.resource" % __title__, location)
-        sys.audit("os.open", location)
+        # sys.audit("os.open", location)
         if overwrite:
             fd = os.open(location, fd_flags | os.O_TRUNC, fd_mode)
         else:

@@ -15,6 +15,7 @@ from hashlib import md5
 from zlib import adler32
 
 from six import PY2
+from six import text_type
 from six import binary_type
 from six import string_types
 from six.moves.urllib.parse import unquote
@@ -405,11 +406,11 @@ def _coerce_args(*args):
     # an appropriate result coercion function
     #   - noop for str inputs
     #   - encoding function otherwise
-    str_input = isinstance(args[0], string_types)
+    str_input = isinstance(args[0], text_type)
     for arg in args[1:]:
         # We special-case the empty string to support the
         # "scheme=''" default argument to some functions
-        if arg and isinstance(arg, string_types) != str_input:
+        if arg and isinstance(arg, text_type) != str_input:
             raise TypeError("Cannot mix str and non-str arguments")
     if str_input:
         return args + (lambda x: x,)
@@ -426,7 +427,7 @@ _filename_ascii_strip_re = re.compile(r'[^A-Za-z0-9_.-]+')
 
 
 def secure_filename(filename, sub='_'):
-    if isinstance(filename, string_types):
+    if isinstance(filename, text_type):
         from unicodedata import normalize
         filename = normalize('NFKD', filename).encode(
             _implicit_encoding, _implicit_errors)
