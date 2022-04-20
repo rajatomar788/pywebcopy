@@ -29,16 +29,16 @@ jobs:
         # Run on all available platforms
         os: [ ubuntu-latest, windows-latest, macos-latest ]
         # Run in all versions of python
-        python-version: [3.7, 3.8, 3.9, 3.10]
+        python-version: ['2.7', '3.7', '3.8', '3.9', '3.10', 'pypy-2.7', 'pypy-3.8']
 
     steps:
       # Checkout the latest code from the repo
       - name: Checkout repo
-        uses: actions/checkout@v2
+        uses: actions/checkout@v3
 
       # Setup which version of the python to use
       - name: Set up Python ${{ matrix.python-version }}
-        uses: actions/setup-python@v2
+        uses: actions/setup-python@v3
         with:
           python-version: ${{ matrix.python-version }}
 
