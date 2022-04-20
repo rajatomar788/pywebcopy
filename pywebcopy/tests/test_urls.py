@@ -140,8 +140,7 @@ class TestUrl2Path(unittest.TestCase):
         self.assertEqual(secure_filename('..//..\\..path'), 'path')
         for i in ["NUL", "COM1", "COM2", "COM3", "COM4", "COM5", "COM6", "COM7", "COM8",
                   "COM9", "LPT1", "LPT2", "LPT3", "LPT4", "LPT5", "LPT6", "LPT7", "LPT8", "LPT9"]:
-            with self.subTest(i=i):
-                if os.name == 'nt':
-                    self.assertEqual(secure_filename(i), '_' + i)
-                else:
-                    self.assertEqual(secure_filename(i), i)
+            if os.name == 'nt':
+                self.assertEqual(secure_filename(i), '_' + i)
+            else:
+                self.assertEqual(secure_filename(i), i)
