@@ -29,7 +29,7 @@ jobs:
         # Run on all available platforms
         os: [ ubuntu-latest, windows-latest, macos-latest ]
         # Run in all versions of python
-        python-version: [ '2.x', '3.x', 'pypy-2.7', 'pypy-3.8' ]
+        python-version: ['2.7', '3.7', '3.8', '3.9', '3.10', 'pypy-2.7', 'pypy-3.8']
 
     steps:
       # Checkout the latest code from the repo
