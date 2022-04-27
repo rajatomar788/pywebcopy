@@ -26,10 +26,7 @@ VERSION = __version__.__version__
 # What packages are required for this module to be executed?
 REQUIRED = []
 
-
-# If you do change the License, remember to change the Trove Classifier for that!
-
-here = os.path.abspath(os.path.dirname(__file__))
+here = os.path.normpath(os.path.abspath(os.path.dirname(__file__)))
 
 with open(os.path.join(here, 'requirements.txt')) as r:
     for rq in r.readlines():
@@ -66,7 +63,8 @@ class UploadCommand(Command):
             pass
 
         self.status('Building Source and Wheel (universal) distribution…')
-        os.system('{0} setup.py sdist bdist_wheel --universal'.format(sys.executable))
+        os.system('{0} setup.py sdist bdist_wheel --universal'.format(
+            os.path.normpath(sys.executable)))
 
         self.status('Uploading the package to PyPi via Twine…')
         os.system('twine upload dist/*')
