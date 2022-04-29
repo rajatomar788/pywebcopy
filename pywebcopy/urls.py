@@ -195,6 +195,10 @@ def parse_url(url):
     fragment = None
     query = None
 
+    # workaround for ignoring <a href="tel:+17035713343"/>
+    if 'tel:' in url:
+        return Url(scheme, auth, host, port, path, query, fragment)
+
     # Scheme
     if '://' in url:
         scheme, url = url.split('://', 1)
