@@ -212,12 +212,15 @@ class ThreadingScheduler(Scheduler):
 
     def _handle_resource(self, resource):
         def run(r):
-            self.logger.debug('Scheduler trying to get resource at: [%s]' % r.url)
-            # r.response = r.session.get(r.context.url)
-            r.get(r.context.url)
-            self.logger.debug('Scheduler running handler for: [%s]' % r.url)
-            r.retrieve()
-            return r.context.url, r.filepath
+            try:
+                self.logger.debug('Scheduler trying to get resource at: [%s]' % r.url)
+                # r.response = r.session.get(r.context.url)
+                r.get(r.context.url)
+                self.logger.debug('Scheduler running handler for: [%s]' % r.url)
+                r.retrieve()
+                return r.context.url, r.filepath
+            except Exception as e:
+                self.logger.debug(f'Exception encountered in retrieval: {e}')
         thread = threading.Thread(target=run, args=(resource,))
         thread.start()
         self.threads.add(thread)
