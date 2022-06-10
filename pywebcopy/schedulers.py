@@ -218,9 +218,10 @@ class ThreadingScheduler(Scheduler):
                 r.get(r.context.url)
                 self.logger.debug('Scheduler running handler for: [%s]' % r.url)
                 r.retrieve()
-                return r.context.url, r.filepath
             except Exception as e:
                 self.logger.debug(f'Exception encountered in retrieval: {e}')
+            finally:
+                return r.context.url, r.filepath
         thread = threading.Thread(target=run, args=(resource,))
         thread.start()
         self.threads.add(thread)
