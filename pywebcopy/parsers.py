@@ -129,11 +129,13 @@ def iterparse(source, encoding=None, events=None,
 
         # parser could generate end events for html and
         # body tags which the parser itself inserted.
-        # for event, element in parser.read_events():
-        #     for child in links(element):
-        #         if child is None:
-        #             continue
-        #         yield child
+        # parser could often delay few events until closed
+        # https://bugs.launchpad.net/lxml/+bug/1990055
+        for event, element in parser.read_events():
+            for child in links(element):
+                if child is None:
+                    continue
+                yield child
 
         # it.root = root
         # noinspection PyUnusedLocal
