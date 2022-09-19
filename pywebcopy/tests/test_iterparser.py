@@ -545,6 +545,13 @@ class TestFullHTMLParsing(unittest.TestCase):
         self.assertTrue(isinstance(self.context.root.getroottree(), lxml.etree._ElementTree))
 
 
+class TestFullHTMLParsingWithMultipleFeeds(TestFullHTMLParsing):
+    """Test multiple feed steps where feed ends within attribute value quotes"""
+
+    long_html = html.replace('<body>', f'<body><div class="{"a" * 0o3000}"></div>')
+    context = iterparse(BytesIO(long_html.encode('utf-8')))
+
+
 class TestFullLatin1EncodedHTMLParsing(unittest.TestCase):
 
     # Single instance of the parser to avoid creating anew each time.
