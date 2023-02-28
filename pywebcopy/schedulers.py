@@ -97,7 +97,7 @@ class SchedulerBase(object):
             return self.data[key](*args, **params)
 
     invalid_schemas = tuple([
-        'data', 'javascript', 'mailto',
+        'data', 'javascript', 'mailto', 'tel',
     ])
 
     def validate_url(self, url):
