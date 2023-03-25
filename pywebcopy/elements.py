@@ -208,6 +208,13 @@ class GenericResource(object):
         return ''
 
     @cached_property
+    def content_encoding(self):
+        """Returns an encoding (usually a compression algorithm) of this resource if available."""
+        if self.response is not None and 'Content-Encoding' in self.response.headers:
+            return self.response.headers['Content-Encoding']
+        return ''
+
+    @cached_property
     def url(self):
         """Returns the actual url of this resource which is resolved if
         there were any redirects."""
@@ -254,6 +261,14 @@ class GenericResource(object):
     def viewing_js(self):
         """Checks whether the current resource is a javascript type or not."""
         return self.content_type in self.js_content_types
+
+    svg_content_types = tuple([
+        'image/svg+xml'
+    ])
+
+    def viewing_svg(self):
+        """Checks whether the current resource is a svg type or not."""
+        return self.content_type in self.svg_content_types
 
     def set_response(self, response):
         """Update the response attribute of this object.
@@ -383,6 +398,8 @@ class GenericResource(object):
                 self.logger.error(
                     "Response object for url <%s> has no attribute 'raw'!"
                     % self.url)
+                content = BytesIO(self.response.content)
+            elif self.viewing_svg() and self.content_encoding == 'gzip':
                 content = BytesIO(self.response.content)
             else:
                 content = self.response.raw
