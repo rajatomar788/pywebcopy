@@ -1,0 +1,1695 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, minimum-scale=1" />
+<meta name="generator" content="pdoc 0.10.0" />
+<title>pywebcopy.urls API documentation</title>
+<meta name="description" content="" />
+<link rel="preload stylesheet" as="style" href="https://cdnjs.cloudflare.com/ajax/libs/10up-sanitize.css/11.0.1/sanitize.min.css" integrity="sha256-PK9q560IAAa6WVRRh76LtCaI8pjTJ2z11v0miyNNjrs=" crossorigin>
+<link rel="preload stylesheet" as="style" href="https://cdnjs.cloudflare.com/ajax/libs/10up-sanitize.css/11.0.1/typography.min.css" integrity="sha256-7l/o7C8jubJiy74VsKTidCy1yBkRtiUGbVkYBylBqUg=" crossorigin>
+<link rel="stylesheet preload" as="style" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/10.1.1/styles/github.min.css" crossorigin>
+<style>:root{--highlight-color:#fe9}.flex{display:flex !important}body{line-height:1.5em}#content{padding:20px}#sidebar{padding:30px;overflow:hidden}#sidebar > *:last-child{margin-bottom:2cm}.http-server-breadcrumbs{font-size:130%;margin:0 0 15px 0}#footer{font-size:.75em;padding:5px 30px;border-top:1px solid #ddd;text-align:right}#footer p{margin:0 0 0 1em;display:inline-block}#footer p:last-child{margin-right:30px}h1,h2,h3,h4,h5{font-weight:300}h1{font-size:2.5em;line-height:1.1em}h2{font-size:1.75em;margin:1em 0 .50em 0}h3{font-size:1.4em;margin:25px 0 10px 0}h4{margin:0;font-size:105%}h1:target,h2:target,h3:target,h4:target,h5:target,h6:target{background:var(--highlight-color);padding:.2em 0}a{color:#058;text-decoration:none;transition:color .3s ease-in-out}a:hover{color:#e82}.title code{font-weight:bold}h2[id^="header-"]{margin-top:2em}.ident{color:#900}pre code{background:#f8f8f8;font-size:.8em;line-height:1.4em}code{background:#f2f2f1;padding:1px 4px;overflow-wrap:break-word}h1 code{background:transparent}pre{background:#f8f8f8;border:0;border-top:1px solid #ccc;border-bottom:1px solid #ccc;margin:1em 0;padding:1ex}#http-server-module-list{display:flex;flex-flow:column}#http-server-module-list div{display:flex}#http-server-module-list dt{min-width:10%}#http-server-module-list p{margin-top:0}.toc ul,#index{list-style-type:none;margin:0;padding:0}#index code{background:transparent}#index h3{border-bottom:1px solid #ddd}#index ul{padding:0}#index h4{margin-top:.6em;font-weight:bold}@media (min-width:200ex){#index .two-column{column-count:2}}@media (min-width:300ex){#index .two-column{column-count:3}}dl{margin-bottom:2em}dl dl:last-child{margin-bottom:4em}dd{margin:0 0 1em 3em}#header-classes + dl > dd{margin-bottom:3em}dd dd{margin-left:2em}dd p{margin:10px 0}.name{background:#eee;font-weight:bold;font-size:.85em;padding:5px 10px;display:inline-block;min-width:40%}.name:hover{background:#e0e0e0}dt:target .name{background:var(--highlight-color)}.name > span:first-child{white-space:nowrap}.name.class > span:nth-child(2){margin-left:.4em}.inherited{color:#999;border-left:5px solid #eee;padding-left:1em}.inheritance em{font-style:normal;font-weight:bold}.desc h2{font-weight:400;font-size:1.25em}.desc h3{font-size:1em}.desc dt code{background:inherit}.source summary,.git-link-div{color:#666;text-align:right;font-weight:400;font-size:.8em;text-transform:uppercase}.source summary > *{white-space:nowrap;cursor:pointer}.git-link{color:inherit;margin-left:1em}.source pre{max-height:500px;overflow:auto;margin:0}.source pre code{font-size:12px;overflow:visible}.hlist{list-style:none}.hlist li{display:inline}.hlist li:after{content:',\2002'}.hlist li:last-child:after{content:none}.hlist .hlist{display:inline;padding-left:1em}img{max-width:100%}td{padding:0 .5em}.admonition{padding:.1em .5em;margin-bottom:1em}.admonition-title{font-weight:bold}.admonition.note,.admonition.info,.admonition.important{background:#aef}.admonition.todo,.admonition.versionadded,.admonition.tip,.admonition.hint{background:#dfd}.admonition.warning,.admonition.versionchanged,.admonition.deprecated{background:#fd4}.admonition.error,.admonition.danger,.admonition.caution{background:lightpink}</style>
+<style media="screen and (min-width: 700px)">@media screen and (min-width:700px){#sidebar{width:30%;height:100vh;overflow:auto;position:sticky;top:0}#content{width:70%;max-width:100ch;padding:3em 4em;border-left:1px solid #ddd}pre code{font-size:1em}.item .name{font-size:1em}main{display:flex;flex-direction:row-reverse;justify-content:flex-end}.toc ul ul,#index ul{padding-left:1.5em}.toc > ul > li{margin-top:.5em}}</style>
+<style media="print">@media print{#sidebar h1{page-break-before:always}.source{display:none}}@media print{*{background:transparent !important;color:#000 !important;box-shadow:none !important;text-shadow:none !important}a[href]:after{content:" (" attr(href) ")";font-size:90%}a[href][title]:after{content:none}abbr[title]:after{content:" (" attr(title) ")"}.ir a:after,a[href^="javascript:"]:after,a[href^="#"]:after{content:""}pre,blockquote{border:1px solid #999;page-break-inside:avoid}thead{display:table-header-group}tr,img{page-break-inside:avoid}img{max-width:100% !important}@page{margin:0.5cm}p,h2,h3{orphans:3;widows:3}h1,h2,h3,h4,h5,h6{page-break-after:avoid}}</style>
+<script defer src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/10.1.1/highlight.min.js" integrity="sha256-Uv3H6lx7dJmRfRvH8TH6kJD1TSK1aFcwgx+mdg3epi8=" crossorigin></script>
+<script>window.addEventListener('DOMContentLoaded', () => hljs.initHighlighting())</script>
+</head>
+<body>
+<main>
+<article id="content">
+<header>
+<h1 class="title">Module <code>pywebcopy.urls</code></h1>
+</header>
+<section id="section-intro">
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python"># Copyright 2020; Raja Tomar
+# See license for more details
+#
+# The main function `url2path` is optimised to be fast using caching.
+# Here is a timeit result for the same.
+#
+# [IPython] timeit url2path(&#34;http://httpbin.org/bytes/1&#34;)
+# 94.7 ns +- 26.5 ns per loop (mean +- std. dev. of 7 runs, 10000000 loops each)
+
+import os
+import re
+from cgi import parse_header
+from collections import namedtuple
+from hashlib import md5
+from zlib import adler32
+
+from six import PY2
+from six import text_type
+from six import binary_type
+from six import string_types
+from six.moves.urllib.parse import unquote
+from six.moves.urllib.parse import urljoin
+
+from .helpers import lru_cache
+
+__all__ = [
+    &#39;url2path&#39;, &#39;filename_present&#39;, &#39;relate&#39;, &#39;get_etag&#39;, &#39;HIERARCHY&#39;, &#39;LINEAR&#39;,
+    &#39;parse_url&#39;, &#39;parse_header&#39;, &#39;get_host&#39;, &#39;get_prefix&#39;, &#39;get_suffix&#39;,
+    &#39;Url&#39;, &#39;LocationParseError&#39;, &#39;secure_filename&#39;, &#39;split_first&#39;,
+    &#39;common_prefix_map&#39;, &#39;common_suffix_map&#39;, &#39;get_content_type_from_headers&#39;,
+    &#39;Context&#39;, &#39;ContextError&#39;,
+]
+
+url_attrs = [&#39;scheme&#39;, &#39;auth&#39;, &#39;host&#39;, &#39;port&#39;, &#39;path&#39;, &#39;query&#39;, &#39;fragment&#39;]
+
+# We only want to normalize urls with an HTTP(S) scheme.
+# urllib3 infers URLs without a scheme (None) to be http.
+NORMALIZABLE_SCHEMES = (&#39;http&#39;, &#39;https&#39;, None)
+
+
+class LocationParseError(ValueError):
+    &#34;&#34;&#34;Invalid url format.&#34;&#34;&#34;
+
+
+class Url(namedtuple(&#39;Url&#39;, url_attrs)):
+    &#34;&#34;&#34;
+    Data structure for representing an HTTP URL. Used as a return value for
+    :func:`parse_url`. Both the scheme and host are normalized as they are
+    both case-insensitive according to RFC 3986.
+    &#34;&#34;&#34;
+    __slots__ = ()
+
+    def __new__(cls, scheme=None, auth=None, host=None, port=None, path=None,
+                query=None, fragment=None):
+        if path and not path.startswith(&#39;/&#39;):
+            path = &#39;/&#39; + path
+        if scheme:
+            scheme = scheme.lower()
+        if host and scheme in NORMALIZABLE_SCHEMES:
+            host = host.lower()
+        # noinspection PyArgumentList
+        return super(Url, cls).__new__(cls, scheme, auth, host, port, path,
+                                       query, fragment)
+
+    @property
+    def hostname(self):
+        &#34;&#34;&#34;For backwards-compatibility with urlparse. We&#39;re nice like that.&#34;&#34;&#34;
+        return self.host
+
+    @property
+    def request_uri(self):
+        &#34;&#34;&#34;Absolute path including the query string.&#34;&#34;&#34;
+        uri = self.path or &#39;/&#39;
+
+        if self.query is not None:
+            uri += &#39;?&#39; + self.query
+
+        return uri
+
+    @property
+    def netloc(self):
+        &#34;&#34;&#34;Network location including host and port&#34;&#34;&#34;
+        if self.port:
+            return &#39;%s:%d&#39; % (self.host, self.port)
+        return self.host
+
+    @property
+    def url(self):
+        &#34;&#34;&#34;
+        Convert self into a url
+
+        This function should more or less round-trip with :func:`.parse_url`. The
+        returned url may not be exactly the same as the url inputted to
+        :func:`.parse_url`, but it should be equivalent by the RFC (e.g., urls
+        with a blank port will have : removed).
+
+        Example: ::
+
+            &gt;&gt;&gt; U = parse_url(&#39;http://google.com/mail/&#39;)
+            &gt;&gt;&gt; U.url
+            &#39;http://google.com/mail/&#39;
+            &gt;&gt;&gt; Url(&#39;http&#39;, &#39;username:password&#39;, &#39;host.com&#39;, 80,
+            ... &#39;/path&#39;, &#39;query&#39;, &#39;fragment&#39;).url
+            &#39;http://username:password@host.com:80/path?query#fragment&#39;
+        &#34;&#34;&#34;
+        scheme, auth, host, port, path, query, fragment = self
+        url = &#39;&#39;
+
+        # We use &#34;is not None&#34; we want things to happen with empty strings (or 0 port)
+        if scheme is not None:
+            url += scheme + &#39;://&#39;
+        if auth is not None:
+            url += auth + &#39;@&#39;
+        if host is not None:
+            url += host
+        if port is not None:
+            url += &#39;:&#39; + str(port)
+        if path is not None:
+            url += path
+        if query is not None:
+            url += &#39;?&#39; + query
+        if fragment is not None:
+            url += &#39;#&#39; + fragment
+
+        return url
+
+    def __str__(self):
+        return self.url
+
+
+def split_first(s, delims):
+    &#34;&#34;&#34;
+    Given a string and an iterable of delimiters, split on the first found
+    delimiter. Return two split parts and the matched delimiter.
+
+    If not found, then the first part is the full input string.
+
+    Example::
+
+        &gt;&gt;&gt; split_first(&#39;foo/bar?baz&#39;, &#39;?/=&#39;)
+        (&#39;foo&#39;, &#39;bar?baz&#39;, &#39;/&#39;)
+        &gt;&gt;&gt; split_first(&#39;foo/bar?baz&#39;, &#39;123&#39;)
+        (&#39;foo/bar?baz&#39;, &#39;&#39;, None)
+
+    Scales linearly with number of delims. Not ideal for large number of delims.
+    &#34;&#34;&#34;
+    min_idx = None
+    min_delim = None
+    for d in delims:
+        idx = s.find(d)
+        if idx &lt; 0:
+            continue
+
+        if min_idx is None or idx &lt; min_idx:
+            min_idx = idx
+            min_delim = d
+
+    if min_idx is None or min_idx &lt; 0:
+        return s, &#39;&#39;, None
+
+    return s[:min_idx], s[min_idx + 1:], min_delim
+
+
+def parse_url(url):
+    &#34;&#34;&#34;
+    Given a url, return a parsed :class:`.Url` namedtuple. Best-effort is
+    performed to parse incomplete urls. Fields not provided will be None.
+
+    Partly backwards-compatible with :mod:`urlparse`.
+
+    Example::
+
+        &gt;&gt;&gt; parse_url(&#39;http://google.com/mail/&#39;)
+        Url(scheme=&#39;http&#39;, host=&#39;google.com&#39;, port=None, path=&#39;/mail/&#39;, ...)
+        &gt;&gt;&gt; parse_url(&#39;google.com:80&#39;)
+        Url(scheme=None, host=&#39;google.com&#39;, port=80, path=None, ...)
+        &gt;&gt;&gt; parse_url(&#39;/foo?bar&#39;)
+        Url(scheme=None, host=None, port=None, path=&#39;/foo&#39;, query=&#39;bar&#39;, ...)
+    &#34;&#34;&#34;
+
+    # While this code has overlap with stdlib&#39;s urlparse, it is much
+    # simplified for our needs and less annoying.
+    # Additionally, this implementations does silly things to be optimal
+    # on CPython.
+
+    if not url:
+        # Empty
+        return Url()
+
+    scheme = None
+    auth = None
+    host = None
+    port = None
+    path = None
+    fragment = None
+    query = None
+
+    # Scheme
+    if &#39;://&#39; in url:
+        scheme, url = url.split(&#39;://&#39;, 1)
+
+    # Find the earliest Authority Terminator
+    # (http://tools.ietf.org/html/rfc3986#section-3.2)
+    url, path_, delim = split_first(url, [&#39;/&#39;, &#39;?&#39;, &#39;#&#39;])
+
+    if delim:
+        # Reassemble the path
+        path = delim + path_
+
+    # Auth
+    if &#39;@&#39; in url:
+        # Last &#39;@&#39; denotes end of auth part
+        auth, url = url.rsplit(&#39;@&#39;, 1)
+
+    # IPv6
+    if url and url[0] == &#39;[&#39;:
+        host, url = url.split(&#39;]&#39;, 1)
+        host += &#39;]&#39;
+
+    # Port
+    if &#39;:&#39; in url:
+        _host, port = url.split(&#39;:&#39;, 1)
+
+        if not host:
+            host = _host
+
+        if port:
+            # If given, ports must be integers. No whitespace, no plus or
+            # minus prefixes, no non-integer digits such as ^2 (superscript).
+            if not port.isdigit():
+                raise LocationParseError(url)
+            try:
+                port = int(port)
+            except ValueError:
+                raise LocationParseError(url)
+        else:
+            # Blank ports are cool, too. (rfc3986#section-3.2.3)
+            port = None
+
+    elif not host and url:
+        host = url
+
+    if not path:
+        return Url(scheme, auth, host, port, path, query, fragment)
+
+    # Fragment
+    if &#39;#&#39; in path:
+        path, fragment = path.split(&#39;#&#39;, 1)
+
+    # Query
+    if &#39;?&#39; in path:
+        path, query = path.split(&#39;?&#39;, 1)
+
+    return Url(scheme, auth, host, port, path, query, fragment)
+
+
+def get_host(url):
+    &#34;&#34;&#34;
+    Returns the Host info from the url.
+    &#34;&#34;&#34;
+    p = parse_url(url)
+    return p.scheme or &#39;http&#39;, p.hostname, p.port
+
+
+def get_etag(string):
+    if not isinstance(string, binary_type):
+        string = string.encode()
+    return md5(string).hexdigest()
+
+
+def get_content_type_from_headers(headers, default=None):
+    content_type = headers.get(&#39;Content-Type&#39;, default)
+    if not content_type:
+        return default
+    content_type, params = parse_header(content_type)
+    return content_type
+
+
+# Pythons mime-types module is weird and does not specifies to web types.
+# Here is the standard web mime-types list from mozilla website
+# https://developer.mozilla.org/en-US/docs/Web/HTTP/Basics_of_HTTP/MIME_types/Complete_list_of_MIME_types
+common_suffix_map = {
+    &#39;application/epub+zip&#39;: &#39;.epub&#39;,  # Electronic publication (EPUB)
+    &#39;application/javascript&#39;: &#39;.js&#39;,  # JavaScript module
+    &#39;application/gzip&#39;: &#39;.gz&#39;,  # GZip Compressed Archive
+    &#39;application/java-archive&#39;: &#39;.jar&#39;,  # Java Archive (JAR)
+    &#39;application/json&#39;: &#39;.json&#39;,  # JSON format
+    &#39;application/ld+json&#39;: &#39;.jsonld&#39;,  # JSON-LD format
+    &#39;application/msword&#39;: &#39;.doc&#39;,  # Microsoft Word
+    &#39;application/octet-stream&#39;: &#39;.bin&#39;,  # Any kind of binary data
+    &#39;application/ogg&#39;: &#39;.ogx&#39;,  # OGG
+    &#39;application/pdf&#39;: &#39;.pdf&#39;,  # Adobe Portable Document Format (PDF)
+    &#39;application/php&#39;: &#39;.php&#39;,  # Hypertext Preprocessor (Personal Home Page)
+    &#39;application/rtf&#39;: &#39;.rtf&#39;,  # Rich Text Format (RTF)
+    &#39;application/vnd.amazon.ebook&#39;: &#39;.azw&#39;,  # Amazon Kindle eBook format
+    &#39;application/vnd.apple.installer+xml&#39;: &#39;.mpkg&#39;,  # Apple Installer Package
+    &#39;application/vnd.mozilla.xul+xml&#39;: &#39;.xul&#39;,  # XUL
+    &#39;application/vnd.ms-excel&#39;: &#39;.xls&#39;,  # Microsoft Excel
+    &#39;application/vnd.ms-fontobject&#39;: &#39;.eot&#39;,  # MS Embedded OpenType fonts
+    &#39;application/vnd.ms-powerpoint&#39;: &#39;.ppt&#39;,  # Microsoft PowerPoint
+    &#39;application/vnd.oasis.opendocument.presentation&#39;: &#39;.odp&#39;,  # OpenDocument presentation document
+    &#39;application/vnd.oasis.opendocument.spreadsheet&#39;: &#39;.ods&#39;,  # OpenDocument spreadsheet document
+    &#39;application/vnd.oasis.opendocument.text&#39;: &#39;.odt&#39;,  # OpenDocument text document
+    &#39;application/vnd.openxmlformats-officedocument.presentationml.presentation&#39;: &#39;.pptx&#39;,
+    # Microsoft PowerPoint (OpenXML)
+    &#39;application/vnd.openxmlformats-officedocument.spreadsheetml.sheet&#39;: &#39;.xlsx&#39;,  # Microsoft Excel (OpenXML)
+    &#39;application/vnd.openxmlformats-officedocument.wordprocessingml.document&#39;: &#39;.docx&#39;,  # Microsoft Word (OpenXML)
+    &#39;application/vnd.rar&#39;: &#39;.rar&#39;,  # RAR archive
+    &#39;application/vnd.visio&#39;: &#39;.vsd&#39;,  # Microsoft Visio
+    &#39;application/x-7z-compressed&#39;: &#39;.7z&#39;,  # 7-zip archive
+    &#39;application/x-abiword&#39;: &#39;.abw&#39;,  # AbiWord document
+    &#39;application/x-bzip&#39;: &#39;.bz&#39;,  # BZip archive
+    &#39;application/x-bzip2&#39;: &#39;.bz2&#39;,  # BZip2 archive
+    &#39;application/x-csh&#39;: &#39;.csh&#39;,  # C-Shell script
+    &#39;application/x-freearc&#39;: &#39;.arc&#39;,  # Archive document (multiple files embedded)
+    &#39;application/x-sh&#39;: &#39;.sh&#39;,  # Bourne shell script
+    &#39;application/x-shockwave-flash&#39;: &#39;.swf&#39;,  # Small web format (SWF) or Adobe Flash document
+    &#39;application/x-tar&#39;: &#39;.tar&#39;,  # Tape Archive (TAR)
+    &#39;application/xhtml+xml&#39;: &#39;.xhtml&#39;,  # XHTML
+    &#39;application/xml&#39;: &#39;.xml&#39;,  # XML
+    &#39;text/xml&#39;: &#39;.xml&#39;,  # XML
+    &#39;application/zip&#39;: &#39;.zip&#39;,  # ZIP archive
+    &#39;audio/aac&#39;: &#39;.aac&#39;,  # AAC audio
+    &#39;audio/midi&#39;: &#39;.mid&#39;,  # Musical Instrument Digital Interface (MIDI)
+    &#39;audio/x-midi&#39;: &#39;.midi&#39;,  # Musical Instrument Digital Interface (MIDI)
+    &#39;audio/mpeg&#39;: &#39;.mp3&#39;,  # MP3 audio
+    &#39;audio/ogg&#39;: &#39;.oga&#39;,  # OGG audio
+    &#39;audio/opus&#39;: &#39;.opus&#39;,  # Opus audio
+    &#39;audio/wav&#39;: &#39;.wav&#39;,  # Waveform Audio Format
+    &#39;audio/webm&#39;: &#39;.weba&#39;,  # WEBM audio
+    &#39;font/otf&#39;: &#39;.otf&#39;,  # OpenType font
+    &#39;font/ttf&#39;: &#39;.ttf&#39;,  # TrueType Font
+    &#39;font/woff&#39;: &#39;.woff&#39;,  # Web Open Font Format (WOFF)
+    &#39;font/woff2&#39;: &#39;.woff2&#39;,  # Web Open Font Format (WOFF)
+    &#39;image/bmp&#39;: &#39;.bmp&#39;,  # Windows OS/2 Bitmap Graphics
+    &#39;image/gif&#39;: &#39;.gif&#39;,  # Graphics Interchange Format (GIF)
+    &#39;image/jpeg&#39;: &#39;.jpeg&#39;,  # JPEG images
+    &#39;image/jpg&#39;: &#39;.jpg&#39;,  # JPG images
+    &#39;image/png&#39;: &#39;.png&#39;,  # Portable Network Graphics
+    &#39;image/svg+xml&#39;: &#39;.svg&#39;,  # Scalable Vector Graphics (SVG)
+    &#39;image/tiff&#39;: &#39;.tiff&#39;,  # Tagged Image File Format (TIFF)
+    &#39;image/x-icon&#39;: &#39;.ico&#39;,  # Icon format
+    &#39;image/vnd.microsoft.icon&#39;: &#39;.ico&#39;,  # Icon format
+    &#39;image/webp&#39;: &#39;.webp&#39;,  # WEBP image
+    &#39;text/calendar&#39;: &#39;.ics&#39;,  # iCalendar format
+    &#39;text/css&#39;: &#39;.css&#39;,  # Cascading Style Sheets (CSS)
+    &#39;text/csv&#39;: &#39;.csv&#39;,  # Comma-separated values (CSV)
+    &#39;text/html&#39;: &#39;.html&#39;,  # HyperText Markup Language (HTML)
+    &#39;text/javascript&#39;: &#39;.mjs&#39;,  # JavaScript module&#39;,
+    &#39;text/plain&#39;: &#39;.txt&#39;,  # Text, (generally ASCII or ISO 8859-n)&#39;,
+    &#34;video/3gpp&#34;: &#39;.3gp&#39;,  # 3GPP audio/video container&#39;,
+    &#34;audio/3gpp&#34;: &#39;.3gp&#39;,  # 3GPP audio/video container&#39;,
+    &#34;video/3gpp2&#34;: &#39;.3g2&#39;,  # 3GPP2 audio/video container&#39;
+    &#34;audio/3gpp2&#34;: &#39;.3g2&#39;,  # 3GPP2 audio/video container&#39;
+    &#39;video/mp2t&#39;: &#39;.ts&#39;,  # MPEG transport stream
+    &#39;video/mpeg&#39;: &#39;.mpeg&#39;,  # MPEG Video
+    &#39;video/ogg&#39;: &#39;.ogv&#39;,  # OGG video
+    &#39;video/webm&#39;: &#39;.webm&#39;,  # WEBM video
+    &#39;video/x-msvideo&#39;: &#39;.avi&#39;  # AVI: Audio Video Interleave
+}
+
+
+def get_suffix(content_type):
+    return common_suffix_map.get(content_type)
+
+
+# common file names for some web file types.
+common_prefix_map = {
+    &#39;application/javascript&#39;: &#39;app&#39;,
+    &#39;application/json&#39;: &#39;data&#39;,
+    &#39;application/octet-stream&#39;: &#39;binary&#39;,
+    &#39;image/gif&#39;: &#39;gif&#39;,
+    &#39;image/jpeg&#39;: &#39;image&#39;,
+    &#39;image/x-icon&#39;: &#39;favicon&#39;,
+    &#39;text/css&#39;: &#39;style&#39;,
+    &#39;text/html&#39;: &#39;index&#39;,
+    &#39;text/plain&#39;: &#39;text&#39;
+}
+
+
+def get_prefix(content_type):
+    return common_prefix_map.get(content_type)
+
+
+HIERARCHY = &#39;HIERARCHY&#39;
+LINEAR = &#39;LINEAR&#39;
+
+# Helpers for bytes handling
+_implicit_encoding = &#39;ascii&#39;
+_implicit_errors = &#39;ignore&#39;
+
+
+def _encode_result(obj, encoding=_implicit_encoding,
+                   errors=_implicit_errors):
+    return obj.encode(encoding, errors)
+
+
+def _decode_args(args, encoding=_implicit_encoding,
+                 errors=_implicit_errors):
+    return tuple(x.decode(encoding, errors) if x else &#39;&#39; for x in args)
+
+
+def _coerce_args(*args):
+    # Invokes decode if necessary to create str args
+    # and returns the coerced inputs along with
+    # an appropriate result coercion function
+    #   - noop for str inputs
+    #   - encoding function otherwise
+    str_input = isinstance(args[0], text_type)
+    for arg in args[1:]:
+        # We special-case the empty string to support the
+        # &#34;scheme=&#39;&#39;&#34; default argument to some functions
+        if arg and isinstance(arg, text_type) != str_input:
+            raise TypeError(&#34;Cannot mix str and non-str arguments&#34;)
+    if str_input:
+        return args + (lambda x: x,)
+    return _decode_args(args) + (_encode_result,)
+
+
+_windows_device_files = frozenset(
+        [&#39;CON&#39;, &#39;PRN&#39;, &#39;AUX&#39;, &#39;NUL&#39;] +
+        [&#39;COM%d&#39; % i for i in range(1, 10)] +
+        [&#39;LPT%d&#39; % i for i in range(1, 10)]
+)
+
+_filename_ascii_strip_re = re.compile(r&#39;[^A-Za-z0-9_.-]+&#39;)
+
+
+def secure_filename(filename, sub=&#39;_&#39;):
+    if isinstance(filename, text_type):
+        from unicodedata import normalize
+        filename = normalize(&#39;NFKD&#39;, filename).encode(
+            _implicit_encoding, _implicit_errors)
+        if not PY2:
+            filename = filename.decode(_implicit_encoding)
+    for sep in os.path.sep, os.path.altsep:
+        if sep:
+            filename = filename.replace(sep, &#39; &#39;)
+    filename = str(_filename_ascii_strip_re.sub(sub, &#39;_&#39;.join(
+        filename.split()))).strip(&#39;._&#39;)
+
+    # on nt a couple of special files are present in each folder.  We
+    # have to ensure that the target file is not such a filename.  In
+    # this case we prepend an underline
+    if os.name == &#39;nt&#39; and filename and \
+            filename.split(&#39;.&#39;)[0].upper() in _windows_device_files:
+        filename = &#39;_&#39; + filename
+
+    return filename
+
+
+def _filter_and_group_segments(url, remove_query=True, remove_frag=True):
+    &#34;&#34;&#34;
+    Groups the parts in a base and tail fashion.
+
+    ..usage::
+        &gt;&gt;&gt; s = &#39;http://www.nx-domain.com/blog/index?q=query#fragment&#39;
+        &gt;&gt;&gt; _filter_and_group_segments(s, remove_query=True, remove_frag=True)
+        &gt;&gt;&gt; ((&#39;www.nx-domain.com&#39;, &#39;blog&#39;), &#39;index&#39;)
+        &gt;&gt;&gt; _filter_and_group_segments(s, remove_query=False, remove_frag=True)
+        &gt;&gt;&gt; ((&#39;www.nx-domain.com&#39;, &#39;blog&#39;), &#39;index_q_query&#39;)
+        &gt;&gt;&gt; _filter_and_group_segments(s, remove_query=False, remove_frag=False)
+        &gt;&gt;&gt; ((&#39;www.nx-domain.com&#39;, &#39;blog&#39;), &#39;index_q_query_fragment&#39;)
+
+    :param str url: url of which parts are to be processed
+    :param bool remove_query: whether to remove the query parameters from url.
+    :param bool remove_frag: whether to remove the fragment parameters from url.
+    :rtype: tuple
+    :return: grouped parts
+    &#34;&#34;&#34;
+    scheme, auth, host, port, path, query, fragment = parse_url(unquote(url))
+
+    host = (secure_filename(host),) if isinstance(host, string_types) and host != &#39;&#39; else tuple()
+    path = path if isinstance(path, string_types) else &#39;&#39;
+    segments = path.lstrip(&#39;/&#39;).split(&#39;/&#39;)
+
+    base = host + tuple(secure_filename(i) for i in segments[:-1])
+    leaf = secure_filename(segments[-1])
+    stem, ext = os.path.splitext(leaf)
+    if not remove_query and isinstance(query, string_types):
+        stem = &#39;_&#39;.join(filter(None, (stem, secure_filename(query))))
+    if not remove_frag and isinstance(fragment, string_types):
+        stem = &#39;_&#39;.join(filter(None, (stem, secure_filename(fragment))))
+    return base, stem, ext
+
+
+def _url2path(url,
+              base_url=None,
+              etag=None,
+              remove_query=None,
+              remove_frag=None,
+              prefix=None,
+              suffix=None,
+              prefix_errors=None,
+              suffix_errors=None):
+    if not isinstance(url, string_types):
+        raise TypeError(&#39;Expected url of type %r, got %r&#39; % (string_types, url))
+    if isinstance(base_url, string_types):
+        url = urljoin(base_url, url)
+
+    base, stem, ext = _filter_and_group_segments(
+        url, remove_query, remove_frag)
+
+    if prefix and isinstance(prefix, string_types):
+        if prefix_errors == &#39;append&#39;:
+            stem = &#39;_&#39;.join(filter(None, (prefix, stem)))
+        elif prefix_errors == &#39;replace&#39;:
+            stem = prefix
+        else:
+            if not stem:
+                stem = prefix
+
+    if not stem or etag:
+        if not isinstance(etag, string_types):
+            etag = str(adler32(url.encode(_implicit_encoding, _implicit_errors)))
+        stem = &#39;.&#39;.join(filter(None, (stem, etag)))
+
+    if suffix and isinstance(suffix, string_types):
+        # avoid appending if it is equal to existing ext.
+        if suffix_errors == &#39;append&#39; and ext != suffix:
+            ext = &#39;&#39;.join(filter(None, (ext, suffix)))
+        elif suffix_errors == &#39;replace&#39;:
+            ext = suffix
+        else:
+            if not ext:
+                ext = suffix
+    return tuple(base), &#39;&#39;.join((stem, ext))
+
+
+@lru_cache()
+def url2path(url,
+             base_url=None,
+             base_path=None,
+             tree_type=HIERARCHY,
+             etag=None,
+             remove_query=None,
+             remove_frag=None,
+             prefix=None,
+             suffix=None,
+             prefix_errors=None,
+             suffix_errors=None):
+    &#34;&#34;&#34;Automated disk path generator for urls.
+
+    The urls not always contain a proper filename at which
+    the file could be saved i.e. &#39;http://httpbin.org/bytes/10&#39;.
+    To deal with these kind of binary streams retrieving,
+    a automated name generator is used which at its core
+    usage the `hashes` to create unique non repeating names.
+
+    Simple workaround to convert the urls into paths.
+    Joins the url with a base url and then transforms the
+    url into a disk-path or file-path with added base path.
+    It returns a generated path along with the name and
+    hex digest of the joined absolute url.
+
+    Tree types:-
+        let there be two paths *&#34;/subdir1/file1&#34;* and *&#34;/file2&#34;*
+
+        linear:-
+            basedir/
+                    file1
+                    file2
+        hierarchy:-
+            basedir/
+                subdir1/
+                    file1
+                file2
+
+    ..features::
+        1. base url joining and normalisations
+        2. basename generation if not present
+        3. pure disk compatible path
+        4. additional base path joining
+        5. prefix and suffix implicit support
+        6. Tree types: linear or hierarchy
+
+    ..usage::
+        &gt;&gt;&gt; url2path(&#39;http://nx-domain.com/path/to/file?q=value&#39;)
+        &gt;&gt;&gt; r&#39;nx-domain.com\\path\\to\\file_q_value&#39;
+
+    &#34;&#34;&#34;
+    url, base_url, base_path, prefix, suffix, _encode = _coerce_args(
+        url, base_url, base_path, prefix, suffix)
+
+    dirname, basename = _url2path(
+        url, base_url, etag, remove_query, remove_frag,
+        prefix, suffix, prefix_errors, suffix_errors)
+
+    if isinstance(base_path, string_types) and &#39;~&#39; in base_path:
+        base_path = os.path.expanduser(base_path)
+
+    # hierarchy or a linear tree
+    if tree_type == LINEAR:
+        if isinstance(base_path, string_types):
+            path = os.path.join(base_path, basename)
+        else:
+            path = basename
+    else:
+        if isinstance(base_path, string_types):
+            path = os.path.join(base_path, *(dirname + (basename,)))
+        else:
+            path = os.path.join(*(dirname + (basename,)))
+    return _encode(os.path.normpath(path))
+
+
+def from_content_type(response, base_url=None, base_path=None, tree_type=HIERARCHY):
+    &#34;&#34;&#34;Builds the path for the url from a http response.
+
+    :type response: requests.Response or urllib.Response
+    :type base_url: string_types
+    :type base_path: string_types
+    :type tree_type: LINEAR or HIERARCHY
+    :rtype: string_types
+    :return: calculated path
+    &#34;&#34;&#34;
+    assert hasattr(response, &#39;headers&#39;), &#34;Response object must have a &#39;headers&#39; attribute!&#34;
+    assert hasattr(response, &#39;url&#39;), &#34;Response object must have a &#39;url&#39; attribute!&#34;
+    ctypes = get_content_type_from_headers(response.headers)
+    return url2path(
+        url=response.url,
+        base_url=base_url,
+        base_path=base_path,
+        tree_type=tree_type,
+        prefix=get_prefix(ctypes),
+        suffix=get_suffix(ctypes)
+    )
+
+
+def relate(target_file, start_file):
+    &#34;&#34;&#34;
+    Returns relative path of target-file from start-file.
+    &#34;&#34;&#34;
+    # Default os.path.rel_path takes directories as argument, thus we need
+    # strip the filename if present in the paths else continue as is.
+    target_dir, target_base = os.path.split(target_file)
+    start_dir = os.path.dirname(start_file)
+
+    # Calculate the relative path using the standard module and then concatenate
+    # the file names if  they were previously present.
+    return os.path.join(os.path.relpath(target_dir, start_dir), target_base)
+
+
+def filename_present(url):
+    &#34;&#34;&#34;Checks whether a `filename` is present in the url/path or not.
+
+    :param str url: url string to check the file name in.
+    :return boolean: True if present, else False
+    &#34;&#34;&#34;
+    return bool(_filter_and_group_segments(url, remove_query=True, remove_frag=True)[1])
+
+
+context_attrs = [
+    &#39;url&#39;, &#39;base_url&#39;, &#39;base_path&#39;, &#39;tree_type&#39;, &#39;content_type&#39;,
+]
+
+
+class ContextError(AttributeError):
+    &#34;&#34;&#34;Bad context attribute or operation.&#34;&#34;&#34;
+
+
+class Context(namedtuple(&#39;Context&#39;, context_attrs)):
+    __slots__ = ()
+
+    @classmethod
+    def from_config(cls, config):
+        url = config.get(&#39;project_url&#39;)
+        path = config.get(&#39;project_folder&#39;)
+        tree_type = config.get(&#39;tree_type&#39;)
+        if None in (url, path, tree_type):
+            raise AttributeError(&#34;Values can&#39;t be NoneType.&#34;, url, path, tree_type)
+        return cls(url, url, path, tree_type, None)
+
+    def __new__(cls, url=None, base_url=None, base_path=None, tree_type=None, content_type=None, **kwargs):
+        if tree_type not in (LINEAR, HIERARCHY):
+            raise ValueError(&#34;TreeType should be either LINEAR or HIERARCHY.&#34;)
+
+        if not isinstance(url, string_types):
+            raise TypeError(url)
+
+        if base_url and not isinstance(base_url, string_types):
+            raise TypeError(base_url)
+        if base_url is None:
+            base_url = url
+
+        if not isinstance(base_path, string_types):
+            raise TypeError(base_path)
+        base_path = os.path.normpath(base_path)
+
+        # noinspection PyArgumentList
+        return super(Context, cls).__new__(cls, url, base_url, base_path, tree_type, content_type)
+
+    def with_values(self, **kwargs):
+        return self._replace(**kwargs)
+
+    def create_new_from_url(self, url):
+        &#34;&#34;&#34;Creates a new identical context with only difference of the url.&#34;&#34;&#34;
+        #: The base url for the new url should be the url of the parent context
+        #: and not the absolute parent url. Learned a lesson today!
+        return self.with_values(url=urljoin(self.url, url), content_type=None)
+
+    def resolve(self):
+        prefix = suffix = None
+        if self.content_type is not None:
+            prefix = get_prefix(self.content_type)
+            suffix = get_suffix(self.content_type)
+
+        return url2path(
+            url=self.url,
+            base_url=self.base_url,
+            base_path=self.base_path,
+            tree_type=self.tree_type,
+            prefix=prefix, suffix=suffix,
+            suffix_errors=&#39;append&#39;
+        )</code></pre>
+</details>
+</section>
+<section>
+</section>
+<section>
+</section>
+<section>
+<h2 class="section-title" id="header-functions">Functions</h2>
+<dl>
+<dt id="pywebcopy.urls.filename_present"><code class="name flex">
+<span>def <span class="ident">filename_present</span></span>(<span>url)</span>
+</code></dt>
+<dd>
+<div class="desc"><p>Checks whether a <code>filename</code> is present in the url/path or not.</p>
+<p>:param str url: url string to check the file name in.
+:return boolean: True if present, else False</p></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def filename_present(url):
+    &#34;&#34;&#34;Checks whether a `filename` is present in the url/path or not.
+
+    :param str url: url string to check the file name in.
+    :return boolean: True if present, else False
+    &#34;&#34;&#34;
+    return bool(_filter_and_group_segments(url, remove_query=True, remove_frag=True)[1])</code></pre>
+</details>
+</dd>
+<dt id="pywebcopy.urls.get_content_type_from_headers"><code class="name flex">
+<span>def <span class="ident">get_content_type_from_headers</span></span>(<span>headers, default=None)</span>
+</code></dt>
+<dd>
+<div class="desc"></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def get_content_type_from_headers(headers, default=None):
+    content_type = headers.get(&#39;Content-Type&#39;, default)
+    if not content_type:
+        return default
+    content_type, params = parse_header(content_type)
+    return content_type</code></pre>
+</details>
+</dd>
+<dt id="pywebcopy.urls.get_etag"><code class="name flex">
+<span>def <span class="ident">get_etag</span></span>(<span>string)</span>
+</code></dt>
+<dd>
+<div class="desc"></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def get_etag(string):
+    if not isinstance(string, binary_type):
+        string = string.encode()
+    return md5(string).hexdigest()</code></pre>
+</details>
+</dd>
+<dt id="pywebcopy.urls.get_host"><code class="name flex">
+<span>def <span class="ident">get_host</span></span>(<span>url)</span>
+</code></dt>
+<dd>
+<div class="desc"><p>Returns the Host info from the url.</p></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def get_host(url):
+    &#34;&#34;&#34;
+    Returns the Host info from the url.
+    &#34;&#34;&#34;
+    p = parse_url(url)
+    return p.scheme or &#39;http&#39;, p.hostname, p.port</code></pre>
+</details>
+</dd>
+<dt id="pywebcopy.urls.get_prefix"><code class="name flex">
+<span>def <span class="ident">get_prefix</span></span>(<span>content_type)</span>
+</code></dt>
+<dd>
+<div class="desc"></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def get_prefix(content_type):
+    return common_prefix_map.get(content_type)</code></pre>
+</details>
+</dd>
+<dt id="pywebcopy.urls.get_suffix"><code class="name flex">
+<span>def <span class="ident">get_suffix</span></span>(<span>content_type)</span>
+</code></dt>
+<dd>
+<div class="desc"></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def get_suffix(content_type):
+    return common_suffix_map.get(content_type)</code></pre>
+</details>
+</dd>
+<dt id="pywebcopy.urls.parse_header"><code class="name flex">
+<span>def <span class="ident">parse_header</span></span>(<span>line)</span>
+</code></dt>
+<dd>
+<div class="desc"><p>Parse a Content-type like header.</p>
+<p>Return the main content-type and a dictionary of options.</p></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def parse_header(line):
+    &#34;&#34;&#34;Parse a Content-type like header.
+
+    Return the main content-type and a dictionary of options.
+
+    &#34;&#34;&#34;
+    parts = _parseparam(&#39;;&#39; + line)
+    key = parts.__next__()
+    pdict = {}
+    for p in parts:
+        i = p.find(&#39;=&#39;)
+        if i &gt;= 0:
+            name = p[:i].strip().lower()
+            value = p[i+1:].strip()
+            if len(value) &gt;= 2 and value[0] == value[-1] == &#39;&#34;&#39;:
+                value = value[1:-1]
+                value = value.replace(&#39;\\\\&#39;, &#39;\\&#39;).replace(&#39;\\&#34;&#39;, &#39;&#34;&#39;)
+            pdict[name] = value
+    return key, pdict</code></pre>
+</details>
+</dd>
+<dt id="pywebcopy.urls.parse_url"><code class="name flex">
+<span>def <span class="ident">parse_url</span></span>(<span>url)</span>
+</code></dt>
+<dd>
+<div class="desc"><p>Given a url, return a parsed :class:<code>.<a title="pywebcopy.urls.Url" href="#pywebcopy.urls.Url">Url</a></code> namedtuple. Best-effort is
+performed to parse incomplete urls. Fields not provided will be None.</p>
+<p>Partly backwards-compatible with :mod:<code>urlparse</code>.</p>
+<p>Example::</p>
+<pre><code>&gt;&gt;&gt; parse_url('http://google.com/mail/')
+Url(scheme='http', host='google.com', port=None, path='/mail/', ...)
+&gt;&gt;&gt; parse_url('google.com:80')
+Url(scheme=None, host='google.com', port=80, path=None, ...)
+&gt;&gt;&gt; parse_url('/foo?bar')
+Url(scheme=None, host=None, port=None, path='/foo', query='bar', ...)
+</code></pre></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def parse_url(url):
+    &#34;&#34;&#34;
+    Given a url, return a parsed :class:`.Url` namedtuple. Best-effort is
+    performed to parse incomplete urls. Fields not provided will be None.
+
+    Partly backwards-compatible with :mod:`urlparse`.
+
+    Example::
+
+        &gt;&gt;&gt; parse_url(&#39;http://google.com/mail/&#39;)
+        Url(scheme=&#39;http&#39;, host=&#39;google.com&#39;, port=None, path=&#39;/mail/&#39;, ...)
+        &gt;&gt;&gt; parse_url(&#39;google.com:80&#39;)
+        Url(scheme=None, host=&#39;google.com&#39;, port=80, path=None, ...)
+        &gt;&gt;&gt; parse_url(&#39;/foo?bar&#39;)
+        Url(scheme=None, host=None, port=None, path=&#39;/foo&#39;, query=&#39;bar&#39;, ...)
+    &#34;&#34;&#34;
+
+    # While this code has overlap with stdlib&#39;s urlparse, it is much
+    # simplified for our needs and less annoying.
+    # Additionally, this implementations does silly things to be optimal
+    # on CPython.
+
+    if not url:
+        # Empty
+        return Url()
+
+    scheme = None
+    auth = None
+    host = None
+    port = None
+    path = None
+    fragment = None
+    query = None
+
+    # Scheme
+    if &#39;://&#39; in url:
+        scheme, url = url.split(&#39;://&#39;, 1)
+
+    # Find the earliest Authority Terminator
+    # (http://tools.ietf.org/html/rfc3986#section-3.2)
+    url, path_, delim = split_first(url, [&#39;/&#39;, &#39;?&#39;, &#39;#&#39;])
+
+    if delim:
+        # Reassemble the path
+        path = delim + path_
+
+    # Auth
+    if &#39;@&#39; in url:
+        # Last &#39;@&#39; denotes end of auth part
+        auth, url = url.rsplit(&#39;@&#39;, 1)
+
+    # IPv6
+    if url and url[0] == &#39;[&#39;:
+        host, url = url.split(&#39;]&#39;, 1)
+        host += &#39;]&#39;
+
+    # Port
+    if &#39;:&#39; in url:
+        _host, port = url.split(&#39;:&#39;, 1)
+
+        if not host:
+            host = _host
+
+        if port:
+            # If given, ports must be integers. No whitespace, no plus or
+            # minus prefixes, no non-integer digits such as ^2 (superscript).
+            if not port.isdigit():
+                raise LocationParseError(url)
+            try:
+                port = int(port)
+            except ValueError:
+                raise LocationParseError(url)
+        else:
+            # Blank ports are cool, too. (rfc3986#section-3.2.3)
+            port = None
+
+    elif not host and url:
+        host = url
+
+    if not path:
+        return Url(scheme, auth, host, port, path, query, fragment)
+
+    # Fragment
+    if &#39;#&#39; in path:
+        path, fragment = path.split(&#39;#&#39;, 1)
+
+    # Query
+    if &#39;?&#39; in path:
+        path, query = path.split(&#39;?&#39;, 1)
+
+    return Url(scheme, auth, host, port, path, query, fragment)</code></pre>
+</details>
+</dd>
+<dt id="pywebcopy.urls.relate"><code class="name flex">
+<span>def <span class="ident">relate</span></span>(<span>target_file, start_file)</span>
+</code></dt>
+<dd>
+<div class="desc"><p>Returns relative path of target-file from start-file.</p></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def relate(target_file, start_file):
+    &#34;&#34;&#34;
+    Returns relative path of target-file from start-file.
+    &#34;&#34;&#34;
+    # Default os.path.rel_path takes directories as argument, thus we need
+    # strip the filename if present in the paths else continue as is.
+    target_dir, target_base = os.path.split(target_file)
+    start_dir = os.path.dirname(start_file)
+
+    # Calculate the relative path using the standard module and then concatenate
+    # the file names if  they were previously present.
+    return os.path.join(os.path.relpath(target_dir, start_dir), target_base)</code></pre>
+</details>
+</dd>
+<dt id="pywebcopy.urls.secure_filename"><code class="name flex">
+<span>def <span class="ident">secure_filename</span></span>(<span>filename, sub='_')</span>
+</code></dt>
+<dd>
+<div class="desc"></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def secure_filename(filename, sub=&#39;_&#39;):
+    if isinstance(filename, text_type):
+        from unicodedata import normalize
+        filename = normalize(&#39;NFKD&#39;, filename).encode(
+            _implicit_encoding, _implicit_errors)
+        if not PY2:
+            filename = filename.decode(_implicit_encoding)
+    for sep in os.path.sep, os.path.altsep:
+        if sep:
+            filename = filename.replace(sep, &#39; &#39;)
+    filename = str(_filename_ascii_strip_re.sub(sub, &#39;_&#39;.join(
+        filename.split()))).strip(&#39;._&#39;)
+
+    # on nt a couple of special files are present in each folder.  We
+    # have to ensure that the target file is not such a filename.  In
+    # this case we prepend an underline
+    if os.name == &#39;nt&#39; and filename and \
+            filename.split(&#39;.&#39;)[0].upper() in _windows_device_files:
+        filename = &#39;_&#39; + filename
+
+    return filename</code></pre>
+</details>
+</dd>
+<dt id="pywebcopy.urls.split_first"><code class="name flex">
+<span>def <span class="ident">split_first</span></span>(<span>s, delims)</span>
+</code></dt>
+<dd>
+<div class="desc"><p>Given a string and an iterable of delimiters, split on the first found
+delimiter. Return two split parts and the matched delimiter.</p>
+<p>If not found, then the first part is the full input string.</p>
+<p>Example::</p>
+<pre><code>&gt;&gt;&gt; split_first('foo/bar?baz', '?/=')
+('foo', 'bar?baz', '/')
+&gt;&gt;&gt; split_first('foo/bar?baz', '123')
+('foo/bar?baz', '', None)
+</code></pre>
+<p>Scales linearly with number of delims. Not ideal for large number of delims.</p></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def split_first(s, delims):
+    &#34;&#34;&#34;
+    Given a string and an iterable of delimiters, split on the first found
+    delimiter. Return two split parts and the matched delimiter.
+
+    If not found, then the first part is the full input string.
+
+    Example::
+
+        &gt;&gt;&gt; split_first(&#39;foo/bar?baz&#39;, &#39;?/=&#39;)
+        (&#39;foo&#39;, &#39;bar?baz&#39;, &#39;/&#39;)
+        &gt;&gt;&gt; split_first(&#39;foo/bar?baz&#39;, &#39;123&#39;)
+        (&#39;foo/bar?baz&#39;, &#39;&#39;, None)
+
+    Scales linearly with number of delims. Not ideal for large number of delims.
+    &#34;&#34;&#34;
+    min_idx = None
+    min_delim = None
+    for d in delims:
+        idx = s.find(d)
+        if idx &lt; 0:
+            continue
+
+        if min_idx is None or idx &lt; min_idx:
+            min_idx = idx
+            min_delim = d
+
+    if min_idx is None or min_idx &lt; 0:
+        return s, &#39;&#39;, None
+
+    return s[:min_idx], s[min_idx + 1:], min_delim</code></pre>
+</details>
+</dd>
+<dt id="pywebcopy.urls.url2path"><code class="name flex">
+<span>def <span class="ident">url2path</span></span>(<span>url, base_url=None, base_path=None, tree_type='HIERARCHY', etag=None, remove_query=None, remove_frag=None, prefix=None, suffix=None, prefix_errors=None, suffix_errors=None)</span>
+</code></dt>
+<dd>
+<div class="desc"><p>Automated disk path generator for urls.</p>
+<p>The urls not always contain a proper filename at which
+the file could be saved i.e. 'http://httpbin.org/bytes/10'.
+To deal with these kind of binary streams retrieving,
+a automated name generator is used which at its core
+usage the <code>hashes</code> to create unique non repeating names.</p>
+<p>Simple workaround to convert the urls into paths.
+Joins the url with a base url and then transforms the
+url into a disk-path or file-path with added base path.
+It returns a generated path along with the name and
+hex digest of the joined absolute url.</p>
+<p>Tree types:-
+let there be two paths <em>"/subdir1/file1"</em> and <em>"/file2"</em></p>
+<pre><code>linear:-
+    basedir/
+            file1
+            file2
+hierarchy:-
+    basedir/
+        subdir1/
+            file1
+        file2
+</code></pre>
+<div class="admonition features">
+<p class="admonition-title">Features</p>
+<ol>
+<li>base url joining and normalisations</li>
+<li>basename generation if not present</li>
+<li>pure disk compatible path</li>
+<li>additional base path joining</li>
+<li>prefix and suffix implicit support</li>
+<li>Tree types: linear or hierarchy</li>
+</ol>
+</div>
+<div class="admonition usage">
+<p class="admonition-title">Usage</p>
+<blockquote>
+<blockquote>
+<blockquote>
+<p>url2path('http://nx-domain.com/path/to/file?q=value')
+r'nx-domain.com\path\to\file_q_value'</p>
+</blockquote>
+</blockquote>
+</blockquote>
+</div></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">@lru_cache()
+def url2path(url,
+             base_url=None,
+             base_path=None,
+             tree_type=HIERARCHY,
+             etag=None,
+             remove_query=None,
+             remove_frag=None,
+             prefix=None,
+             suffix=None,
+             prefix_errors=None,
+             suffix_errors=None):
+    &#34;&#34;&#34;Automated disk path generator for urls.
+
+    The urls not always contain a proper filename at which
+    the file could be saved i.e. &#39;http://httpbin.org/bytes/10&#39;.
+    To deal with these kind of binary streams retrieving,
+    a automated name generator is used which at its core
+    usage the `hashes` to create unique non repeating names.
+
+    Simple workaround to convert the urls into paths.
+    Joins the url with a base url and then transforms the
+    url into a disk-path or file-path with added base path.
+    It returns a generated path along with the name and
+    hex digest of the joined absolute url.
+
+    Tree types:-
+        let there be two paths *&#34;/subdir1/file1&#34;* and *&#34;/file2&#34;*
+
+        linear:-
+            basedir/
+                    file1
+                    file2
+        hierarchy:-
+            basedir/
+                subdir1/
+                    file1
+                file2
+
+    ..features::
+        1. base url joining and normalisations
+        2. basename generation if not present
+        3. pure disk compatible path
+        4. additional base path joining
+        5. prefix and suffix implicit support
+        6. Tree types: linear or hierarchy
+
+    ..usage::
+        &gt;&gt;&gt; url2path(&#39;http://nx-domain.com/path/to/file?q=value&#39;)
+        &gt;&gt;&gt; r&#39;nx-domain.com\\path\\to\\file_q_value&#39;
+
+    &#34;&#34;&#34;
+    url, base_url, base_path, prefix, suffix, _encode = _coerce_args(
+        url, base_url, base_path, prefix, suffix)
+
+    dirname, basename = _url2path(
+        url, base_url, etag, remove_query, remove_frag,
+        prefix, suffix, prefix_errors, suffix_errors)
+
+    if isinstance(base_path, string_types) and &#39;~&#39; in base_path:
+        base_path = os.path.expanduser(base_path)
+
+    # hierarchy or a linear tree
+    if tree_type == LINEAR:
+        if isinstance(base_path, string_types):
+            path = os.path.join(base_path, basename)
+        else:
+            path = basename
+    else:
+        if isinstance(base_path, string_types):
+            path = os.path.join(base_path, *(dirname + (basename,)))
+        else:
+            path = os.path.join(*(dirname + (basename,)))
+    return _encode(os.path.normpath(path))</code></pre>
+</details>
+</dd>
+</dl>
+</section>
+<section>
+<h2 class="section-title" id="header-classes">Classes</h2>
+<dl>
+<dt id="pywebcopy.urls.Context"><code class="flex name class">
+<span>class <span class="ident">Context</span></span>
+<span>(</span><span>url=None, base_url=None, base_path=None, tree_type=None, content_type=None, **kwargs)</span>
+</code></dt>
+<dd>
+<div class="desc"><p>Context(url, base_url, base_path, tree_type, content_type)</p></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">class Context(namedtuple(&#39;Context&#39;, context_attrs)):
+    __slots__ = ()
+
+    @classmethod
+    def from_config(cls, config):
+        url = config.get(&#39;project_url&#39;)
+        path = config.get(&#39;project_folder&#39;)
+        tree_type = config.get(&#39;tree_type&#39;)
+        if None in (url, path, tree_type):
+            raise AttributeError(&#34;Values can&#39;t be NoneType.&#34;, url, path, tree_type)
+        return cls(url, url, path, tree_type, None)
+
+    def __new__(cls, url=None, base_url=None, base_path=None, tree_type=None, content_type=None, **kwargs):
+        if tree_type not in (LINEAR, HIERARCHY):
+            raise ValueError(&#34;TreeType should be either LINEAR or HIERARCHY.&#34;)
+
+        if not isinstance(url, string_types):
+            raise TypeError(url)
+
+        if base_url and not isinstance(base_url, string_types):
+            raise TypeError(base_url)
+        if base_url is None:
+            base_url = url
+
+        if not isinstance(base_path, string_types):
+            raise TypeError(base_path)
+        base_path = os.path.normpath(base_path)
+
+        # noinspection PyArgumentList
+        return super(Context, cls).__new__(cls, url, base_url, base_path, tree_type, content_type)
+
+    def with_values(self, **kwargs):
+        return self._replace(**kwargs)
+
+    def create_new_from_url(self, url):
+        &#34;&#34;&#34;Creates a new identical context with only difference of the url.&#34;&#34;&#34;
+        #: The base url for the new url should be the url of the parent context
+        #: and not the absolute parent url. Learned a lesson today!
+        return self.with_values(url=urljoin(self.url, url), content_type=None)
+
+    def resolve(self):
+        prefix = suffix = None
+        if self.content_type is not None:
+            prefix = get_prefix(self.content_type)
+            suffix = get_suffix(self.content_type)
+
+        return url2path(
+            url=self.url,
+            base_url=self.base_url,
+            base_path=self.base_path,
+            tree_type=self.tree_type,
+            prefix=prefix, suffix=suffix,
+            suffix_errors=&#39;append&#39;
+        )</code></pre>
+</details>
+<h3>Ancestors</h3>
+<ul class="hlist">
+<li>builtins.tuple</li>
+</ul>
+<h3>Static methods</h3>
+<dl>
+<dt id="pywebcopy.urls.Context.from_config"><code class="name flex">
+<span>def <span class="ident">from_config</span></span>(<span>config)</span>
+</code></dt>
+<dd>
+<div class="desc"></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">@classmethod
+def from_config(cls, config):
+    url = config.get(&#39;project_url&#39;)
+    path = config.get(&#39;project_folder&#39;)
+    tree_type = config.get(&#39;tree_type&#39;)
+    if None in (url, path, tree_type):
+        raise AttributeError(&#34;Values can&#39;t be NoneType.&#34;, url, path, tree_type)
+    return cls(url, url, path, tree_type, None)</code></pre>
+</details>
+</dd>
+</dl>
+<h3>Methods</h3>
+<dl>
+<dt id="pywebcopy.urls.Context.create_new_from_url"><code class="name flex">
+<span>def <span class="ident">create_new_from_url</span></span>(<span>self, url)</span>
+</code></dt>
+<dd>
+<div class="desc"><p>Creates a new identical context with only difference of the url.</p></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def create_new_from_url(self, url):
+    &#34;&#34;&#34;Creates a new identical context with only difference of the url.&#34;&#34;&#34;
+    #: The base url for the new url should be the url of the parent context
+    #: and not the absolute parent url. Learned a lesson today!
+    return self.with_values(url=urljoin(self.url, url), content_type=None)</code></pre>
+</details>
+</dd>
+<dt id="pywebcopy.urls.Context.resolve"><code class="name flex">
+<span>def <span class="ident">resolve</span></span>(<span>self)</span>
+</code></dt>
+<dd>
+<div class="desc"></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def resolve(self):
+    prefix = suffix = None
+    if self.content_type is not None:
+        prefix = get_prefix(self.content_type)
+        suffix = get_suffix(self.content_type)
+
+    return url2path(
+        url=self.url,
+        base_url=self.base_url,
+        base_path=self.base_path,
+        tree_type=self.tree_type,
+        prefix=prefix, suffix=suffix,
+        suffix_errors=&#39;append&#39;
+    )</code></pre>
+</details>
+</dd>
+<dt id="pywebcopy.urls.Context.with_values"><code class="name flex">
+<span>def <span class="ident">with_values</span></span>(<span>self, **kwargs)</span>
+</code></dt>
+<dd>
+<div class="desc"></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def with_values(self, **kwargs):
+    return self._replace(**kwargs)</code></pre>
+</details>
+</dd>
+</dl>
+</dd>
+<dt id="pywebcopy.urls.ContextError"><code class="flex name class">
+<span>class <span class="ident">ContextError</span></span>
+<span>(</span><span>*args, **kwargs)</span>
+</code></dt>
+<dd>
+<div class="desc"><p>Bad context attribute or operation.</p></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">class ContextError(AttributeError):
+    &#34;&#34;&#34;Bad context attribute or operation.&#34;&#34;&#34;</code></pre>
+</details>
+<h3>Ancestors</h3>
+<ul class="hlist">
+<li>builtins.AttributeError</li>
+<li>builtins.Exception</li>
+<li>builtins.BaseException</li>
+</ul>
+</dd>
+<dt id="pywebcopy.urls.LocationParseError"><code class="flex name class">
+<span>class <span class="ident">LocationParseError</span></span>
+<span>(</span><span>*args, **kwargs)</span>
+</code></dt>
+<dd>
+<div class="desc"><p>Invalid url format.</p></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">class LocationParseError(ValueError):
+    &#34;&#34;&#34;Invalid url format.&#34;&#34;&#34;</code></pre>
+</details>
+<h3>Ancestors</h3>
+<ul class="hlist">
+<li>builtins.ValueError</li>
+<li>builtins.Exception</li>
+<li>builtins.BaseException</li>
+</ul>
+</dd>
+<dt id="pywebcopy.urls.Url"><code class="flex name class">
+<span>class <span class="ident">Url</span></span>
+<span>(</span><span>scheme=None, auth=None, host=None, port=None, path=None, query=None, fragment=None)</span>
+</code></dt>
+<dd>
+<div class="desc"><p>Data structure for representing an HTTP URL. Used as a return value for
+:func:<code><a title="pywebcopy.urls.parse_url" href="#pywebcopy.urls.parse_url">parse_url()</a></code>. Both the scheme and host are normalized as they are
+both case-insensitive according to RFC 3986.</p></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">class Url(namedtuple(&#39;Url&#39;, url_attrs)):
+    &#34;&#34;&#34;
+    Data structure for representing an HTTP URL. Used as a return value for
+    :func:`parse_url`. Both the scheme and host are normalized as they are
+    both case-insensitive according to RFC 3986.
+    &#34;&#34;&#34;
+    __slots__ = ()
+
+    def __new__(cls, scheme=None, auth=None, host=None, port=None, path=None,
+                query=None, fragment=None):
+        if path and not path.startswith(&#39;/&#39;):
+            path = &#39;/&#39; + path
+        if scheme:
+            scheme = scheme.lower()
+        if host and scheme in NORMALIZABLE_SCHEMES:
+            host = host.lower()
+        # noinspection PyArgumentList
+        return super(Url, cls).__new__(cls, scheme, auth, host, port, path,
+                                       query, fragment)
+
+    @property
+    def hostname(self):
+        &#34;&#34;&#34;For backwards-compatibility with urlparse. We&#39;re nice like that.&#34;&#34;&#34;
+        return self.host
+
+    @property
+    def request_uri(self):
+        &#34;&#34;&#34;Absolute path including the query string.&#34;&#34;&#34;
+        uri = self.path or &#39;/&#39;
+
+        if self.query is not None:
+            uri += &#39;?&#39; + self.query
+
+        return uri
+
+    @property
+    def netloc(self):
+        &#34;&#34;&#34;Network location including host and port&#34;&#34;&#34;
+        if self.port:
+            return &#39;%s:%d&#39; % (self.host, self.port)
+        return self.host
+
+    @property
+    def url(self):
+        &#34;&#34;&#34;
+        Convert self into a url
+
+        This function should more or less round-trip with :func:`.parse_url`. The
+        returned url may not be exactly the same as the url inputted to
+        :func:`.parse_url`, but it should be equivalent by the RFC (e.g., urls
+        with a blank port will have : removed).
+
+        Example: ::
+
+            &gt;&gt;&gt; U = parse_url(&#39;http://google.com/mail/&#39;)
+            &gt;&gt;&gt; U.url
+            &#39;http://google.com/mail/&#39;
+            &gt;&gt;&gt; Url(&#39;http&#39;, &#39;username:password&#39;, &#39;host.com&#39;, 80,
+            ... &#39;/path&#39;, &#39;query&#39;, &#39;fragment&#39;).url
+            &#39;http://username:password@host.com:80/path?query#fragment&#39;
+        &#34;&#34;&#34;
+        scheme, auth, host, port, path, query, fragment = self
+        url = &#39;&#39;
+
+        # We use &#34;is not None&#34; we want things to happen with empty strings (or 0 port)
+        if scheme is not None:
+            url += scheme + &#39;://&#39;
+        if auth is not None:
+            url += auth + &#39;@&#39;
+        if host is not None:
+            url += host
+        if port is not None:
+            url += &#39;:&#39; + str(port)
+        if path is not None:
+            url += path
+        if query is not None:
+            url += &#39;?&#39; + query
+        if fragment is not None:
+            url += &#39;#&#39; + fragment
+
+        return url
+
+    def __str__(self):
+        return self.url</code></pre>
+</details>
+<h3>Ancestors</h3>
+<ul class="hlist">
+<li>builtins.tuple</li>
+</ul>
+<h3>Instance variables</h3>
+<dl>
+<dt id="pywebcopy.urls.Url.hostname"><code class="name">var <span class="ident">hostname</span></code></dt>
+<dd>
+<div class="desc"><p>For backwards-compatibility with urlparse. We're nice like that.</p></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">@property
+def hostname(self):
+    &#34;&#34;&#34;For backwards-compatibility with urlparse. We&#39;re nice like that.&#34;&#34;&#34;
+    return self.host</code></pre>
+</details>
+</dd>
+<dt id="pywebcopy.urls.Url.netloc"><code class="name">var <span class="ident">netloc</span></code></dt>
+<dd>
+<div class="desc"><p>Network location including host and port</p></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">@property
+def netloc(self):
+    &#34;&#34;&#34;Network location including host and port&#34;&#34;&#34;
+    if self.port:
+        return &#39;%s:%d&#39; % (self.host, self.port)
+    return self.host</code></pre>
+</details>
+</dd>
+<dt id="pywebcopy.urls.Url.request_uri"><code class="name">var <span class="ident">request_uri</span></code></dt>
+<dd>
+<div class="desc"><p>Absolute path including the query string.</p></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">@property
+def request_uri(self):
+    &#34;&#34;&#34;Absolute path including the query string.&#34;&#34;&#34;
+    uri = self.path or &#39;/&#39;
+
+    if self.query is not None:
+        uri += &#39;?&#39; + self.query
+
+    return uri</code></pre>
+</details>
+</dd>
+<dt id="pywebcopy.urls.Url.url"><code class="name">var <span class="ident">url</span></code></dt>
+<dd>
+<div class="desc"><p>Convert self into a url</p>
+<p>This function should more or less round-trip with :func:<code>.<a title="pywebcopy.urls.parse_url" href="#pywebcopy.urls.parse_url">parse_url()</a></code>. The
+returned url may not be exactly the same as the url inputted to
+:func:<code>.<a title="pywebcopy.urls.parse_url" href="#pywebcopy.urls.parse_url">parse_url()</a></code>, but it should be equivalent by the RFC (e.g., urls
+with a blank port will have : removed).</p>
+<p>Example: ::</p>
+<pre><code>&gt;&gt;&gt; U = parse_url('http://google.com/mail/')
+&gt;&gt;&gt; U.url
+'http://google.com/mail/'
+&gt;&gt;&gt; Url('http', 'username:password', 'host.com', 80,
+... '/path', 'query', 'fragment').url
+'http://username:password@host.com:80/path?query#fragment'
+</code></pre></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">@property
+def url(self):
+    &#34;&#34;&#34;
+    Convert self into a url
+
+    This function should more or less round-trip with :func:`.parse_url`. The
+    returned url may not be exactly the same as the url inputted to
+    :func:`.parse_url`, but it should be equivalent by the RFC (e.g., urls
+    with a blank port will have : removed).
+
+    Example: ::
+
+        &gt;&gt;&gt; U = parse_url(&#39;http://google.com/mail/&#39;)
+        &gt;&gt;&gt; U.url
+        &#39;http://google.com/mail/&#39;
+        &gt;&gt;&gt; Url(&#39;http&#39;, &#39;username:password&#39;, &#39;host.com&#39;, 80,
+        ... &#39;/path&#39;, &#39;query&#39;, &#39;fragment&#39;).url
+        &#39;http://username:password@host.com:80/path?query#fragment&#39;
+    &#34;&#34;&#34;
+    scheme, auth, host, port, path, query, fragment = self
+    url = &#39;&#39;
+
+    # We use &#34;is not None&#34; we want things to happen with empty strings (or 0 port)
+    if scheme is not None:
+        url += scheme + &#39;://&#39;
+    if auth is not None:
+        url += auth + &#39;@&#39;
+    if host is not None:
+        url += host
+    if port is not None:
+        url += &#39;:&#39; + str(port)
+    if path is not None:
+        url += path
+    if query is not None:
+        url += &#39;?&#39; + query
+    if fragment is not None:
+        url += &#39;#&#39; + fragment
+
+    return url</code></pre>
+</details>
+</dd>
+</dl>
+</dd>
+</dl>
+</section>
+</article>
+<nav id="sidebar">
+<h1>Index</h1>
+<div class="toc">
+<ul></ul>
+</div>
+<ul id="index">
+<li><h3>Super-module</h3>
+<ul>
+<li><code><a title="pywebcopy" href="index.html">pywebcopy</a></code></li>
+</ul>
+</li>
+<li><h3><a href="#header-functions">Functions</a></h3>
+<ul class="">
+<li><code><a title="pywebcopy.urls.filename_present" href="#pywebcopy.urls.filename_present">filename_present</a></code></li>
+<li><code><a title="pywebcopy.urls.get_content_type_from_headers" href="#pywebcopy.urls.get_content_type_from_headers">get_content_type_from_headers</a></code></li>
+<li><code><a title="pywebcopy.urls.get_etag" href="#pywebcopy.urls.get_etag">get_etag</a></code></li>
+<li><code><a title="pywebcopy.urls.get_host" href="#pywebcopy.urls.get_host">get_host</a></code></li>
+<li><code><a title="pywebcopy.urls.get_prefix" href="#pywebcopy.urls.get_prefix">get_prefix</a></code></li>
+<li><code><a title="pywebcopy.urls.get_suffix" href="#pywebcopy.urls.get_suffix">get_suffix</a></code></li>
+<li><code><a title="pywebcopy.urls.parse_header" href="#pywebcopy.urls.parse_header">parse_header</a></code></li>
+<li><code><a title="pywebcopy.urls.parse_url" href="#pywebcopy.urls.parse_url">parse_url</a></code></li>
+<li><code><a title="pywebcopy.urls.relate" href="#pywebcopy.urls.relate">relate</a></code></li>
+<li><code><a title="pywebcopy.urls.secure_filename" href="#pywebcopy.urls.secure_filename">secure_filename</a></code></li>
+<li><code><a title="pywebcopy.urls.split_first" href="#pywebcopy.urls.split_first">split_first</a></code></li>
+<li><code><a title="pywebcopy.urls.url2path" href="#pywebcopy.urls.url2path">url2path</a></code></li>
+</ul>
+</li>
+<li><h3><a href="#header-classes">Classes</a></h3>
+<ul>
+<li>
+<h4><code><a title="pywebcopy.urls.Context" href="#pywebcopy.urls.Context">Context</a></code></h4>
+<ul class="">
+<li><code><a title="pywebcopy.urls.Context.create_new_from_url" href="#pywebcopy.urls.Context.create_new_from_url">create_new_from_url</a></code></li>
+<li><code><a title="pywebcopy.urls.Context.from_config" href="#pywebcopy.urls.Context.from_config">from_config</a></code></li>
+<li><code><a title="pywebcopy.urls.Context.resolve" href="#pywebcopy.urls.Context.resolve">resolve</a></code></li>
+<li><code><a title="pywebcopy.urls.Context.with_values" href="#pywebcopy.urls.Context.with_values">with_values</a></code></li>
+</ul>
+</li>
+<li>
+<h4><code><a title="pywebcopy.urls.ContextError" href="#pywebcopy.urls.ContextError">ContextError</a></code></h4>
+</li>
+<li>
+<h4><code><a title="pywebcopy.urls.LocationParseError" href="#pywebcopy.urls.LocationParseError">LocationParseError</a></code></h4>
+</li>
+<li>
+<h4><code><a title="pywebcopy.urls.Url" href="#pywebcopy.urls.Url">Url</a></code></h4>
+<ul class="">
+<li><code><a title="pywebcopy.urls.Url.hostname" href="#pywebcopy.urls.Url.hostname">hostname</a></code></li>
+<li><code><a title="pywebcopy.urls.Url.netloc" href="#pywebcopy.urls.Url.netloc">netloc</a></code></li>
+<li><code><a title="pywebcopy.urls.Url.request_uri" href="#pywebcopy.urls.Url.request_uri">request_uri</a></code></li>
+<li><code><a title="pywebcopy.urls.Url.url" href="#pywebcopy.urls.Url.url">url</a></code></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</nav>
+</main>
+<footer id="footer">
+<p>Generated by <a href="https://pdoc3.github.io/pdoc" title="pdoc: Python API documentation generator"><cite>pdoc</cite> 0.10.0</a>.</p>
+</footer>
+</body>
+</html>

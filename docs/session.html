@@ -1,0 +1,786 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, minimum-scale=1" />
+<meta name="generator" content="pdoc 0.10.0" />
+<title>pywebcopy.session API documentation</title>
+<meta name="description" content="..todo:: …" />
+<link rel="preload stylesheet" as="style" href="https://cdnjs.cloudflare.com/ajax/libs/10up-sanitize.css/11.0.1/sanitize.min.css" integrity="sha256-PK9q560IAAa6WVRRh76LtCaI8pjTJ2z11v0miyNNjrs=" crossorigin>
+<link rel="preload stylesheet" as="style" href="https://cdnjs.cloudflare.com/ajax/libs/10up-sanitize.css/11.0.1/typography.min.css" integrity="sha256-7l/o7C8jubJiy74VsKTidCy1yBkRtiUGbVkYBylBqUg=" crossorigin>
+<link rel="stylesheet preload" as="style" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/10.1.1/styles/github.min.css" crossorigin>
+<style>:root{--highlight-color:#fe9}.flex{display:flex !important}body{line-height:1.5em}#content{padding:20px}#sidebar{padding:30px;overflow:hidden}#sidebar > *:last-child{margin-bottom:2cm}.http-server-breadcrumbs{font-size:130%;margin:0 0 15px 0}#footer{font-size:.75em;padding:5px 30px;border-top:1px solid #ddd;text-align:right}#footer p{margin:0 0 0 1em;display:inline-block}#footer p:last-child{margin-right:30px}h1,h2,h3,h4,h5{font-weight:300}h1{font-size:2.5em;line-height:1.1em}h2{font-size:1.75em;margin:1em 0 .50em 0}h3{font-size:1.4em;margin:25px 0 10px 0}h4{margin:0;font-size:105%}h1:target,h2:target,h3:target,h4:target,h5:target,h6:target{background:var(--highlight-color);padding:.2em 0}a{color:#058;text-decoration:none;transition:color .3s ease-in-out}a:hover{color:#e82}.title code{font-weight:bold}h2[id^="header-"]{margin-top:2em}.ident{color:#900}pre code{background:#f8f8f8;font-size:.8em;line-height:1.4em}code{background:#f2f2f1;padding:1px 4px;overflow-wrap:break-word}h1 code{background:transparent}pre{background:#f8f8f8;border:0;border-top:1px solid #ccc;border-bottom:1px solid #ccc;margin:1em 0;padding:1ex}#http-server-module-list{display:flex;flex-flow:column}#http-server-module-list div{display:flex}#http-server-module-list dt{min-width:10%}#http-server-module-list p{margin-top:0}.toc ul,#index{list-style-type:none;margin:0;padding:0}#index code{background:transparent}#index h3{border-bottom:1px solid #ddd}#index ul{padding:0}#index h4{margin-top:.6em;font-weight:bold}@media (min-width:200ex){#index .two-column{column-count:2}}@media (min-width:300ex){#index .two-column{column-count:3}}dl{margin-bottom:2em}dl dl:last-child{margin-bottom:4em}dd{margin:0 0 1em 3em}#header-classes + dl > dd{margin-bottom:3em}dd dd{margin-left:2em}dd p{margin:10px 0}.name{background:#eee;font-weight:bold;font-size:.85em;padding:5px 10px;display:inline-block;min-width:40%}.name:hover{background:#e0e0e0}dt:target .name{background:var(--highlight-color)}.name > span:first-child{white-space:nowrap}.name.class > span:nth-child(2){margin-left:.4em}.inherited{color:#999;border-left:5px solid #eee;padding-left:1em}.inheritance em{font-style:normal;font-weight:bold}.desc h2{font-weight:400;font-size:1.25em}.desc h3{font-size:1em}.desc dt code{background:inherit}.source summary,.git-link-div{color:#666;text-align:right;font-weight:400;font-size:.8em;text-transform:uppercase}.source summary > *{white-space:nowrap;cursor:pointer}.git-link{color:inherit;margin-left:1em}.source pre{max-height:500px;overflow:auto;margin:0}.source pre code{font-size:12px;overflow:visible}.hlist{list-style:none}.hlist li{display:inline}.hlist li:after{content:',\2002'}.hlist li:last-child:after{content:none}.hlist .hlist{display:inline;padding-left:1em}img{max-width:100%}td{padding:0 .5em}.admonition{padding:.1em .5em;margin-bottom:1em}.admonition-title{font-weight:bold}.admonition.note,.admonition.info,.admonition.important{background:#aef}.admonition.todo,.admonition.versionadded,.admonition.tip,.admonition.hint{background:#dfd}.admonition.warning,.admonition.versionchanged,.admonition.deprecated{background:#fd4}.admonition.error,.admonition.danger,.admonition.caution{background:lightpink}</style>
+<style media="screen and (min-width: 700px)">@media screen and (min-width:700px){#sidebar{width:30%;height:100vh;overflow:auto;position:sticky;top:0}#content{width:70%;max-width:100ch;padding:3em 4em;border-left:1px solid #ddd}pre code{font-size:1em}.item .name{font-size:1em}main{display:flex;flex-direction:row-reverse;justify-content:flex-end}.toc ul ul,#index ul{padding-left:1.5em}.toc > ul > li{margin-top:.5em}}</style>
+<style media="print">@media print{#sidebar h1{page-break-before:always}.source{display:none}}@media print{*{background:transparent !important;color:#000 !important;box-shadow:none !important;text-shadow:none !important}a[href]:after{content:" (" attr(href) ")";font-size:90%}a[href][title]:after{content:none}abbr[title]:after{content:" (" attr(title) ")"}.ir a:after,a[href^="javascript:"]:after,a[href^="#"]:after{content:""}pre,blockquote{border:1px solid #999;page-break-inside:avoid}thead{display:table-header-group}tr,img{page-break-inside:avoid}img{max-width:100% !important}@page{margin:0.5cm}p,h2,h3{orphans:3;widows:3}h1,h2,h3,h4,h5,h6{page-break-after:avoid}}</style>
+<script defer src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/10.1.1/highlight.min.js" integrity="sha256-Uv3H6lx7dJmRfRvH8TH6kJD1TSK1aFcwgx+mdg3epi8=" crossorigin></script>
+<script>window.addEventListener('DOMContentLoaded', () => hljs.initHighlighting())</script>
+</head>
+<body>
+<main>
+<article id="content">
+<header>
+<h1 class="title">Module <code>pywebcopy.session</code></h1>
+</header>
+<section id="section-intro">
+<div class="admonition todo">
+<p class="admonition-title">TODO</p>
+</div>
+<ol>
+<li>Add domain-specific / global delays.</li>
+<li>Add domain blocking, * pattern blocking.</li>
+</ol>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python"># Copyright 2020; Raja Tomar
+# See license for more details
+&#34;&#34;&#34;
+..todo::
+
+1. Add domain-specific / global delays.
+2. Add domain blocking, * pattern blocking.
+&#34;&#34;&#34;
+
+import time
+import contextlib
+import logging
+import socket
+
+import requests
+from requests.exceptions import RequestException
+from requests.structures import CaseInsensitiveDict
+from six.moves.urllib.parse import urlsplit
+from six.moves.urllib.parse import urlunsplit
+from six.moves.urllib.robotparser import RobotFileParser
+from six import integer_types
+
+from .__version__ import __title__
+from .__version__ import __version__
+
+logger = logging.getLogger(__name__)
+
+
+class UrlDisallowed(RequestException):
+    &#34;&#34;&#34;Access to requested url disallowed by the robots.txt rules.&#34;&#34;&#34;
+
+
+def default_headers(**kwargs):
+    &#34;&#34;&#34;Returns a standard set of http headers.
+
+    :rtype: requests.structures.CaseInsensitiveDict
+    &#34;&#34;&#34;
+    return CaseInsensitiveDict({
+        &#39;User-Agent&#39;: &#39;%s/%s&#39; % (__title__, __version__),
+        &#39;Accept-Encoding&#39;: &#39;, &#39;.join((&#39;gzip&#39;, &#39;deflate&#39;)),
+        &#39;Accept&#39;: &#39;*/*&#39;,
+        &#39;Connection&#39;: &#39;keep-alive&#39;,
+    }, **kwargs)
+
+
+def check_connection(host=None, port=None, timeout=None):
+    &#34;&#34;&#34;Checks whether internet connection is available.
+
+    :param host: dns host address to lookup in.
+    :param port: port of the server
+    :param timeout: socket timeout time in seconds
+    :rtype: bool
+    :return: True if available False otherwise
+    &#34;&#34;&#34;
+    if not host:
+        host = &#39;8.8.8.8&#39;
+    if not port:
+        port = 53
+
+    #: Family and Type will be default
+    with contextlib.closing(socket.socket()) as sock:
+        sock.settimeout(timeout)
+        with contextlib.suppress(socket.error):
+            sock.connect((host, port))
+            return True
+        return False
+
+
+class Session(requests.Session):
+    &#34;&#34;&#34;
+    Caching Session object which consults robots.txt before accessing a resource.
+    You can disable the robots.txt rules by using method `.set_robots_txt`.
+    &#34;&#34;&#34;
+
+    def __init__(self):
+        super(Session, self).__init__()
+        self.headers = default_headers()
+        self.follow_robots_txt = True
+        self.robots_registry = {}
+        self.domain_blacklist = set()
+        self.logger = logger.getChild(self.__class__.__name__)
+
+    def enable_http_cache(self):
+        try:
+            import cachecontrol
+        except ImportError:
+            raise ImportError(
+                &#34;cachecontrol module is not installed.&#34;
+                &#34; Install it like this from pip: $ pip install cachecontrol&#34;
+            )
+        self.mount(&#39;https://&#39;, cachecontrol.CacheControlAdapter())
+        self.mount(&#39;http://&#39;, cachecontrol.CacheControlAdapter())
+
+    def set_follow_robots_txt(self, b):
+        &#34;&#34;&#34;Set whether to follow the robots.txt rules or not.
+        &#34;&#34;&#34;
+        self.follow_robots_txt = bool(b)
+        self.logger.debug(&#39;Set obey_robots_txt to [%r] for [%r]&#39; % (b, self))
+
+    #: backward compatibility
+    def set_bypass(self, b):
+        self.set_follow_robots_txt(not b)
+
+    def load_rules_from_url(self, robots_url, timeout=None):
+        &#34;&#34;&#34;Manually load the robots.txt file from the server.
+
+        :param robots_url: url address of the text file to load.
+        :param timeout: requests timeout
+        :return: loaded rules or None if failed.
+        &#34;&#34;&#34;
+        _parser = RobotFileParser()
+        try:
+            req = requests.Request(
+                method=&#39;GET&#39;,
+                url=robots_url,
+                headers=self.headers,
+                auth=self.auth,
+                cookies=self.cookies,
+                hooks=self.hooks
+            )
+            prep = req.prepare()
+            send_kwargs = {
+                &#39;stream&#39;: False,
+                &#39;timeout&#39;: timeout,
+                &#39;verify&#39;: self.verify,
+                &#39;cert&#39;: self.cert,
+                &#39;proxies&#39;: self.proxies,
+                &#39;allow_redirects&#39;: True,
+            }
+            f = super(Session, self).send(prep, **send_kwargs)
+            f.raise_for_status()
+            self.cookies.update(f.cookies)
+        except requests.exceptions.HTTPError as err:
+            code = err.response.status_code
+            if code in (401, 403):
+                _parser.disallow_all = True
+            elif 400 &lt;= code &lt; 500:
+                _parser.allow_all = True
+        except requests.exceptions.ConnectionError:
+            _parser.allow_all = True
+        else:
+            _parser.parse(f.text.splitlines())
+        self.robots_registry[robots_url] = _parser
+        #: Initiate a start time for delays
+        _parser.modified()
+        return _parser
+
+    # def validate_url(self, url):
+    #     if not isinstance(url, string_types):
+    #         self.logger.error(
+    #             &#34;Expected string type, got %r&#34; % url)
+    #         return False
+    #     scheme, host, port, path, query, frag = urlparse(url)
+    #     if scheme in self.invalid_schemas:
+    #         self.logger.error(
+    #             &#34;Invalid url schema: [%s] for url: [%s]&#34;
+    #             % (scheme, url))
+    #         return False
+    #     #: TODO: Add a user validation of the url before blocking
+    #     return True
+
+    def is_allowed(self, request, timeout=None):
+        s, n, p, q, f = urlsplit(request.url)
+
+        if n in self.domain_blacklist:
+            self.logger.error(
+                &#34;Blocking request to a blacklisted domain: %r&#34; % n)
+            return False
+
+        #: if set to not follow the robots.txt
+        if not self.follow_robots_txt:
+            return True
+
+        robots_url = urlunsplit((s, n, &#39;robots.txt&#39;, None, None))
+        try:
+            access_rules = self.robots_registry[robots_url]
+        except KeyError:
+            access_rules = self.load_rules_from_url(robots_url, timeout)
+        if access_rules is None:  # error - everybody welcome
+            return True
+
+        user_agent = request.headers.get(&#39;User-Agent&#39;, &#39;*&#39;)
+        allowed = access_rules.can_fetch(user_agent, request.url)
+        if not allowed:
+            return False
+        request_rate = access_rules.request_rate(user_agent)
+        if request_rate is None:
+            #: No worries :)
+            return True
+
+        diff_time = time.time() - access_rules.mtime()
+        delay = request_rate.seconds / request_rate.requests
+
+        if isinstance(delay, integer_types) and not diff_time &gt;= delay:
+            self.logger.debug(
+                &#34;Waiting on request for [%r] seconds!&#34; % delay)
+            time.sleep(delay)
+        #: Update the access time value
+        access_rules.modified()
+
+    def send(self, request, **kwargs):
+        if not isinstance(request, requests.PreparedRequest):
+            raise ValueError(&#39;You can only send PreparedRequests.&#39;)
+        if not self.is_allowed(request, kwargs.get(&#39;timeout&#39;, None)):
+            err = &#34;Access to [%r] disallowed by the Session rules.&#34; % request.url
+            self.logger.error(err)
+            raise UrlDisallowed(err)
+
+        self.logger.info(&#39;[%s] [%s]&#39; % (request.method, request.url))
+        return super(Session, self).send(request, **kwargs)
+
+    @classmethod
+    def from_config(cls, config):
+        &#34;&#34;&#34;Creates a new instance of Session object using the config object.&#34;&#34;&#34;
+        ans = cls()
+        ans.headers = config.get(&#39;http_headers&#39;, default_headers())
+        ans.follow_robots_txt = not config.get(&#39;bypass_robots&#39;)
+        ans.delay = config.get_delay()
+        if config.get(&#39;http_cache&#39;):
+            ans.enable_http_cache()
+        # XXX I don&#39;t know if it will work?
+        # ans.headers.update(
+        #     {&#39;Accept&#39;: &#39;, &#39;.join(config.get(&#39;allowed_file_types&#39;))}
+        # )
+        return ans</code></pre>
+</details>
+</section>
+<section>
+</section>
+<section>
+</section>
+<section>
+<h2 class="section-title" id="header-functions">Functions</h2>
+<dl>
+<dt id="pywebcopy.session.check_connection"><code class="name flex">
+<span>def <span class="ident">check_connection</span></span>(<span>host=None, port=None, timeout=None)</span>
+</code></dt>
+<dd>
+<div class="desc"><p>Checks whether internet connection is available.</p>
+<p>:param host: dns host address to lookup in.
+:param port: port of the server
+:param timeout: socket timeout time in seconds
+:rtype: bool
+:return: True if available False otherwise</p></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def check_connection(host=None, port=None, timeout=None):
+    &#34;&#34;&#34;Checks whether internet connection is available.
+
+    :param host: dns host address to lookup in.
+    :param port: port of the server
+    :param timeout: socket timeout time in seconds
+    :rtype: bool
+    :return: True if available False otherwise
+    &#34;&#34;&#34;
+    if not host:
+        host = &#39;8.8.8.8&#39;
+    if not port:
+        port = 53
+
+    #: Family and Type will be default
+    with contextlib.closing(socket.socket()) as sock:
+        sock.settimeout(timeout)
+        with contextlib.suppress(socket.error):
+            sock.connect((host, port))
+            return True
+        return False</code></pre>
+</details>
+</dd>
+<dt id="pywebcopy.session.default_headers"><code class="name flex">
+<span>def <span class="ident">default_headers</span></span>(<span>**kwargs)</span>
+</code></dt>
+<dd>
+<div class="desc"><p>Returns a standard set of http headers.</p>
+<p>:rtype: requests.structures.CaseInsensitiveDict</p></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def default_headers(**kwargs):
+    &#34;&#34;&#34;Returns a standard set of http headers.
+
+    :rtype: requests.structures.CaseInsensitiveDict
+    &#34;&#34;&#34;
+    return CaseInsensitiveDict({
+        &#39;User-Agent&#39;: &#39;%s/%s&#39; % (__title__, __version__),
+        &#39;Accept-Encoding&#39;: &#39;, &#39;.join((&#39;gzip&#39;, &#39;deflate&#39;)),
+        &#39;Accept&#39;: &#39;*/*&#39;,
+        &#39;Connection&#39;: &#39;keep-alive&#39;,
+    }, **kwargs)</code></pre>
+</details>
+</dd>
+</dl>
+</section>
+<section>
+<h2 class="section-title" id="header-classes">Classes</h2>
+<dl>
+<dt id="pywebcopy.session.Session"><code class="flex name class">
+<span>class <span class="ident">Session</span></span>
+</code></dt>
+<dd>
+<div class="desc"><p>Caching Session object which consults robots.txt before accessing a resource.
+You can disable the robots.txt rules by using method <code>.set_robots_txt</code>.</p></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">class Session(requests.Session):
+    &#34;&#34;&#34;
+    Caching Session object which consults robots.txt before accessing a resource.
+    You can disable the robots.txt rules by using method `.set_robots_txt`.
+    &#34;&#34;&#34;
+
+    def __init__(self):
+        super(Session, self).__init__()
+        self.headers = default_headers()
+        self.follow_robots_txt = True
+        self.robots_registry = {}
+        self.domain_blacklist = set()
+        self.logger = logger.getChild(self.__class__.__name__)
+
+    def enable_http_cache(self):
+        try:
+            import cachecontrol
+        except ImportError:
+            raise ImportError(
+                &#34;cachecontrol module is not installed.&#34;
+                &#34; Install it like this from pip: $ pip install cachecontrol&#34;
+            )
+        self.mount(&#39;https://&#39;, cachecontrol.CacheControlAdapter())
+        self.mount(&#39;http://&#39;, cachecontrol.CacheControlAdapter())
+
+    def set_follow_robots_txt(self, b):
+        &#34;&#34;&#34;Set whether to follow the robots.txt rules or not.
+        &#34;&#34;&#34;
+        self.follow_robots_txt = bool(b)
+        self.logger.debug(&#39;Set obey_robots_txt to [%r] for [%r]&#39; % (b, self))
+
+    #: backward compatibility
+    def set_bypass(self, b):
+        self.set_follow_robots_txt(not b)
+
+    def load_rules_from_url(self, robots_url, timeout=None):
+        &#34;&#34;&#34;Manually load the robots.txt file from the server.
+
+        :param robots_url: url address of the text file to load.
+        :param timeout: requests timeout
+        :return: loaded rules or None if failed.
+        &#34;&#34;&#34;
+        _parser = RobotFileParser()
+        try:
+            req = requests.Request(
+                method=&#39;GET&#39;,
+                url=robots_url,
+                headers=self.headers,
+                auth=self.auth,
+                cookies=self.cookies,
+                hooks=self.hooks
+            )
+            prep = req.prepare()
+            send_kwargs = {
+                &#39;stream&#39;: False,
+                &#39;timeout&#39;: timeout,
+                &#39;verify&#39;: self.verify,
+                &#39;cert&#39;: self.cert,
+                &#39;proxies&#39;: self.proxies,
+                &#39;allow_redirects&#39;: True,
+            }
+            f = super(Session, self).send(prep, **send_kwargs)
+            f.raise_for_status()
+            self.cookies.update(f.cookies)
+        except requests.exceptions.HTTPError as err:
+            code = err.response.status_code
+            if code in (401, 403):
+                _parser.disallow_all = True
+            elif 400 &lt;= code &lt; 500:
+                _parser.allow_all = True
+        except requests.exceptions.ConnectionError:
+            _parser.allow_all = True
+        else:
+            _parser.parse(f.text.splitlines())
+        self.robots_registry[robots_url] = _parser
+        #: Initiate a start time for delays
+        _parser.modified()
+        return _parser
+
+    # def validate_url(self, url):
+    #     if not isinstance(url, string_types):
+    #         self.logger.error(
+    #             &#34;Expected string type, got %r&#34; % url)
+    #         return False
+    #     scheme, host, port, path, query, frag = urlparse(url)
+    #     if scheme in self.invalid_schemas:
+    #         self.logger.error(
+    #             &#34;Invalid url schema: [%s] for url: [%s]&#34;
+    #             % (scheme, url))
+    #         return False
+    #     #: TODO: Add a user validation of the url before blocking
+    #     return True
+
+    def is_allowed(self, request, timeout=None):
+        s, n, p, q, f = urlsplit(request.url)
+
+        if n in self.domain_blacklist:
+            self.logger.error(
+                &#34;Blocking request to a blacklisted domain: %r&#34; % n)
+            return False
+
+        #: if set to not follow the robots.txt
+        if not self.follow_robots_txt:
+            return True
+
+        robots_url = urlunsplit((s, n, &#39;robots.txt&#39;, None, None))
+        try:
+            access_rules = self.robots_registry[robots_url]
+        except KeyError:
+            access_rules = self.load_rules_from_url(robots_url, timeout)
+        if access_rules is None:  # error - everybody welcome
+            return True
+
+        user_agent = request.headers.get(&#39;User-Agent&#39;, &#39;*&#39;)
+        allowed = access_rules.can_fetch(user_agent, request.url)
+        if not allowed:
+            return False
+        request_rate = access_rules.request_rate(user_agent)
+        if request_rate is None:
+            #: No worries :)
+            return True
+
+        diff_time = time.time() - access_rules.mtime()
+        delay = request_rate.seconds / request_rate.requests
+
+        if isinstance(delay, integer_types) and not diff_time &gt;= delay:
+            self.logger.debug(
+                &#34;Waiting on request for [%r] seconds!&#34; % delay)
+            time.sleep(delay)
+        #: Update the access time value
+        access_rules.modified()
+
+    def send(self, request, **kwargs):
+        if not isinstance(request, requests.PreparedRequest):
+            raise ValueError(&#39;You can only send PreparedRequests.&#39;)
+        if not self.is_allowed(request, kwargs.get(&#39;timeout&#39;, None)):
+            err = &#34;Access to [%r] disallowed by the Session rules.&#34; % request.url
+            self.logger.error(err)
+            raise UrlDisallowed(err)
+
+        self.logger.info(&#39;[%s] [%s]&#39; % (request.method, request.url))
+        return super(Session, self).send(request, **kwargs)
+
+    @classmethod
+    def from_config(cls, config):
+        &#34;&#34;&#34;Creates a new instance of Session object using the config object.&#34;&#34;&#34;
+        ans = cls()
+        ans.headers = config.get(&#39;http_headers&#39;, default_headers())
+        ans.follow_robots_txt = not config.get(&#39;bypass_robots&#39;)
+        ans.delay = config.get_delay()
+        if config.get(&#39;http_cache&#39;):
+            ans.enable_http_cache()
+        # XXX I don&#39;t know if it will work?
+        # ans.headers.update(
+        #     {&#39;Accept&#39;: &#39;, &#39;.join(config.get(&#39;allowed_file_types&#39;))}
+        # )
+        return ans</code></pre>
+</details>
+<h3>Ancestors</h3>
+<ul class="hlist">
+<li>requests.sessions.Session</li>
+<li>requests.sessions.SessionRedirectMixin</li>
+</ul>
+<h3>Static methods</h3>
+<dl>
+<dt id="pywebcopy.session.Session.from_config"><code class="name flex">
+<span>def <span class="ident">from_config</span></span>(<span>config)</span>
+</code></dt>
+<dd>
+<div class="desc"><p>Creates a new instance of Session object using the config object.</p></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">@classmethod
+def from_config(cls, config):
+    &#34;&#34;&#34;Creates a new instance of Session object using the config object.&#34;&#34;&#34;
+    ans = cls()
+    ans.headers = config.get(&#39;http_headers&#39;, default_headers())
+    ans.follow_robots_txt = not config.get(&#39;bypass_robots&#39;)
+    ans.delay = config.get_delay()
+    if config.get(&#39;http_cache&#39;):
+        ans.enable_http_cache()
+    # XXX I don&#39;t know if it will work?
+    # ans.headers.update(
+    #     {&#39;Accept&#39;: &#39;, &#39;.join(config.get(&#39;allowed_file_types&#39;))}
+    # )
+    return ans</code></pre>
+</details>
+</dd>
+</dl>
+<h3>Methods</h3>
+<dl>
+<dt id="pywebcopy.session.Session.enable_http_cache"><code class="name flex">
+<span>def <span class="ident">enable_http_cache</span></span>(<span>self)</span>
+</code></dt>
+<dd>
+<div class="desc"></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def enable_http_cache(self):
+    try:
+        import cachecontrol
+    except ImportError:
+        raise ImportError(
+            &#34;cachecontrol module is not installed.&#34;
+            &#34; Install it like this from pip: $ pip install cachecontrol&#34;
+        )
+    self.mount(&#39;https://&#39;, cachecontrol.CacheControlAdapter())
+    self.mount(&#39;http://&#39;, cachecontrol.CacheControlAdapter())</code></pre>
+</details>
+</dd>
+<dt id="pywebcopy.session.Session.is_allowed"><code class="name flex">
+<span>def <span class="ident">is_allowed</span></span>(<span>self, request, timeout=None)</span>
+</code></dt>
+<dd>
+<div class="desc"></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def is_allowed(self, request, timeout=None):
+    s, n, p, q, f = urlsplit(request.url)
+
+    if n in self.domain_blacklist:
+        self.logger.error(
+            &#34;Blocking request to a blacklisted domain: %r&#34; % n)
+        return False
+
+    #: if set to not follow the robots.txt
+    if not self.follow_robots_txt:
+        return True
+
+    robots_url = urlunsplit((s, n, &#39;robots.txt&#39;, None, None))
+    try:
+        access_rules = self.robots_registry[robots_url]
+    except KeyError:
+        access_rules = self.load_rules_from_url(robots_url, timeout)
+    if access_rules is None:  # error - everybody welcome
+        return True
+
+    user_agent = request.headers.get(&#39;User-Agent&#39;, &#39;*&#39;)
+    allowed = access_rules.can_fetch(user_agent, request.url)
+    if not allowed:
+        return False
+    request_rate = access_rules.request_rate(user_agent)
+    if request_rate is None:
+        #: No worries :)
+        return True
+
+    diff_time = time.time() - access_rules.mtime()
+    delay = request_rate.seconds / request_rate.requests
+
+    if isinstance(delay, integer_types) and not diff_time &gt;= delay:
+        self.logger.debug(
+            &#34;Waiting on request for [%r] seconds!&#34; % delay)
+        time.sleep(delay)
+    #: Update the access time value
+    access_rules.modified()</code></pre>
+</details>
+</dd>
+<dt id="pywebcopy.session.Session.load_rules_from_url"><code class="name flex">
+<span>def <span class="ident">load_rules_from_url</span></span>(<span>self, robots_url, timeout=None)</span>
+</code></dt>
+<dd>
+<div class="desc"><p>Manually load the robots.txt file from the server.</p>
+<p>:param robots_url: url address of the text file to load.
+:param timeout: requests timeout
+:return: loaded rules or None if failed.</p></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def load_rules_from_url(self, robots_url, timeout=None):
+    &#34;&#34;&#34;Manually load the robots.txt file from the server.
+
+    :param robots_url: url address of the text file to load.
+    :param timeout: requests timeout
+    :return: loaded rules or None if failed.
+    &#34;&#34;&#34;
+    _parser = RobotFileParser()
+    try:
+        req = requests.Request(
+            method=&#39;GET&#39;,
+            url=robots_url,
+            headers=self.headers,
+            auth=self.auth,
+            cookies=self.cookies,
+            hooks=self.hooks
+        )
+        prep = req.prepare()
+        send_kwargs = {
+            &#39;stream&#39;: False,
+            &#39;timeout&#39;: timeout,
+            &#39;verify&#39;: self.verify,
+            &#39;cert&#39;: self.cert,
+            &#39;proxies&#39;: self.proxies,
+            &#39;allow_redirects&#39;: True,
+        }
+        f = super(Session, self).send(prep, **send_kwargs)
+        f.raise_for_status()
+        self.cookies.update(f.cookies)
+    except requests.exceptions.HTTPError as err:
+        code = err.response.status_code
+        if code in (401, 403):
+            _parser.disallow_all = True
+        elif 400 &lt;= code &lt; 500:
+            _parser.allow_all = True
+    except requests.exceptions.ConnectionError:
+        _parser.allow_all = True
+    else:
+        _parser.parse(f.text.splitlines())
+    self.robots_registry[robots_url] = _parser
+    #: Initiate a start time for delays
+    _parser.modified()
+    return _parser</code></pre>
+</details>
+</dd>
+<dt id="pywebcopy.session.Session.send"><code class="name flex">
+<span>def <span class="ident">send</span></span>(<span>self, request, **kwargs)</span>
+</code></dt>
+<dd>
+<div class="desc"><p>Send a given PreparedRequest.</p>
+<p>:rtype: requests.Response</p></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def send(self, request, **kwargs):
+    if not isinstance(request, requests.PreparedRequest):
+        raise ValueError(&#39;You can only send PreparedRequests.&#39;)
+    if not self.is_allowed(request, kwargs.get(&#39;timeout&#39;, None)):
+        err = &#34;Access to [%r] disallowed by the Session rules.&#34; % request.url
+        self.logger.error(err)
+        raise UrlDisallowed(err)
+
+    self.logger.info(&#39;[%s] [%s]&#39; % (request.method, request.url))
+    return super(Session, self).send(request, **kwargs)</code></pre>
+</details>
+</dd>
+<dt id="pywebcopy.session.Session.set_bypass"><code class="name flex">
+<span>def <span class="ident">set_bypass</span></span>(<span>self, b)</span>
+</code></dt>
+<dd>
+<div class="desc"></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def set_bypass(self, b):
+    self.set_follow_robots_txt(not b)</code></pre>
+</details>
+</dd>
+<dt id="pywebcopy.session.Session.set_follow_robots_txt"><code class="name flex">
+<span>def <span class="ident">set_follow_robots_txt</span></span>(<span>self, b)</span>
+</code></dt>
+<dd>
+<div class="desc"><p>Set whether to follow the robots.txt rules or not.</p></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def set_follow_robots_txt(self, b):
+    &#34;&#34;&#34;Set whether to follow the robots.txt rules or not.
+    &#34;&#34;&#34;
+    self.follow_robots_txt = bool(b)
+    self.logger.debug(&#39;Set obey_robots_txt to [%r] for [%r]&#39; % (b, self))</code></pre>
+</details>
+</dd>
+</dl>
+</dd>
+<dt id="pywebcopy.session.UrlDisallowed"><code class="flex name class">
+<span>class <span class="ident">UrlDisallowed</span></span>
+<span>(</span><span>*args, **kwargs)</span>
+</code></dt>
+<dd>
+<div class="desc"><p>Access to requested url disallowed by the robots.txt rules.</p>
+<p>Initialize RequestException with <code>request</code> and <code>response</code> objects.</p></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">class UrlDisallowed(RequestException):
+    &#34;&#34;&#34;Access to requested url disallowed by the robots.txt rules.&#34;&#34;&#34;</code></pre>
+</details>
+<h3>Ancestors</h3>
+<ul class="hlist">
+<li>requests.exceptions.RequestException</li>
+<li>builtins.OSError</li>
+<li>builtins.Exception</li>
+<li>builtins.BaseException</li>
+</ul>
+</dd>
+</dl>
+</section>
+</article>
+<nav id="sidebar">
+<h1>Index</h1>
+<div class="toc">
+<ul></ul>
+</div>
+<ul id="index">
+<li><h3>Super-module</h3>
+<ul>
+<li><code><a title="pywebcopy" href="index.html">pywebcopy</a></code></li>
+</ul>
+</li>
+<li><h3><a href="#header-functions">Functions</a></h3>
+<ul class="">
+<li><code><a title="pywebcopy.session.check_connection" href="#pywebcopy.session.check_connection">check_connection</a></code></li>
+<li><code><a title="pywebcopy.session.default_headers" href="#pywebcopy.session.default_headers">default_headers</a></code></li>
+</ul>
+</li>
+<li><h3><a href="#header-classes">Classes</a></h3>
+<ul>
+<li>
+<h4><code><a title="pywebcopy.session.Session" href="#pywebcopy.session.Session">Session</a></code></h4>
+<ul class="">
+<li><code><a title="pywebcopy.session.Session.enable_http_cache" href="#pywebcopy.session.Session.enable_http_cache">enable_http_cache</a></code></li>
+<li><code><a title="pywebcopy.session.Session.from_config" href="#pywebcopy.session.Session.from_config">from_config</a></code></li>
+<li><code><a title="pywebcopy.session.Session.is_allowed" href="#pywebcopy.session.Session.is_allowed">is_allowed</a></code></li>
+<li><code><a title="pywebcopy.session.Session.load_rules_from_url" href="#pywebcopy.session.Session.load_rules_from_url">load_rules_from_url</a></code></li>
+<li><code><a title="pywebcopy.session.Session.send" href="#pywebcopy.session.Session.send">send</a></code></li>
+<li><code><a title="pywebcopy.session.Session.set_bypass" href="#pywebcopy.session.Session.set_bypass">set_bypass</a></code></li>
+<li><code><a title="pywebcopy.session.Session.set_follow_robots_txt" href="#pywebcopy.session.Session.set_follow_robots_txt">set_follow_robots_txt</a></code></li>
+</ul>
+</li>
+<li>
+<h4><code><a title="pywebcopy.session.UrlDisallowed" href="#pywebcopy.session.UrlDisallowed">UrlDisallowed</a></code></h4>
+</li>
+</ul>
+</li>
+</ul>
+</nav>
+</main>
+<footer id="footer">
+<p>Generated by <a href="https://pdoc3.github.io/pdoc" title="pdoc: Python API documentation generator"><cite>pdoc</cite> 0.10.0</a>.</p>
+</footer>
+</body>
+</html>

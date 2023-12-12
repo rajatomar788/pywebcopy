@@ -1,0 +1,2166 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, minimum-scale=1" />
+<meta name="generator" content="pdoc 0.10.0" />
+<title>pywebcopy.parsers API documentation</title>
+<meta name="description" content="" />
+<link rel="preload stylesheet" as="style" href="https://cdnjs.cloudflare.com/ajax/libs/10up-sanitize.css/11.0.1/sanitize.min.css" integrity="sha256-PK9q560IAAa6WVRRh76LtCaI8pjTJ2z11v0miyNNjrs=" crossorigin>
+<link rel="preload stylesheet" as="style" href="https://cdnjs.cloudflare.com/ajax/libs/10up-sanitize.css/11.0.1/typography.min.css" integrity="sha256-7l/o7C8jubJiy74VsKTidCy1yBkRtiUGbVkYBylBqUg=" crossorigin>
+<link rel="stylesheet preload" as="style" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/10.1.1/styles/github.min.css" crossorigin>
+<style>:root{--highlight-color:#fe9}.flex{display:flex !important}body{line-height:1.5em}#content{padding:20px}#sidebar{padding:30px;overflow:hidden}#sidebar > *:last-child{margin-bottom:2cm}.http-server-breadcrumbs{font-size:130%;margin:0 0 15px 0}#footer{font-size:.75em;padding:5px 30px;border-top:1px solid #ddd;text-align:right}#footer p{margin:0 0 0 1em;display:inline-block}#footer p:last-child{margin-right:30px}h1,h2,h3,h4,h5{font-weight:300}h1{font-size:2.5em;line-height:1.1em}h2{font-size:1.75em;margin:1em 0 .50em 0}h3{font-size:1.4em;margin:25px 0 10px 0}h4{margin:0;font-size:105%}h1:target,h2:target,h3:target,h4:target,h5:target,h6:target{background:var(--highlight-color);padding:.2em 0}a{color:#058;text-decoration:none;transition:color .3s ease-in-out}a:hover{color:#e82}.title code{font-weight:bold}h2[id^="header-"]{margin-top:2em}.ident{color:#900}pre code{background:#f8f8f8;font-size:.8em;line-height:1.4em}code{background:#f2f2f1;padding:1px 4px;overflow-wrap:break-word}h1 code{background:transparent}pre{background:#f8f8f8;border:0;border-top:1px solid #ccc;border-bottom:1px solid #ccc;margin:1em 0;padding:1ex}#http-server-module-list{display:flex;flex-flow:column}#http-server-module-list div{display:flex}#http-server-module-list dt{min-width:10%}#http-server-module-list p{margin-top:0}.toc ul,#index{list-style-type:none;margin:0;padding:0}#index code{background:transparent}#index h3{border-bottom:1px solid #ddd}#index ul{padding:0}#index h4{margin-top:.6em;font-weight:bold}@media (min-width:200ex){#index .two-column{column-count:2}}@media (min-width:300ex){#index .two-column{column-count:3}}dl{margin-bottom:2em}dl dl:last-child{margin-bottom:4em}dd{margin:0 0 1em 3em}#header-classes + dl > dd{margin-bottom:3em}dd dd{margin-left:2em}dd p{margin:10px 0}.name{background:#eee;font-weight:bold;font-size:.85em;padding:5px 10px;display:inline-block;min-width:40%}.name:hover{background:#e0e0e0}dt:target .name{background:var(--highlight-color)}.name > span:first-child{white-space:nowrap}.name.class > span:nth-child(2){margin-left:.4em}.inherited{color:#999;border-left:5px solid #eee;padding-left:1em}.inheritance em{font-style:normal;font-weight:bold}.desc h2{font-weight:400;font-size:1.25em}.desc h3{font-size:1em}.desc dt code{background:inherit}.source summary,.git-link-div{color:#666;text-align:right;font-weight:400;font-size:.8em;text-transform:uppercase}.source summary > *{white-space:nowrap;cursor:pointer}.git-link{color:inherit;margin-left:1em}.source pre{max-height:500px;overflow:auto;margin:0}.source pre code{font-size:12px;overflow:visible}.hlist{list-style:none}.hlist li{display:inline}.hlist li:after{content:',\2002'}.hlist li:last-child:after{content:none}.hlist .hlist{display:inline;padding-left:1em}img{max-width:100%}td{padding:0 .5em}.admonition{padding:.1em .5em;margin-bottom:1em}.admonition-title{font-weight:bold}.admonition.note,.admonition.info,.admonition.important{background:#aef}.admonition.todo,.admonition.versionadded,.admonition.tip,.admonition.hint{background:#dfd}.admonition.warning,.admonition.versionchanged,.admonition.deprecated{background:#fd4}.admonition.error,.admonition.danger,.admonition.caution{background:lightpink}</style>
+<style media="screen and (min-width: 700px)">@media screen and (min-width:700px){#sidebar{width:30%;height:100vh;overflow:auto;position:sticky;top:0}#content{width:70%;max-width:100ch;padding:3em 4em;border-left:1px solid #ddd}pre code{font-size:1em}.item .name{font-size:1em}main{display:flex;flex-direction:row-reverse;justify-content:flex-end}.toc ul ul,#index ul{padding-left:1.5em}.toc > ul > li{margin-top:.5em}}</style>
+<style media="print">@media print{#sidebar h1{page-break-before:always}.source{display:none}}@media print{*{background:transparent !important;color:#000 !important;box-shadow:none !important;text-shadow:none !important}a[href]:after{content:" (" attr(href) ")";font-size:90%}a[href][title]:after{content:none}abbr[title]:after{content:" (" attr(title) ")"}.ir a:after,a[href^="javascript:"]:after,a[href^="#"]:after{content:""}pre,blockquote{border:1px solid #999;page-break-inside:avoid}thead{display:table-header-group}tr,img{page-break-inside:avoid}img{max-width:100% !important}@page{margin:0.5cm}p,h2,h3{orphans:3;widows:3}h1,h2,h3,h4,h5,h6{page-break-after:avoid}}</style>
+<script defer src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/10.1.1/highlight.min.js" integrity="sha256-Uv3H6lx7dJmRfRvH8TH6kJD1TSK1aFcwgx+mdg3epi8=" crossorigin></script>
+<script>window.addEventListener('DOMContentLoaded', () => hljs.initHighlighting())</script>
+</head>
+<body>
+<main>
+<article id="content">
+<header>
+<h1 class="title">Module <code>pywebcopy.parsers</code></h1>
+</header>
+<section id="section-intro">
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python"># Copyright 2020; Raja Tomar
+# See license for more details
+import functools
+import inspect
+import logging
+import re
+
+import requests
+from lxml import etree
+from lxml.html import _nons
+from lxml.html import fromstring
+from lxml.html import tostring
+from lxml.html import XHTML_NAMESPACE
+from lxml.html.clean import Cleaner
+from lxml.html.defs import link_attrs
+from six import next
+from six import integer_types
+from six import string_types
+from six.moves.urllib.parse import urljoin
+from six.moves.collections_abc import Iterator
+
+__all__ = [&#39;iterparse&#39;, &#39;MultiParser&#39;, &#39;Element&#39;, &#39;unquote_match&#39;, &#39;links&#39;]
+
+logger = logging.getLogger(__name__)
+
+# Attributes which contains multiple links.
+srcset_attrs = frozenset([
+    &#39;srcset&#39;, &#39;data-srcset&#39;, &#39;src-set&#39;, &#39;imageset&#39;,
+])
+_iter_srcset_urls = re.compile(r&#34;([^\s,]{4,})&#34;, re.MULTILINE).finditer
+_iter_css_urls = re.compile(r&#39;url\((&#39; + &#39;[&#34;][^&#34;]*[&#34;]|&#39; + &#34;[&#39;][^&#39;]*[&#39;]|&#34; + r&#39;[^)]*)\)&#39;, re.I).finditer
+_iter_css_imports = re.compile(r&#39;@import &#34;(.*?)&#34;&#39;).finditer
+_archive_re = re.compile(r&#39;[^ ]+&#39;)
+_parse_meta_refresh_url = re.compile(r&#39;[^;=]*;\s*(?:url\s*=\s*)?(?P&lt;url&gt;.*)$&#39;, re.I).search
+
+
+def unquote_match(s, pos):
+    if s[:1] == &#39;&#34;&#39; and s[-1:] == &#39;&#34;&#39; or s[:1] == &#34;&#39;&#34; and s[-1:] == &#34;&#39;&#34; or \
+            s[:1] == &#39;&#34;&#39; and s[-1:] == &#34;&#39;&#34; or s[:1] == &#34;&#39;&#34; and s[-1:] == &#39;&#34;&#39;:
+        return s[1:-1], pos + 1
+    else:
+        return s, pos
+
+
+class ElementBase(etree.ElementBase):
+    def remove_csrf_checks(self):
+        # Remove integrity or cors check from the file
+        self.attrib.pop(&#39;integrity&#39;, None)
+        self.attrib.pop(&#39;crossorigin&#39;, None)
+
+    def replace_url(self, old_url, new_url, attr, pos):
+        # Change the url in the object depending on the  case
+        if not isinstance(new_url, string_types):
+            TypeError(&#34;Expected %r, got %r&#34; % (string_types, new_url))
+        if not isinstance(pos, integer_types):
+            TypeError(&#34;Expected %r, got %r&#34; % (integer_types, pos))
+        if new_url is None or new_url == old_url:
+            return
+        if attr is None:
+            new = self.text[:pos] + new_url + self.text[pos + len(old_url):]
+            self.text = new
+        else:
+            cur = self.get(attr)
+            if not pos and len(cur) == len(old_url):
+                new = new_url  # most common case
+            else:
+                new = cur[:pos] + new_url + cur[pos + len(old_url):]
+            self.set(attr, new)
+        #: For the new url to work properly we need to remove
+        #: any sort of url check attributes present in element.
+        self.remove_csrf_checks()
+
+
+def iterparse(source, encoding=None, events=None,
+              include_meta_charset_tag=False, **kwargs):
+    &#34;&#34;&#34;Incrementally parse HTML document into ElementTree.
+
+    TODO:
+        1. Make iterparse function take in a factory argument which
+            defines the output of the generator.
+        2. Modify the links function to be a subclass of Iterator
+            and it should be passable to iterparse as factory arg.
+        3. Make a additional no-op iterator and a forms iterator.
+
+    &#34;&#34;&#34;
+    encoding = encoding or &#39;iso-8859-1&#39;  # rfc default web encoding
+    parser = etree.HTMLPullParser(events=events, encoding=encoding, **kwargs)
+    lookup = etree.ElementDefaultClassLookup(ElementBase)
+    parser.set_element_class_lookup(lookup)
+
+    def iterator():
+        # try:
+        while True:
+            # yield from chain.from_iterable(map(filter_, parser.read_events()))
+            # for i in chain.from_iterable(
+            #   (links(element) for event, element in parser.read_events())
+            # ):
+            #     yield i
+            for event, element in parser.read_events():
+                for child in links(element):
+                    if child is None:
+                        continue
+                    yield child
+            data = source.read(0o3000)
+            if not data:
+                break
+            parser.feed(data)
+
+        if include_meta_charset_tag:
+            parser.feed((&#39;&lt;meta charset=&#34;%s&#34; /&gt;&#39; % encoding).encode(
+                encoding, &#39;xmlcharrefreplace&#39;))
+            # try:
+            #     head = root.xpath(
+            #         &#34;descendant-or-self::head|descendant-or-self::x:head&#34;,
+            #         namespaces={&#39;x&#39;: XHTML_NAMESPACE}
+            #     )[0]
+            # except (AttributeError, IndexError):
+            #     head = parser.makeelement(&#39;head&#39;)
+            #     root.insert(0, head)
+            # #: Write the inferred charset to the html dom so that browsers read this
+            # #: document in our specified encoding.
+            # head.insert(0, parser.makeelement(&#39;meta&#39;, charset=encoding))
+        try:
+            it.root = parser.close()
+        except etree.XMLSyntaxError:
+            parser.feed(
+                &#39;&lt;html&gt;&lt;/html&gt;&#39;.encode(encoding, &#39;xmlcharrefreplace&#39;))
+            it.root = parser.close()
+
+        # parser could generate end events for html and
+        # body tags which the parser itself inserted.
+        for event, element in parser.read_events():
+            for child in links(element):
+                if child is None:
+                    continue
+                yield child
+
+        # it.root = root
+        # noinspection PyUnusedLocal
+        # root = None
+        # XXX No implicit source closing
+        # if close_source:
+        #     source.close()
+
+    class IterParseIterator(Iterator):
+        next = __next__ = functools.partial(next, iterator())
+
+    it = IterParseIterator()
+    it.root = None
+    del IterParseIterator
+
+    # close_source = False
+    if not hasattr(source, &#34;read&#34;):
+        # source = open(source, &#34;rb&#34;)
+        # close_source = True
+        raise TypeError(&#34;Expected a readable object, got %r&#34; % source)
+
+    return it
+
+
+def links(el):
+    tag = _nons(el.tag)
+    attribs = el.attrib
+
+    if tag == &#39;object&#39;:  # pragma: no cover
+        codebase = None
+        if &#39;codebase&#39; in attribs:
+            codebase = el.get(&#39;codebase&#39;)
+            yield el, &#39;codebase&#39;, codebase, 0
+        for attrib in (&#39;classid&#39;, &#39;data&#39;):
+            if attrib in attribs:
+                value = el.get(attrib)
+                if codebase is not None:
+                    value = urljoin(codebase, value)
+                yield el, attrib, value, 0
+        if &#39;archive&#39; in attribs:
+            for match in _archive_re.finditer(el.get(&#39;archive&#39;)):
+                value = match.group(0)
+                if codebase is not None:
+                    value = urljoin(codebase, value)
+                yield el, &#39;archive&#39;, value, match.start()
+    else:
+        for attrib in link_attrs:
+            if attrib in attribs:
+                yield el, attrib, attribs[attrib], 0
+
+        # XXX Patch for src-set url detection
+        for attrib in srcset_attrs:
+            if attrib in attribs:
+                urls = list(_iter_srcset_urls(attribs[attrib]))
+                if urls:
+                    # yield in reversed order to simplify in-place modifications
+                    for match in urls[::-1]:
+                        url, start = unquote_match(match.group(1).strip(), match.start(1))
+                        yield el, attrib, url, start
+    if tag == &#39;meta&#39;:
+        http_equiv = attribs.get(&#39;http-equiv&#39;, &#39;&#39;).lower()
+        if http_equiv == &#39;refresh&#39;:
+            content = attribs.get(&#39;content&#39;, &#39;&#39;)
+            match = _parse_meta_refresh_url(content)
+            url = (match.group(&#39;url&#39;) if match else content).strip()
+            # unexpected content means the redirect won&#39;t work, but we might
+            # as well be permissive and yield the entire string.
+            if url:
+                url, pos = unquote_match(
+                    url, match.start(&#39;url&#39;) if match else content.find(url))
+                yield el, &#39;content&#39;, url, pos
+        itemprop = attribs.get(&#39;itemprop&#39;, &#39;&#39;).lower()
+        if itemprop == &#39;image&#39;:
+            url = attribs.get(&#39;content&#39;, &#39;&#39;)
+            if url:
+                yield el, &#39;content&#39;, url, 0
+    elif tag == &#39;param&#39;:
+        valuetype = el.get(&#39;valuetype&#39;) or &#39;&#39;
+        if valuetype.lower() == &#39;ref&#39;:
+            yield el, &#39;value&#39;, el.get(&#39;value&#39;), 0
+    elif tag == &#39;script&#39; and el.text:
+        urls = [
+            # (start_pos, url)
+            unquote_match(match.group(1), match.start(1))[::-1]
+            for match in _iter_css_urls(el.text)
+        ]
+        if urls:
+            # sort by start pos to bring both match sets back into order
+            # and reverse the list to report correct positions despite
+            # modifications
+            urls.sort(reverse=True)
+            for start, url in urls:
+                yield el, None, url, start
+    elif tag == &#39;style&#39; and el.text:
+        urls = [
+                   # (start_pos, url)
+                   unquote_match(match.group(1), match.start(1))[::-1]
+                   for match in _iter_css_urls(el.text)
+               ] + [
+                   (match.start(1), match.group(1))
+                   for match in _iter_css_imports(el.text)
+               ]
+        if urls:
+            # sort by start pos to bring both match sets back into order
+            # and reverse the list to report correct positions despite
+            # modifications
+            urls.sort(reverse=True)
+            for start, url in urls:
+                yield el, None, url, start
+    if &#39;style&#39; in attribs:
+        urls = list(_iter_css_urls(attribs[&#39;style&#39;]))
+        if urls:
+            # yield in reversed order to simplify in-place modifications
+            for match in urls[::-1]:
+                url, start = unquote_match(match.group(1), match.start(1))
+                yield el, &#39;style&#39;, url, start
+
+
+# HTML style and script tags cleaner
+cleaner = Cleaner()
+cleaner.javascript = True
+cleaner.style = True
+
+
+class MultiParser(object):  # pragma: no cover
+    &#34;&#34;&#34;Provides apis specific to scraping or data searching purposes.
+
+    This contains the apis from the requests-html module.
+
+    Most of the source code is from the MIT Licensed library called
+    `requests-html` courtesy of kenneth, some code has been heavily modified to
+    fit the needs of this project but some apis are still untouched.
+
+    :param html: html markup string.
+    :param encoding: optional explicit declaration of encoding type of that web page
+    :param element: Used internally: PyQuery object or raw html.
+    &#34;&#34;&#34;
+
+    def __init__(self, html=None, encoding=None, element=None):
+        self._lxml = None
+        self._pq = None
+        self._soup = None
+        self._html = html  # represents your raw html
+        self._encoding = encoding  # represents your provided encoding
+        self.element = element  # internal lxml element
+        self._decoded_html = False  # internal switch to tell if html has been decoded
+        self.default_encoding = &#39;iso-8859-1&#39;  # a standard encoding defined by w3c
+
+    def request(self, method, url, **params):
+        &#34;&#34;&#34;Fetches the Html content from Internet using the requests.
+        You can any requests params which will be passed to the library
+        itself.
+        The requests arguments you supply will also be applied to the
+        global session meaning all the files will be downloaded using these
+        settings.
+
+        :param method: http verb for transport.
+        :param url: url of the page to fetch
+        :param params: keyword arguments which `requests` module may accept.
+        &#34;&#34;&#34;
+        resp = requests.request(method, url, stream=True, **params)
+        resp.raise_for_status()
+        self._html = resp.content
+
+    def get(self, url, **params):
+        return self.request(&#39;GET&#39;, url, **params)
+
+    def post(self, url, **params):
+        return self.request(&#39;POST&#39;, url, **params)
+
+    def get_forms(self):
+        &#34;&#34;&#34;Returns a list of form elements available on the page.&#34;&#34;&#34;
+        return fromstring(
+            self.html
+        ).xpath(
+            &#34;descendant-or-self::form|descendant-or-self::x:form&#34;,
+            namespaces={&#39;x&#39;: XHTML_NAMESPACE}
+        )
+
+    def submit_form(self, form, url=None, **extra_values):
+        &#34;&#34;&#34;
+        Helper function to submit a form.
+
+        .. todo::
+            check documentation.
+
+        You can use this like::
+
+            wp = WebPage()
+            wp.get(&#39;http://httpbin.org/forms/&#39;)
+            form = wp.get_forms()[0]
+            form.inputs[&#39;email&#39;].value = &#39;bar&#39; # etc
+            form.inputs[&#39;password&#39;].value = &#39;baz&#39; # etc
+            wp.submit_form(form)
+            wp.get_links()
+
+        The action is one of &#39;GET&#39; or &#39;POST&#39;, the URL is the target URL as a
+        string, and the values are a sequence of ``(name, value)`` tuples with the
+        form data.
+        &#34;&#34;&#34;
+        values = form.form_values()
+        if extra_values:
+            if hasattr(extra_values, &#39;items&#39;):
+                extra_values = extra_values.items()
+            values.extend(extra_values)
+
+        if url is None:
+            if form.action:
+                url = form.action
+            else:
+                url = form.base_url
+        return self.request(form.method, url, data=values)
+
+    @property
+    def raw_html(self):
+        &#34;&#34;&#34;Bytes representation of the HTML content.
+        (`learn more &lt;http://www.diveintopython3.net/strings.html&gt;`_).
+        &#34;&#34;&#34;
+        if self._html:
+            return self._html
+        else:
+            return tostring(self.element, encoding=self.encoding)
+
+    @raw_html.setter
+    def raw_html(self, html):
+        &#34;&#34;&#34;Property setter for raw_html. Type can be bytes.&#34;&#34;&#34;
+        self._html = html
+
+    @property
+    def html(self):
+        &#34;&#34;&#34;Unicode representation of the HTML content.&#34;&#34;&#34;
+        if self._html:
+            return self.decode()
+        else:
+            return tostring(self.element, encoding=&#39;unicode&#39;)
+
+    @html.setter
+    def html(self, html):
+        &#34;&#34;&#34;Property setter for self.html&#34;&#34;&#34;
+        if not isinstance(html, str):
+            raise TypeError
+        self._html = html
+        self.decode()
+
+    def encode(self, encoding=None, errors=&#39;xmlcharrefreplace&#39;):
+        &#34;&#34;&#34;Returns the html encoded with specified encoding.&#34;&#34;&#34;
+        return self.html.encode(encoding=encoding, errors=errors)
+
+    def decode(self):
+        &#34;&#34;&#34;Decodes the html set to this object and returns used encoding and decoded html.&#34;&#34;&#34;
+        self._encoding, html = self.decode_html(self._html, self._encoding, self.default_encoding)
+        return html
+
+    @staticmethod
+    def decode_html(html_string, encoding=None, default_encoding=&#39;iso-8859-1&#39;):
+        &#34;&#34;&#34;Decodes a html string into a unicode string.
+        If explicit encoding is defined then
+        it would use it otherwise it will decoding it using
+        beautiful soups UnicodeDammit feature,
+        otherwise it will use w3lib to decode the html.
+
+        Returns a two tuple with (&lt;encoding&gt;, &lt;decoded unicode string&gt;)
+
+        :rtype: (str, str)
+        :returns: (used-encoding, unicode-markup)
+        &#34;&#34;&#34;
+
+        tried = [encoding, default_encoding]
+
+        try:
+            logger.info(&#34;Trying UnicodeDammit Codec for decoding html.&#34;)
+            try:
+                import bs4
+            except ImportError:
+                raise ImportError(
+                    &#34;bs4 module is not installed. &#34;
+                    &#34;Install it using pip: $ pip install bs4&#34;
+                )
+            converted = bs4.UnicodeDammit(html_string, [encoding], is_html=True)
+
+            if not converted.unicode_markup:
+                tried += converted.tried_encodings
+                logger.critical(
+                    &#34;UnicodeDammit decoder failed to decode html!&#34;
+                    &#34;Encoding tried by default enc: [%s]&#34;
+                    &#34;Trying fallback...&#34; % &#39;,&#39;.join(tried)
+                )
+                raise UnicodeDecodeError
+
+            return converted.original_encoding, converted.unicode_markup
+
+        except (UnicodeDecodeError, ImportError):
+            # This method will definitely decode the html though
+            # the result could be corrupt. But if you getting a
+            # corrupt html output then you definitely have to
+            # manually provide the encoding.
+            try:
+                import w3lib
+                from w3lib.encoding import html_to_unicode
+            except ImportError:
+                raise ImportError(
+                    &#34;w3lib module is not installed. &#34;
+                    &#34;Install it using pip: $ pip install w3lib&#34;
+                )
+
+            enc, unc = w3lib.encoding.html_to_unicode(
+                None, html_body_str=html_string,
+                default_encoding=default_encoding
+            )
+            return enc, unc
+
+    @property
+    def encoding(self):
+        &#34;&#34;&#34;The encoding string to be used, extracted from the HTML and
+        :class:`HTMLResponse &lt;HTMLResponse&gt;` headers.
+        &#34;&#34;&#34;
+        if self._encoding is None:
+            self.decode()
+        return self._encoding
+
+    @encoding.setter
+    def encoding(self, enc):
+        &#34;&#34;&#34;Property setter for self.encoding.&#34;&#34;&#34;
+        self._encoding = enc
+
+    @property
+    def lxml(self):
+        &#34;&#34;&#34;Parses the decoded self.html contents after decoding it by itself
+        decoding detector (default) or decoding it using provided self.default_encoding.
+        &#34;&#34;&#34;
+        if self._lxml is None:
+            self._lxml = fromstring(self.html)
+        return self._lxml
+
+    @property
+    def bs4(self):
+        &#34;&#34;&#34;BeautifulSoup object under the hood.
+        Read more about beautiful_soup at https://www.crummy.com/software/BeautifulSoup/doc
+        &#34;&#34;&#34;
+        try:
+            import bs4
+        except ImportError:
+            raise ImportError(
+                &#34;bs4 module is not installed. &#34;
+                &#34;Install it using pip: $ pip install bs4&#34;
+            )
+        if self._soup is None:
+            self._soup = bs4.BeautifulSoup(self.raw_html, &#39;lxml&#39;)
+        return self._soup
+
+    @property
+    def pq(self):
+        &#34;&#34;&#34;`PyQuery &lt;https://pythonhosted.org/pyquery/&gt;`_ representation
+        of the :class:`Element &lt;Element&gt;` or :class:`HTML &lt;HTML&gt;`.
+        &#34;&#34;&#34;
+        try:
+            import pyquery
+        except ImportError:
+            raise ImportError(
+                &#34;pyquery module is not installed. &#34;
+                &#34;Install it using pip: $ pip install pyquery&#34;
+            )
+        if self._pq is None:
+            self._pq = pyquery.PyQuery(self.lxml)
+
+        return self._pq
+
+    @property
+    def text(self):
+        &#34;&#34;&#34;The text content of the
+        :class:`Element &lt;Element&gt;` or :class:`HTML &lt;HTML&gt;`.
+        &#34;&#34;&#34;
+        return self.pq.text()
+
+    @property
+    def full_text(self):
+        &#34;&#34;&#34;The full text content (including links) of the
+        :class:`Element &lt;Element&gt;` or :class:`HTML &lt;HTML&gt;`.
+        &#34;&#34;&#34;
+        return self.lxml.text_content()
+
+    def find(self, selector=&#34;*&#34;, containing=None, clean=False, first=False,
+             _encoding=None):
+        &#34;&#34;&#34;Given a CSS Selector, returns a list of
+        :class:`Element &lt;Element&gt;` objects or a single one.
+
+        :param selector: CSS Selector to use.
+        :param clean: Whether or not to sanitize the found HTML of ``&lt;script&gt;`` and ``&lt;style&gt;`` tags.
+        :param containing: If specified, only return elements that contain the provided text.
+        :param first: Whether or not to return just the first result.
+        :param _encoding: The encoding format.
+
+        Example CSS Selectors:
+
+        - ``a``
+        - ``a.someClass``
+        - ``a#someID``
+        - ``a[target=_blank]``
+
+        See W3School&#39;s `CSS Selectors Reference
+        &lt;https://www.w3schools.com/cssref/css_selectors.asp&gt;`_
+        for more details.
+
+        If ``first`` is ``True``, only returns the first
+        :class:`Element &lt;Element&gt;` found.
+        &#34;&#34;&#34;
+
+        # Convert a single containing into a list.
+        if isinstance(containing, str):
+            containing = [containing]
+        if not isinstance(selector, str):
+            raise TypeError(&#34;Expected string, got %r&#34; % type(selector))
+
+        encoding = _encoding or self.encoding
+        elements = [
+            Element(element=found, default_encoding=encoding)
+            for found in self.pq(selector)
+        ]
+
+        if containing:
+            elements_copy = list(elements)
+            elements = []
+
+            for element in elements_copy:
+                if any([c.lower() in element.full_text.lower() for c in containing]):
+                    elements.append(element)
+
+            elements.reverse()
+
+        # Sanitize the found HTML.
+        if clean:
+            elements_copy = list(elements)
+            elements = []
+
+            for element in elements_copy:
+                element.raw_html = tostring(cleaner.clean_html(element.lxml))
+                elements.append(element)
+
+        if first and len(elements) &gt; 0:
+            return elements[0]
+        else:
+            return elements
+
+    def xpath(self, selector, clean=False, first=False, _encoding=None):
+        &#34;&#34;&#34;Given an XPath selector, returns a list of
+        :class:`Element &lt;Element&gt;` objects or a single one.
+
+        :param selector: XPath Selector to use.
+        :param clean: Whether or not to sanitize the found HTML of ``&lt;script&gt;`` and ``&lt;style&gt;`` tags.
+        :param first: Whether or not to return just the first result.
+        :param _encoding: The encoding format.
+
+        If a sub-selector is specified (e.g. ``//a/@href``), a simple
+        list of results is returned.
+
+        See W3School&#39;s `XPath Examples
+        &lt;https://www.w3schools.com/xml/xpath_examples.asp&gt;`_
+        for more details.
+
+        If ``first`` is ``True``, only returns the first
+        :class:`Element &lt;Element&gt;` found.
+        &#34;&#34;&#34;
+        if not isinstance(selector, str):
+            raise TypeError(&#34;Expected string, got %r&#34; % type(selector))
+
+        selected = self.lxml.xpath(selector)
+
+        elements = [
+            Element(element=selection, default_encoding=_encoding or self.encoding)
+            if inspect.isclass(selection) and not issubclass(selection, str) else str(selection)
+            for selection in selected
+        ]
+
+        # Sanitize the found HTML.
+        if clean:
+            elements_copy = list(elements)
+            elements = []
+
+            for element in elements_copy:
+                element.raw_html = tostring(cleaner.clean_html(element.lxml))
+                elements.append(element)
+
+        if first and len(elements) &gt; 0:
+            return elements[0]
+        else:
+            return elements
+
+    def search(self, template):
+        &#34;&#34;&#34;Search the :class:`Element &lt;Element&gt;` for the given Parse template.
+
+        :param template: The Parse template to use.
+        &#34;&#34;&#34;
+        if not isinstance(template, str):
+            raise TypeError(&#34;Expected string, got %r&#34; % type(template))
+        try:
+            import parse
+        except ImportError:
+            raise ImportError(
+                &#34;parse module is not installed. &#34;
+                &#34;Install it using pip: $ pip install parse&#34;
+            )
+        return parse.search(template, self.html)
+
+    def search_all(self, template):
+        &#34;&#34;&#34;Search the :class:`Element &lt;Element&gt;` (multiple times) for the given parse
+        template.
+
+        :param template: The Parse template to use.
+        &#34;&#34;&#34;
+        if not isinstance(template, str):
+            raise TypeError(&#34;Expected string, got %r&#34; % type(template))
+        try:
+            import parse
+        except ImportError:
+            raise ImportError(
+                &#34;parse module is not installed. &#34;
+                &#34;Install it using pip: $ pip install parse&#34;
+            )
+        return [r for r in parse.findall(template, self.html)]
+
+
+class Element(MultiParser):  # pragma: no cover
+    &#34;&#34;&#34;An element of HTML.
+
+    :param element: The element from which to base the parsing upon.
+    :param default_encoding: Which encoding to default to.
+    &#34;&#34;&#34;
+
+    def __init__(self, element, default_encoding=None):
+        super(Element, self).__init__(element=element, encoding=default_encoding)
+        self.element = element
+        self.tag = element.tag
+        self.lineno = element.sourceline
+        self._attrs = None
+
+    def __repr__(self):
+        attrs = [&#39;{}={}&#39;.format(attr, repr(self.attrs[attr])) for attr in self.attrs]
+        return &#34;&lt;Element {} {}&gt;&#34;.format(repr(self.element.tag), &#39; &#39;.join(attrs))
+
+    @property
+    def attrs(self):
+        &#34;&#34;&#34;Returns a dictionary of the attributes of the :class:`Element &lt;Element&gt;`
+        (`learn more &lt;https://www.w3schools.com/tags/ref_attributes.asp&gt;`_).
+        &#34;&#34;&#34;
+        if self._attrs is None:
+            d = {}
+            for k, v in self.element.items():
+                d[k] = v
+            self._attrs = d
+
+            # Split class and rel up, as there are usually many of them:
+            for attr in [&#39;class&#39;, &#39;rel&#39;]:
+                if attr in self._attrs:
+                    self._attrs[attr] = tuple(self._attrs[attr].split())
+
+        return self._attrs</code></pre>
+</details>
+</section>
+<section>
+</section>
+<section>
+</section>
+<section>
+<h2 class="section-title" id="header-functions">Functions</h2>
+<dl>
+<dt id="pywebcopy.parsers.iterparse"><code class="name flex">
+<span>def <span class="ident">iterparse</span></span>(<span>source, encoding=None, events=None, include_meta_charset_tag=False, **kwargs)</span>
+</code></dt>
+<dd>
+<div class="desc"><p>Incrementally parse HTML document into ElementTree.</p>
+<h2 id="todo">Todo</h2>
+<ol>
+<li>Make iterparse function take in a factory argument which
+defines the output of the generator.</li>
+<li>Modify the links function to be a subclass of Iterator
+and it should be passable to iterparse as factory arg.</li>
+<li>Make a additional no-op iterator and a forms iterator.</li>
+</ol></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def iterparse(source, encoding=None, events=None,
+              include_meta_charset_tag=False, **kwargs):
+    &#34;&#34;&#34;Incrementally parse HTML document into ElementTree.
+
+    TODO:
+        1. Make iterparse function take in a factory argument which
+            defines the output of the generator.
+        2. Modify the links function to be a subclass of Iterator
+            and it should be passable to iterparse as factory arg.
+        3. Make a additional no-op iterator and a forms iterator.
+
+    &#34;&#34;&#34;
+    encoding = encoding or &#39;iso-8859-1&#39;  # rfc default web encoding
+    parser = etree.HTMLPullParser(events=events, encoding=encoding, **kwargs)
+    lookup = etree.ElementDefaultClassLookup(ElementBase)
+    parser.set_element_class_lookup(lookup)
+
+    def iterator():
+        # try:
+        while True:
+            # yield from chain.from_iterable(map(filter_, parser.read_events()))
+            # for i in chain.from_iterable(
+            #   (links(element) for event, element in parser.read_events())
+            # ):
+            #     yield i
+            for event, element in parser.read_events():
+                for child in links(element):
+                    if child is None:
+                        continue
+                    yield child
+            data = source.read(0o3000)
+            if not data:
+                break
+            parser.feed(data)
+
+        if include_meta_charset_tag:
+            parser.feed((&#39;&lt;meta charset=&#34;%s&#34; /&gt;&#39; % encoding).encode(
+                encoding, &#39;xmlcharrefreplace&#39;))
+            # try:
+            #     head = root.xpath(
+            #         &#34;descendant-or-self::head|descendant-or-self::x:head&#34;,
+            #         namespaces={&#39;x&#39;: XHTML_NAMESPACE}
+            #     )[0]
+            # except (AttributeError, IndexError):
+            #     head = parser.makeelement(&#39;head&#39;)
+            #     root.insert(0, head)
+            # #: Write the inferred charset to the html dom so that browsers read this
+            # #: document in our specified encoding.
+            # head.insert(0, parser.makeelement(&#39;meta&#39;, charset=encoding))
+        try:
+            it.root = parser.close()
+        except etree.XMLSyntaxError:
+            parser.feed(
+                &#39;&lt;html&gt;&lt;/html&gt;&#39;.encode(encoding, &#39;xmlcharrefreplace&#39;))
+            it.root = parser.close()
+
+        # parser could generate end events for html and
+        # body tags which the parser itself inserted.
+        for event, element in parser.read_events():
+            for child in links(element):
+                if child is None:
+                    continue
+                yield child
+
+        # it.root = root
+        # noinspection PyUnusedLocal
+        # root = None
+        # XXX No implicit source closing
+        # if close_source:
+        #     source.close()
+
+    class IterParseIterator(Iterator):
+        next = __next__ = functools.partial(next, iterator())
+
+    it = IterParseIterator()
+    it.root = None
+    del IterParseIterator
+
+    # close_source = False
+    if not hasattr(source, &#34;read&#34;):
+        # source = open(source, &#34;rb&#34;)
+        # close_source = True
+        raise TypeError(&#34;Expected a readable object, got %r&#34; % source)
+
+    return it</code></pre>
+</details>
+</dd>
+<dt id="pywebcopy.parsers.links"><code class="name flex">
+<span>def <span class="ident">links</span></span>(<span>el)</span>
+</code></dt>
+<dd>
+<div class="desc"></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def links(el):
+    tag = _nons(el.tag)
+    attribs = el.attrib
+
+    if tag == &#39;object&#39;:  # pragma: no cover
+        codebase = None
+        if &#39;codebase&#39; in attribs:
+            codebase = el.get(&#39;codebase&#39;)
+            yield el, &#39;codebase&#39;, codebase, 0
+        for attrib in (&#39;classid&#39;, &#39;data&#39;):
+            if attrib in attribs:
+                value = el.get(attrib)
+                if codebase is not None:
+                    value = urljoin(codebase, value)
+                yield el, attrib, value, 0
+        if &#39;archive&#39; in attribs:
+            for match in _archive_re.finditer(el.get(&#39;archive&#39;)):
+                value = match.group(0)
+                if codebase is not None:
+                    value = urljoin(codebase, value)
+                yield el, &#39;archive&#39;, value, match.start()
+    else:
+        for attrib in link_attrs:
+            if attrib in attribs:
+                yield el, attrib, attribs[attrib], 0
+
+        # XXX Patch for src-set url detection
+        for attrib in srcset_attrs:
+            if attrib in attribs:
+                urls = list(_iter_srcset_urls(attribs[attrib]))
+                if urls:
+                    # yield in reversed order to simplify in-place modifications
+                    for match in urls[::-1]:
+                        url, start = unquote_match(match.group(1).strip(), match.start(1))
+                        yield el, attrib, url, start
+    if tag == &#39;meta&#39;:
+        http_equiv = attribs.get(&#39;http-equiv&#39;, &#39;&#39;).lower()
+        if http_equiv == &#39;refresh&#39;:
+            content = attribs.get(&#39;content&#39;, &#39;&#39;)
+            match = _parse_meta_refresh_url(content)
+            url = (match.group(&#39;url&#39;) if match else content).strip()
+            # unexpected content means the redirect won&#39;t work, but we might
+            # as well be permissive and yield the entire string.
+            if url:
+                url, pos = unquote_match(
+                    url, match.start(&#39;url&#39;) if match else content.find(url))
+                yield el, &#39;content&#39;, url, pos
+        itemprop = attribs.get(&#39;itemprop&#39;, &#39;&#39;).lower()
+        if itemprop == &#39;image&#39;:
+            url = attribs.get(&#39;content&#39;, &#39;&#39;)
+            if url:
+                yield el, &#39;content&#39;, url, 0
+    elif tag == &#39;param&#39;:
+        valuetype = el.get(&#39;valuetype&#39;) or &#39;&#39;
+        if valuetype.lower() == &#39;ref&#39;:
+            yield el, &#39;value&#39;, el.get(&#39;value&#39;), 0
+    elif tag == &#39;script&#39; and el.text:
+        urls = [
+            # (start_pos, url)
+            unquote_match(match.group(1), match.start(1))[::-1]
+            for match in _iter_css_urls(el.text)
+        ]
+        if urls:
+            # sort by start pos to bring both match sets back into order
+            # and reverse the list to report correct positions despite
+            # modifications
+            urls.sort(reverse=True)
+            for start, url in urls:
+                yield el, None, url, start
+    elif tag == &#39;style&#39; and el.text:
+        urls = [
+                   # (start_pos, url)
+                   unquote_match(match.group(1), match.start(1))[::-1]
+                   for match in _iter_css_urls(el.text)
+               ] + [
+                   (match.start(1), match.group(1))
+                   for match in _iter_css_imports(el.text)
+               ]
+        if urls:
+            # sort by start pos to bring both match sets back into order
+            # and reverse the list to report correct positions despite
+            # modifications
+            urls.sort(reverse=True)
+            for start, url in urls:
+                yield el, None, url, start
+    if &#39;style&#39; in attribs:
+        urls = list(_iter_css_urls(attribs[&#39;style&#39;]))
+        if urls:
+            # yield in reversed order to simplify in-place modifications
+            for match in urls[::-1]:
+                url, start = unquote_match(match.group(1), match.start(1))
+                yield el, &#39;style&#39;, url, start</code></pre>
+</details>
+</dd>
+<dt id="pywebcopy.parsers.unquote_match"><code class="name flex">
+<span>def <span class="ident">unquote_match</span></span>(<span>s, pos)</span>
+</code></dt>
+<dd>
+<div class="desc"></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def unquote_match(s, pos):
+    if s[:1] == &#39;&#34;&#39; and s[-1:] == &#39;&#34;&#39; or s[:1] == &#34;&#39;&#34; and s[-1:] == &#34;&#39;&#34; or \
+            s[:1] == &#39;&#34;&#39; and s[-1:] == &#34;&#39;&#34; or s[:1] == &#34;&#39;&#34; and s[-1:] == &#39;&#34;&#39;:
+        return s[1:-1], pos + 1
+    else:
+        return s, pos</code></pre>
+</details>
+</dd>
+</dl>
+</section>
+<section>
+<h2 class="section-title" id="header-classes">Classes</h2>
+<dl>
+<dt id="pywebcopy.parsers.Element"><code class="flex name class">
+<span>class <span class="ident">Element</span></span>
+<span>(</span><span>element, default_encoding=None)</span>
+</code></dt>
+<dd>
+<div class="desc"><p>An element of HTML.</p>
+<p>:param element: The element from which to base the parsing upon.
+:param default_encoding: Which encoding to default to.</p></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">class Element(MultiParser):  # pragma: no cover
+    &#34;&#34;&#34;An element of HTML.
+
+    :param element: The element from which to base the parsing upon.
+    :param default_encoding: Which encoding to default to.
+    &#34;&#34;&#34;
+
+    def __init__(self, element, default_encoding=None):
+        super(Element, self).__init__(element=element, encoding=default_encoding)
+        self.element = element
+        self.tag = element.tag
+        self.lineno = element.sourceline
+        self._attrs = None
+
+    def __repr__(self):
+        attrs = [&#39;{}={}&#39;.format(attr, repr(self.attrs[attr])) for attr in self.attrs]
+        return &#34;&lt;Element {} {}&gt;&#34;.format(repr(self.element.tag), &#39; &#39;.join(attrs))
+
+    @property
+    def attrs(self):
+        &#34;&#34;&#34;Returns a dictionary of the attributes of the :class:`Element &lt;Element&gt;`
+        (`learn more &lt;https://www.w3schools.com/tags/ref_attributes.asp&gt;`_).
+        &#34;&#34;&#34;
+        if self._attrs is None:
+            d = {}
+            for k, v in self.element.items():
+                d[k] = v
+            self._attrs = d
+
+            # Split class and rel up, as there are usually many of them:
+            for attr in [&#39;class&#39;, &#39;rel&#39;]:
+                if attr in self._attrs:
+                    self._attrs[attr] = tuple(self._attrs[attr].split())
+
+        return self._attrs</code></pre>
+</details>
+<h3>Ancestors</h3>
+<ul class="hlist">
+<li><a title="pywebcopy.parsers.MultiParser" href="#pywebcopy.parsers.MultiParser">MultiParser</a></li>
+</ul>
+<h3>Instance variables</h3>
+<dl>
+<dt id="pywebcopy.parsers.Element.attrs"><code class="name">var <span class="ident">attrs</span></code></dt>
+<dd>
+<div class="desc"><p>Returns a dictionary of the attributes of the :class:<code>Element &lt;Element&gt;</code>
+(<code>learn more &lt;https://www.w3schools.com/tags/ref_attributes.asp&gt;</code>_).</p></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">@property
+def attrs(self):
+    &#34;&#34;&#34;Returns a dictionary of the attributes of the :class:`Element &lt;Element&gt;`
+    (`learn more &lt;https://www.w3schools.com/tags/ref_attributes.asp&gt;`_).
+    &#34;&#34;&#34;
+    if self._attrs is None:
+        d = {}
+        for k, v in self.element.items():
+            d[k] = v
+        self._attrs = d
+
+        # Split class and rel up, as there are usually many of them:
+        for attr in [&#39;class&#39;, &#39;rel&#39;]:
+            if attr in self._attrs:
+                self._attrs[attr] = tuple(self._attrs[attr].split())
+
+    return self._attrs</code></pre>
+</details>
+</dd>
+</dl>
+<h3>Inherited members</h3>
+<ul class="hlist">
+<li><code><b><a title="pywebcopy.parsers.MultiParser" href="#pywebcopy.parsers.MultiParser">MultiParser</a></b></code>:
+<ul class="hlist">
+<li><code><a title="pywebcopy.parsers.MultiParser.bs4" href="#pywebcopy.parsers.MultiParser.bs4">bs4</a></code></li>
+<li><code><a title="pywebcopy.parsers.MultiParser.decode" href="#pywebcopy.parsers.MultiParser.decode">decode</a></code></li>
+<li><code><a title="pywebcopy.parsers.MultiParser.decode_html" href="#pywebcopy.parsers.MultiParser.decode_html">decode_html</a></code></li>
+<li><code><a title="pywebcopy.parsers.MultiParser.encode" href="#pywebcopy.parsers.MultiParser.encode">encode</a></code></li>
+<li><code><a title="pywebcopy.parsers.MultiParser.encoding" href="#pywebcopy.parsers.MultiParser.encoding">encoding</a></code></li>
+<li><code><a title="pywebcopy.parsers.MultiParser.find" href="#pywebcopy.parsers.MultiParser.find">find</a></code></li>
+<li><code><a title="pywebcopy.parsers.MultiParser.full_text" href="#pywebcopy.parsers.MultiParser.full_text">full_text</a></code></li>
+<li><code><a title="pywebcopy.parsers.MultiParser.get_forms" href="#pywebcopy.parsers.MultiParser.get_forms">get_forms</a></code></li>
+<li><code><a title="pywebcopy.parsers.MultiParser.html" href="#pywebcopy.parsers.MultiParser.html">html</a></code></li>
+<li><code><a title="pywebcopy.parsers.MultiParser.lxml" href="#pywebcopy.parsers.MultiParser.lxml">lxml</a></code></li>
+<li><code><a title="pywebcopy.parsers.MultiParser.pq" href="#pywebcopy.parsers.MultiParser.pq">pq</a></code></li>
+<li><code><a title="pywebcopy.parsers.MultiParser.raw_html" href="#pywebcopy.parsers.MultiParser.raw_html">raw_html</a></code></li>
+<li><code><a title="pywebcopy.parsers.MultiParser.request" href="#pywebcopy.parsers.MultiParser.request">request</a></code></li>
+<li><code><a title="pywebcopy.parsers.MultiParser.search" href="#pywebcopy.parsers.MultiParser.search">search</a></code></li>
+<li><code><a title="pywebcopy.parsers.MultiParser.search_all" href="#pywebcopy.parsers.MultiParser.search_all">search_all</a></code></li>
+<li><code><a title="pywebcopy.parsers.MultiParser.submit_form" href="#pywebcopy.parsers.MultiParser.submit_form">submit_form</a></code></li>
+<li><code><a title="pywebcopy.parsers.MultiParser.text" href="#pywebcopy.parsers.MultiParser.text">text</a></code></li>
+<li><code><a title="pywebcopy.parsers.MultiParser.xpath" href="#pywebcopy.parsers.MultiParser.xpath">xpath</a></code></li>
+</ul>
+</li>
+</ul>
+</dd>
+<dt id="pywebcopy.parsers.MultiParser"><code class="flex name class">
+<span>class <span class="ident">MultiParser</span></span>
+<span>(</span><span>html=None, encoding=None, element=None)</span>
+</code></dt>
+<dd>
+<div class="desc"><p>Provides apis specific to scraping or data searching purposes.</p>
+<p>This contains the apis from the requests-html module.</p>
+<p>Most of the source code is from the MIT Licensed library called
+<code>requests-html</code> courtesy of kenneth, some code has been heavily modified to
+fit the needs of this project but some apis are still untouched.</p>
+<p>:param html: html markup string.
+:param encoding: optional explicit declaration of encoding type of that web page
+:param element: Used internally: PyQuery object or raw html.</p></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">class MultiParser(object):  # pragma: no cover
+    &#34;&#34;&#34;Provides apis specific to scraping or data searching purposes.
+
+    This contains the apis from the requests-html module.
+
+    Most of the source code is from the MIT Licensed library called
+    `requests-html` courtesy of kenneth, some code has been heavily modified to
+    fit the needs of this project but some apis are still untouched.
+
+    :param html: html markup string.
+    :param encoding: optional explicit declaration of encoding type of that web page
+    :param element: Used internally: PyQuery object or raw html.
+    &#34;&#34;&#34;
+
+    def __init__(self, html=None, encoding=None, element=None):
+        self._lxml = None
+        self._pq = None
+        self._soup = None
+        self._html = html  # represents your raw html
+        self._encoding = encoding  # represents your provided encoding
+        self.element = element  # internal lxml element
+        self._decoded_html = False  # internal switch to tell if html has been decoded
+        self.default_encoding = &#39;iso-8859-1&#39;  # a standard encoding defined by w3c
+
+    def request(self, method, url, **params):
+        &#34;&#34;&#34;Fetches the Html content from Internet using the requests.
+        You can any requests params which will be passed to the library
+        itself.
+        The requests arguments you supply will also be applied to the
+        global session meaning all the files will be downloaded using these
+        settings.
+
+        :param method: http verb for transport.
+        :param url: url of the page to fetch
+        :param params: keyword arguments which `requests` module may accept.
+        &#34;&#34;&#34;
+        resp = requests.request(method, url, stream=True, **params)
+        resp.raise_for_status()
+        self._html = resp.content
+
+    def get(self, url, **params):
+        return self.request(&#39;GET&#39;, url, **params)
+
+    def post(self, url, **params):
+        return self.request(&#39;POST&#39;, url, **params)
+
+    def get_forms(self):
+        &#34;&#34;&#34;Returns a list of form elements available on the page.&#34;&#34;&#34;
+        return fromstring(
+            self.html
+        ).xpath(
+            &#34;descendant-or-self::form|descendant-or-self::x:form&#34;,
+            namespaces={&#39;x&#39;: XHTML_NAMESPACE}
+        )
+
+    def submit_form(self, form, url=None, **extra_values):
+        &#34;&#34;&#34;
+        Helper function to submit a form.
+
+        .. todo::
+            check documentation.
+
+        You can use this like::
+
+            wp = WebPage()
+            wp.get(&#39;http://httpbin.org/forms/&#39;)
+            form = wp.get_forms()[0]
+            form.inputs[&#39;email&#39;].value = &#39;bar&#39; # etc
+            form.inputs[&#39;password&#39;].value = &#39;baz&#39; # etc
+            wp.submit_form(form)
+            wp.get_links()
+
+        The action is one of &#39;GET&#39; or &#39;POST&#39;, the URL is the target URL as a
+        string, and the values are a sequence of ``(name, value)`` tuples with the
+        form data.
+        &#34;&#34;&#34;
+        values = form.form_values()
+        if extra_values:
+            if hasattr(extra_values, &#39;items&#39;):
+                extra_values = extra_values.items()
+            values.extend(extra_values)
+
+        if url is None:
+            if form.action:
+                url = form.action
+            else:
+                url = form.base_url
+        return self.request(form.method, url, data=values)
+
+    @property
+    def raw_html(self):
+        &#34;&#34;&#34;Bytes representation of the HTML content.
+        (`learn more &lt;http://www.diveintopython3.net/strings.html&gt;`_).
+        &#34;&#34;&#34;
+        if self._html:
+            return self._html
+        else:
+            return tostring(self.element, encoding=self.encoding)
+
+    @raw_html.setter
+    def raw_html(self, html):
+        &#34;&#34;&#34;Property setter for raw_html. Type can be bytes.&#34;&#34;&#34;
+        self._html = html
+
+    @property
+    def html(self):
+        &#34;&#34;&#34;Unicode representation of the HTML content.&#34;&#34;&#34;
+        if self._html:
+            return self.decode()
+        else:
+            return tostring(self.element, encoding=&#39;unicode&#39;)
+
+    @html.setter
+    def html(self, html):
+        &#34;&#34;&#34;Property setter for self.html&#34;&#34;&#34;
+        if not isinstance(html, str):
+            raise TypeError
+        self._html = html
+        self.decode()
+
+    def encode(self, encoding=None, errors=&#39;xmlcharrefreplace&#39;):
+        &#34;&#34;&#34;Returns the html encoded with specified encoding.&#34;&#34;&#34;
+        return self.html.encode(encoding=encoding, errors=errors)
+
+    def decode(self):
+        &#34;&#34;&#34;Decodes the html set to this object and returns used encoding and decoded html.&#34;&#34;&#34;
+        self._encoding, html = self.decode_html(self._html, self._encoding, self.default_encoding)
+        return html
+
+    @staticmethod
+    def decode_html(html_string, encoding=None, default_encoding=&#39;iso-8859-1&#39;):
+        &#34;&#34;&#34;Decodes a html string into a unicode string.
+        If explicit encoding is defined then
+        it would use it otherwise it will decoding it using
+        beautiful soups UnicodeDammit feature,
+        otherwise it will use w3lib to decode the html.
+
+        Returns a two tuple with (&lt;encoding&gt;, &lt;decoded unicode string&gt;)
+
+        :rtype: (str, str)
+        :returns: (used-encoding, unicode-markup)
+        &#34;&#34;&#34;
+
+        tried = [encoding, default_encoding]
+
+        try:
+            logger.info(&#34;Trying UnicodeDammit Codec for decoding html.&#34;)
+            try:
+                import bs4
+            except ImportError:
+                raise ImportError(
+                    &#34;bs4 module is not installed. &#34;
+                    &#34;Install it using pip: $ pip install bs4&#34;
+                )
+            converted = bs4.UnicodeDammit(html_string, [encoding], is_html=True)
+
+            if not converted.unicode_markup:
+                tried += converted.tried_encodings
+                logger.critical(
+                    &#34;UnicodeDammit decoder failed to decode html!&#34;
+                    &#34;Encoding tried by default enc: [%s]&#34;
+                    &#34;Trying fallback...&#34; % &#39;,&#39;.join(tried)
+                )
+                raise UnicodeDecodeError
+
+            return converted.original_encoding, converted.unicode_markup
+
+        except (UnicodeDecodeError, ImportError):
+            # This method will definitely decode the html though
+            # the result could be corrupt. But if you getting a
+            # corrupt html output then you definitely have to
+            # manually provide the encoding.
+            try:
+                import w3lib
+                from w3lib.encoding import html_to_unicode
+            except ImportError:
+                raise ImportError(
+                    &#34;w3lib module is not installed. &#34;
+                    &#34;Install it using pip: $ pip install w3lib&#34;
+                )
+
+            enc, unc = w3lib.encoding.html_to_unicode(
+                None, html_body_str=html_string,
+                default_encoding=default_encoding
+            )
+            return enc, unc
+
+    @property
+    def encoding(self):
+        &#34;&#34;&#34;The encoding string to be used, extracted from the HTML and
+        :class:`HTMLResponse &lt;HTMLResponse&gt;` headers.
+        &#34;&#34;&#34;
+        if self._encoding is None:
+            self.decode()
+        return self._encoding
+
+    @encoding.setter
+    def encoding(self, enc):
+        &#34;&#34;&#34;Property setter for self.encoding.&#34;&#34;&#34;
+        self._encoding = enc
+
+    @property
+    def lxml(self):
+        &#34;&#34;&#34;Parses the decoded self.html contents after decoding it by itself
+        decoding detector (default) or decoding it using provided self.default_encoding.
+        &#34;&#34;&#34;
+        if self._lxml is None:
+            self._lxml = fromstring(self.html)
+        return self._lxml
+
+    @property
+    def bs4(self):
+        &#34;&#34;&#34;BeautifulSoup object under the hood.
+        Read more about beautiful_soup at https://www.crummy.com/software/BeautifulSoup/doc
+        &#34;&#34;&#34;
+        try:
+            import bs4
+        except ImportError:
+            raise ImportError(
+                &#34;bs4 module is not installed. &#34;
+                &#34;Install it using pip: $ pip install bs4&#34;
+            )
+        if self._soup is None:
+            self._soup = bs4.BeautifulSoup(self.raw_html, &#39;lxml&#39;)
+        return self._soup
+
+    @property
+    def pq(self):
+        &#34;&#34;&#34;`PyQuery &lt;https://pythonhosted.org/pyquery/&gt;`_ representation
+        of the :class:`Element &lt;Element&gt;` or :class:`HTML &lt;HTML&gt;`.
+        &#34;&#34;&#34;
+        try:
+            import pyquery
+        except ImportError:
+            raise ImportError(
+                &#34;pyquery module is not installed. &#34;
+                &#34;Install it using pip: $ pip install pyquery&#34;
+            )
+        if self._pq is None:
+            self._pq = pyquery.PyQuery(self.lxml)
+
+        return self._pq
+
+    @property
+    def text(self):
+        &#34;&#34;&#34;The text content of the
+        :class:`Element &lt;Element&gt;` or :class:`HTML &lt;HTML&gt;`.
+        &#34;&#34;&#34;
+        return self.pq.text()
+
+    @property
+    def full_text(self):
+        &#34;&#34;&#34;The full text content (including links) of the
+        :class:`Element &lt;Element&gt;` or :class:`HTML &lt;HTML&gt;`.
+        &#34;&#34;&#34;
+        return self.lxml.text_content()
+
+    def find(self, selector=&#34;*&#34;, containing=None, clean=False, first=False,
+             _encoding=None):
+        &#34;&#34;&#34;Given a CSS Selector, returns a list of
+        :class:`Element &lt;Element&gt;` objects or a single one.
+
+        :param selector: CSS Selector to use.
+        :param clean: Whether or not to sanitize the found HTML of ``&lt;script&gt;`` and ``&lt;style&gt;`` tags.
+        :param containing: If specified, only return elements that contain the provided text.
+        :param first: Whether or not to return just the first result.
+        :param _encoding: The encoding format.
+
+        Example CSS Selectors:
+
+        - ``a``
+        - ``a.someClass``
+        - ``a#someID``
+        - ``a[target=_blank]``
+
+        See W3School&#39;s `CSS Selectors Reference
+        &lt;https://www.w3schools.com/cssref/css_selectors.asp&gt;`_
+        for more details.
+
+        If ``first`` is ``True``, only returns the first
+        :class:`Element &lt;Element&gt;` found.
+        &#34;&#34;&#34;
+
+        # Convert a single containing into a list.
+        if isinstance(containing, str):
+            containing = [containing]
+        if not isinstance(selector, str):
+            raise TypeError(&#34;Expected string, got %r&#34; % type(selector))
+
+        encoding = _encoding or self.encoding
+        elements = [
+            Element(element=found, default_encoding=encoding)
+            for found in self.pq(selector)
+        ]
+
+        if containing:
+            elements_copy = list(elements)
+            elements = []
+
+            for element in elements_copy:
+                if any([c.lower() in element.full_text.lower() for c in containing]):
+                    elements.append(element)
+
+            elements.reverse()
+
+        # Sanitize the found HTML.
+        if clean:
+            elements_copy = list(elements)
+            elements = []
+
+            for element in elements_copy:
+                element.raw_html = tostring(cleaner.clean_html(element.lxml))
+                elements.append(element)
+
+        if first and len(elements) &gt; 0:
+            return elements[0]
+        else:
+            return elements
+
+    def xpath(self, selector, clean=False, first=False, _encoding=None):
+        &#34;&#34;&#34;Given an XPath selector, returns a list of
+        :class:`Element &lt;Element&gt;` objects or a single one.
+
+        :param selector: XPath Selector to use.
+        :param clean: Whether or not to sanitize the found HTML of ``&lt;script&gt;`` and ``&lt;style&gt;`` tags.
+        :param first: Whether or not to return just the first result.
+        :param _encoding: The encoding format.
+
+        If a sub-selector is specified (e.g. ``//a/@href``), a simple
+        list of results is returned.
+
+        See W3School&#39;s `XPath Examples
+        &lt;https://www.w3schools.com/xml/xpath_examples.asp&gt;`_
+        for more details.
+
+        If ``first`` is ``True``, only returns the first
+        :class:`Element &lt;Element&gt;` found.
+        &#34;&#34;&#34;
+        if not isinstance(selector, str):
+            raise TypeError(&#34;Expected string, got %r&#34; % type(selector))
+
+        selected = self.lxml.xpath(selector)
+
+        elements = [
+            Element(element=selection, default_encoding=_encoding or self.encoding)
+            if inspect.isclass(selection) and not issubclass(selection, str) else str(selection)
+            for selection in selected
+        ]
+
+        # Sanitize the found HTML.
+        if clean:
+            elements_copy = list(elements)
+            elements = []
+
+            for element in elements_copy:
+                element.raw_html = tostring(cleaner.clean_html(element.lxml))
+                elements.append(element)
+
+        if first and len(elements) &gt; 0:
+            return elements[0]
+        else:
+            return elements
+
+    def search(self, template):
+        &#34;&#34;&#34;Search the :class:`Element &lt;Element&gt;` for the given Parse template.
+
+        :param template: The Parse template to use.
+        &#34;&#34;&#34;
+        if not isinstance(template, str):
+            raise TypeError(&#34;Expected string, got %r&#34; % type(template))
+        try:
+            import parse
+        except ImportError:
+            raise ImportError(
+                &#34;parse module is not installed. &#34;
+                &#34;Install it using pip: $ pip install parse&#34;
+            )
+        return parse.search(template, self.html)
+
+    def search_all(self, template):
+        &#34;&#34;&#34;Search the :class:`Element &lt;Element&gt;` (multiple times) for the given parse
+        template.
+
+        :param template: The Parse template to use.
+        &#34;&#34;&#34;
+        if not isinstance(template, str):
+            raise TypeError(&#34;Expected string, got %r&#34; % type(template))
+        try:
+            import parse
+        except ImportError:
+            raise ImportError(
+                &#34;parse module is not installed. &#34;
+                &#34;Install it using pip: $ pip install parse&#34;
+            )
+        return [r for r in parse.findall(template, self.html)]</code></pre>
+</details>
+<h3>Subclasses</h3>
+<ul class="hlist">
+<li><a title="pywebcopy.parsers.Element" href="#pywebcopy.parsers.Element">Element</a></li>
+</ul>
+<h3>Static methods</h3>
+<dl>
+<dt id="pywebcopy.parsers.MultiParser.decode_html"><code class="name flex">
+<span>def <span class="ident">decode_html</span></span>(<span>html_string, encoding=None, default_encoding='iso-8859-1')</span>
+</code></dt>
+<dd>
+<div class="desc"><p>Decodes a html string into a unicode string.
+If explicit encoding is defined then
+it would use it otherwise it will decoding it using
+beautiful soups UnicodeDammit feature,
+otherwise it will use w3lib to decode the html.</p>
+<p>Returns a two tuple with (<encoding>, <decoded unicode string>)</p>
+<p>:rtype: (str, str)
+:returns: (used-encoding, unicode-markup)</p></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">@staticmethod
+def decode_html(html_string, encoding=None, default_encoding=&#39;iso-8859-1&#39;):
+    &#34;&#34;&#34;Decodes a html string into a unicode string.
+    If explicit encoding is defined then
+    it would use it otherwise it will decoding it using
+    beautiful soups UnicodeDammit feature,
+    otherwise it will use w3lib to decode the html.
+
+    Returns a two tuple with (&lt;encoding&gt;, &lt;decoded unicode string&gt;)
+
+    :rtype: (str, str)
+    :returns: (used-encoding, unicode-markup)
+    &#34;&#34;&#34;
+
+    tried = [encoding, default_encoding]
+
+    try:
+        logger.info(&#34;Trying UnicodeDammit Codec for decoding html.&#34;)
+        try:
+            import bs4
+        except ImportError:
+            raise ImportError(
+                &#34;bs4 module is not installed. &#34;
+                &#34;Install it using pip: $ pip install bs4&#34;
+            )
+        converted = bs4.UnicodeDammit(html_string, [encoding], is_html=True)
+
+        if not converted.unicode_markup:
+            tried += converted.tried_encodings
+            logger.critical(
+                &#34;UnicodeDammit decoder failed to decode html!&#34;
+                &#34;Encoding tried by default enc: [%s]&#34;
+                &#34;Trying fallback...&#34; % &#39;,&#39;.join(tried)
+            )
+            raise UnicodeDecodeError
+
+        return converted.original_encoding, converted.unicode_markup
+
+    except (UnicodeDecodeError, ImportError):
+        # This method will definitely decode the html though
+        # the result could be corrupt. But if you getting a
+        # corrupt html output then you definitely have to
+        # manually provide the encoding.
+        try:
+            import w3lib
+            from w3lib.encoding import html_to_unicode
+        except ImportError:
+            raise ImportError(
+                &#34;w3lib module is not installed. &#34;
+                &#34;Install it using pip: $ pip install w3lib&#34;
+            )
+
+        enc, unc = w3lib.encoding.html_to_unicode(
+            None, html_body_str=html_string,
+            default_encoding=default_encoding
+        )
+        return enc, unc</code></pre>
+</details>
+</dd>
+</dl>
+<h3>Instance variables</h3>
+<dl>
+<dt id="pywebcopy.parsers.MultiParser.bs4"><code class="name">var <span class="ident">bs4</span></code></dt>
+<dd>
+<div class="desc"><p>BeautifulSoup object under the hood.
+Read more about beautiful_soup at <a href="https://www.crummy.com/software/BeautifulSoup/doc">https://www.crummy.com/software/BeautifulSoup/doc</a></p></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">@property
+def bs4(self):
+    &#34;&#34;&#34;BeautifulSoup object under the hood.
+    Read more about beautiful_soup at https://www.crummy.com/software/BeautifulSoup/doc
+    &#34;&#34;&#34;
+    try:
+        import bs4
+    except ImportError:
+        raise ImportError(
+            &#34;bs4 module is not installed. &#34;
+            &#34;Install it using pip: $ pip install bs4&#34;
+        )
+    if self._soup is None:
+        self._soup = bs4.BeautifulSoup(self.raw_html, &#39;lxml&#39;)
+    return self._soup</code></pre>
+</details>
+</dd>
+<dt id="pywebcopy.parsers.MultiParser.encoding"><code class="name">var <span class="ident">encoding</span></code></dt>
+<dd>
+<div class="desc"><p>The encoding string to be used, extracted from the HTML and
+:class:<code>HTMLResponse &lt;HTMLResponse&gt;</code> headers.</p></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">@property
+def encoding(self):
+    &#34;&#34;&#34;The encoding string to be used, extracted from the HTML and
+    :class:`HTMLResponse &lt;HTMLResponse&gt;` headers.
+    &#34;&#34;&#34;
+    if self._encoding is None:
+        self.decode()
+    return self._encoding</code></pre>
+</details>
+</dd>
+<dt id="pywebcopy.parsers.MultiParser.full_text"><code class="name">var <span class="ident">full_text</span></code></dt>
+<dd>
+<div class="desc"><p>The full text content (including links) of the
+:class:<code>Element &lt;Element&gt;</code> or :class:<code>HTML &lt;HTML&gt;</code>.</p></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">@property
+def full_text(self):
+    &#34;&#34;&#34;The full text content (including links) of the
+    :class:`Element &lt;Element&gt;` or :class:`HTML &lt;HTML&gt;`.
+    &#34;&#34;&#34;
+    return self.lxml.text_content()</code></pre>
+</details>
+</dd>
+<dt id="pywebcopy.parsers.MultiParser.html"><code class="name">var <span class="ident">html</span></code></dt>
+<dd>
+<div class="desc"><p>Unicode representation of the HTML content.</p></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">@property
+def html(self):
+    &#34;&#34;&#34;Unicode representation of the HTML content.&#34;&#34;&#34;
+    if self._html:
+        return self.decode()
+    else:
+        return tostring(self.element, encoding=&#39;unicode&#39;)</code></pre>
+</details>
+</dd>
+<dt id="pywebcopy.parsers.MultiParser.lxml"><code class="name">var <span class="ident">lxml</span></code></dt>
+<dd>
+<div class="desc"><p>Parses the decoded self.html contents after decoding it by itself
+decoding detector (default) or decoding it using provided self.default_encoding.</p></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">@property
+def lxml(self):
+    &#34;&#34;&#34;Parses the decoded self.html contents after decoding it by itself
+    decoding detector (default) or decoding it using provided self.default_encoding.
+    &#34;&#34;&#34;
+    if self._lxml is None:
+        self._lxml = fromstring(self.html)
+    return self._lxml</code></pre>
+</details>
+</dd>
+<dt id="pywebcopy.parsers.MultiParser.pq"><code class="name">var <span class="ident">pq</span></code></dt>
+<dd>
+<div class="desc"><p><code>PyQuery &lt;https://pythonhosted.org/pyquery/&gt;</code>_ representation
+of the :class:<code>Element &lt;Element&gt;</code> or :class:<code>HTML &lt;HTML&gt;</code>.</p></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">@property
+def pq(self):
+    &#34;&#34;&#34;`PyQuery &lt;https://pythonhosted.org/pyquery/&gt;`_ representation
+    of the :class:`Element &lt;Element&gt;` or :class:`HTML &lt;HTML&gt;`.
+    &#34;&#34;&#34;
+    try:
+        import pyquery
+    except ImportError:
+        raise ImportError(
+            &#34;pyquery module is not installed. &#34;
+            &#34;Install it using pip: $ pip install pyquery&#34;
+        )
+    if self._pq is None:
+        self._pq = pyquery.PyQuery(self.lxml)
+
+    return self._pq</code></pre>
+</details>
+</dd>
+<dt id="pywebcopy.parsers.MultiParser.raw_html"><code class="name">var <span class="ident">raw_html</span></code></dt>
+<dd>
+<div class="desc"><p>Bytes representation of the HTML content.
+(<code>learn more &lt;http://www.diveintopython3.net/strings.html&gt;</code>_).</p></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">@property
+def raw_html(self):
+    &#34;&#34;&#34;Bytes representation of the HTML content.
+    (`learn more &lt;http://www.diveintopython3.net/strings.html&gt;`_).
+    &#34;&#34;&#34;
+    if self._html:
+        return self._html
+    else:
+        return tostring(self.element, encoding=self.encoding)</code></pre>
+</details>
+</dd>
+<dt id="pywebcopy.parsers.MultiParser.text"><code class="name">var <span class="ident">text</span></code></dt>
+<dd>
+<div class="desc"><p>The text content of the
+:class:<code>Element &lt;Element&gt;</code> or :class:<code>HTML &lt;HTML&gt;</code>.</p></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">@property
+def text(self):
+    &#34;&#34;&#34;The text content of the
+    :class:`Element &lt;Element&gt;` or :class:`HTML &lt;HTML&gt;`.
+    &#34;&#34;&#34;
+    return self.pq.text()</code></pre>
+</details>
+</dd>
+</dl>
+<h3>Methods</h3>
+<dl>
+<dt id="pywebcopy.parsers.MultiParser.decode"><code class="name flex">
+<span>def <span class="ident">decode</span></span>(<span>self)</span>
+</code></dt>
+<dd>
+<div class="desc"><p>Decodes the html set to this object and returns used encoding and decoded html.</p></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def decode(self):
+    &#34;&#34;&#34;Decodes the html set to this object and returns used encoding and decoded html.&#34;&#34;&#34;
+    self._encoding, html = self.decode_html(self._html, self._encoding, self.default_encoding)
+    return html</code></pre>
+</details>
+</dd>
+<dt id="pywebcopy.parsers.MultiParser.encode"><code class="name flex">
+<span>def <span class="ident">encode</span></span>(<span>self, encoding=None, errors='xmlcharrefreplace')</span>
+</code></dt>
+<dd>
+<div class="desc"><p>Returns the html encoded with specified encoding.</p></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def encode(self, encoding=None, errors=&#39;xmlcharrefreplace&#39;):
+    &#34;&#34;&#34;Returns the html encoded with specified encoding.&#34;&#34;&#34;
+    return self.html.encode(encoding=encoding, errors=errors)</code></pre>
+</details>
+</dd>
+<dt id="pywebcopy.parsers.MultiParser.find"><code class="name flex">
+<span>def <span class="ident">find</span></span>(<span>self, selector='*', containing=None, clean=False, first=False)</span>
+</code></dt>
+<dd>
+<div class="desc"><p>Given a CSS Selector, returns a list of
+:class:<code>Element &lt;Element&gt;</code> objects or a single one.</p>
+<p>:param selector: CSS Selector to use.
+:param clean: Whether or not to sanitize the found HTML of <code>&lt;script&gt;</code> and <code>&lt;style&gt;</code> tags.
+:param containing: If specified, only return elements that contain the provided text.
+:param first: Whether or not to return just the first result.
+:param _encoding: The encoding format.</p>
+<p>Example CSS Selectors:</p>
+<ul>
+<li><code>a</code></li>
+<li><code>a.someClass</code></li>
+<li><code>a#someID</code></li>
+<li><code>a[target=_blank]</code></li>
+</ul>
+<p>See W3School's <code>CSS Selectors Reference
+&lt;https://www.w3schools.com/cssref/css_selectors.asp&gt;</code>_
+for more details.</p>
+<p>If <code>first</code> is <code>True</code>, only returns the first
+:class:<code>Element &lt;Element&gt;</code> found.</p></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def find(self, selector=&#34;*&#34;, containing=None, clean=False, first=False,
+         _encoding=None):
+    &#34;&#34;&#34;Given a CSS Selector, returns a list of
+    :class:`Element &lt;Element&gt;` objects or a single one.
+
+    :param selector: CSS Selector to use.
+    :param clean: Whether or not to sanitize the found HTML of ``&lt;script&gt;`` and ``&lt;style&gt;`` tags.
+    :param containing: If specified, only return elements that contain the provided text.
+    :param first: Whether or not to return just the first result.
+    :param _encoding: The encoding format.
+
+    Example CSS Selectors:
+
+    - ``a``
+    - ``a.someClass``
+    - ``a#someID``
+    - ``a[target=_blank]``
+
+    See W3School&#39;s `CSS Selectors Reference
+    &lt;https://www.w3schools.com/cssref/css_selectors.asp&gt;`_
+    for more details.
+
+    If ``first`` is ``True``, only returns the first
+    :class:`Element &lt;Element&gt;` found.
+    &#34;&#34;&#34;
+
+    # Convert a single containing into a list.
+    if isinstance(containing, str):
+        containing = [containing]
+    if not isinstance(selector, str):
+        raise TypeError(&#34;Expected string, got %r&#34; % type(selector))
+
+    encoding = _encoding or self.encoding
+    elements = [
+        Element(element=found, default_encoding=encoding)
+        for found in self.pq(selector)
+    ]
+
+    if containing:
+        elements_copy = list(elements)
+        elements = []
+
+        for element in elements_copy:
+            if any([c.lower() in element.full_text.lower() for c in containing]):
+                elements.append(element)
+
+        elements.reverse()
+
+    # Sanitize the found HTML.
+    if clean:
+        elements_copy = list(elements)
+        elements = []
+
+        for element in elements_copy:
+            element.raw_html = tostring(cleaner.clean_html(element.lxml))
+            elements.append(element)
+
+    if first and len(elements) &gt; 0:
+        return elements[0]
+    else:
+        return elements</code></pre>
+</details>
+</dd>
+<dt id="pywebcopy.parsers.MultiParser.get"><code class="name flex">
+<span>def <span class="ident">get</span></span>(<span>self, url, **params)</span>
+</code></dt>
+<dd>
+<div class="desc"></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def get(self, url, **params):
+    return self.request(&#39;GET&#39;, url, **params)</code></pre>
+</details>
+</dd>
+<dt id="pywebcopy.parsers.MultiParser.get_forms"><code class="name flex">
+<span>def <span class="ident">get_forms</span></span>(<span>self)</span>
+</code></dt>
+<dd>
+<div class="desc"><p>Returns a list of form elements available on the page.</p></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def get_forms(self):
+    &#34;&#34;&#34;Returns a list of form elements available on the page.&#34;&#34;&#34;
+    return fromstring(
+        self.html
+    ).xpath(
+        &#34;descendant-or-self::form|descendant-or-self::x:form&#34;,
+        namespaces={&#39;x&#39;: XHTML_NAMESPACE}
+    )</code></pre>
+</details>
+</dd>
+<dt id="pywebcopy.parsers.MultiParser.post"><code class="name flex">
+<span>def <span class="ident">post</span></span>(<span>self, url, **params)</span>
+</code></dt>
+<dd>
+<div class="desc"></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def post(self, url, **params):
+    return self.request(&#39;POST&#39;, url, **params)</code></pre>
+</details>
+</dd>
+<dt id="pywebcopy.parsers.MultiParser.request"><code class="name flex">
+<span>def <span class="ident">request</span></span>(<span>self, method, url, **params)</span>
+</code></dt>
+<dd>
+<div class="desc"><p>Fetches the Html content from Internet using the requests.
+You can any requests params which will be passed to the library
+itself.
+The requests arguments you supply will also be applied to the
+global session meaning all the files will be downloaded using these
+settings.</p>
+<p>:param method: http verb for transport.
+:param url: url of the page to fetch
+:param params: keyword arguments which <code>requests</code> module may accept.</p></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def request(self, method, url, **params):
+    &#34;&#34;&#34;Fetches the Html content from Internet using the requests.
+    You can any requests params which will be passed to the library
+    itself.
+    The requests arguments you supply will also be applied to the
+    global session meaning all the files will be downloaded using these
+    settings.
+
+    :param method: http verb for transport.
+    :param url: url of the page to fetch
+    :param params: keyword arguments which `requests` module may accept.
+    &#34;&#34;&#34;
+    resp = requests.request(method, url, stream=True, **params)
+    resp.raise_for_status()
+    self._html = resp.content</code></pre>
+</details>
+</dd>
+<dt id="pywebcopy.parsers.MultiParser.search"><code class="name flex">
+<span>def <span class="ident">search</span></span>(<span>self, template)</span>
+</code></dt>
+<dd>
+<div class="desc"><p>Search the :class:<code>Element &lt;Element&gt;</code> for the given Parse template.</p>
+<p>:param template: The Parse template to use.</p></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def search(self, template):
+    &#34;&#34;&#34;Search the :class:`Element &lt;Element&gt;` for the given Parse template.
+
+    :param template: The Parse template to use.
+    &#34;&#34;&#34;
+    if not isinstance(template, str):
+        raise TypeError(&#34;Expected string, got %r&#34; % type(template))
+    try:
+        import parse
+    except ImportError:
+        raise ImportError(
+            &#34;parse module is not installed. &#34;
+            &#34;Install it using pip: $ pip install parse&#34;
+        )
+    return parse.search(template, self.html)</code></pre>
+</details>
+</dd>
+<dt id="pywebcopy.parsers.MultiParser.search_all"><code class="name flex">
+<span>def <span class="ident">search_all</span></span>(<span>self, template)</span>
+</code></dt>
+<dd>
+<div class="desc"><p>Search the :class:<code>Element &lt;Element&gt;</code> (multiple times) for the given parse
+template.</p>
+<p>:param template: The Parse template to use.</p></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def search_all(self, template):
+    &#34;&#34;&#34;Search the :class:`Element &lt;Element&gt;` (multiple times) for the given parse
+    template.
+
+    :param template: The Parse template to use.
+    &#34;&#34;&#34;
+    if not isinstance(template, str):
+        raise TypeError(&#34;Expected string, got %r&#34; % type(template))
+    try:
+        import parse
+    except ImportError:
+        raise ImportError(
+            &#34;parse module is not installed. &#34;
+            &#34;Install it using pip: $ pip install parse&#34;
+        )
+    return [r for r in parse.findall(template, self.html)]</code></pre>
+</details>
+</dd>
+<dt id="pywebcopy.parsers.MultiParser.submit_form"><code class="name flex">
+<span>def <span class="ident">submit_form</span></span>(<span>self, form, url=None, **extra_values)</span>
+</code></dt>
+<dd>
+<div class="desc"><p>Helper function to submit a form.</p>
+<div class="admonition todo">
+<p class="admonition-title">TODO</p>
+<p>check documentation.</p>
+</div>
+<p>You can use this like::</p>
+<pre><code>wp = WebPage()
+wp.get('http://httpbin.org/forms/')
+form = wp.get_forms()[0]
+form.inputs['email'].value = 'bar' # etc
+form.inputs['password'].value = 'baz' # etc
+wp.submit_form(form)
+wp.get_links()
+</code></pre>
+<p>The action is one of 'GET' or 'POST', the URL is the target URL as a
+string, and the values are a sequence of <code>(name, value)</code> tuples with the
+form data.</p></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def submit_form(self, form, url=None, **extra_values):
+    &#34;&#34;&#34;
+    Helper function to submit a form.
+
+    .. todo::
+        check documentation.
+
+    You can use this like::
+
+        wp = WebPage()
+        wp.get(&#39;http://httpbin.org/forms/&#39;)
+        form = wp.get_forms()[0]
+        form.inputs[&#39;email&#39;].value = &#39;bar&#39; # etc
+        form.inputs[&#39;password&#39;].value = &#39;baz&#39; # etc
+        wp.submit_form(form)
+        wp.get_links()
+
+    The action is one of &#39;GET&#39; or &#39;POST&#39;, the URL is the target URL as a
+    string, and the values are a sequence of ``(name, value)`` tuples with the
+    form data.
+    &#34;&#34;&#34;
+    values = form.form_values()
+    if extra_values:
+        if hasattr(extra_values, &#39;items&#39;):
+            extra_values = extra_values.items()
+        values.extend(extra_values)
+
+    if url is None:
+        if form.action:
+            url = form.action
+        else:
+            url = form.base_url
+    return self.request(form.method, url, data=values)</code></pre>
+</details>
+</dd>
+<dt id="pywebcopy.parsers.MultiParser.xpath"><code class="name flex">
+<span>def <span class="ident">xpath</span></span>(<span>self, selector, clean=False, first=False)</span>
+</code></dt>
+<dd>
+<div class="desc"><p>Given an XPath selector, returns a list of
+:class:<code>Element &lt;Element&gt;</code> objects or a single one.</p>
+<p>:param selector: XPath Selector to use.
+:param clean: Whether or not to sanitize the found HTML of <code>&lt;script&gt;</code> and <code>&lt;style&gt;</code> tags.
+:param first: Whether or not to return just the first result.
+:param _encoding: The encoding format.</p>
+<p>If a sub-selector is specified (e.g. <code>//a/@href</code>), a simple
+list of results is returned.</p>
+<p>See W3School's <code>XPath Examples
+&lt;https://www.w3schools.com/xml/xpath_examples.asp&gt;</code>_
+for more details.</p>
+<p>If <code>first</code> is <code>True</code>, only returns the first
+:class:<code>Element &lt;Element&gt;</code> found.</p></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def xpath(self, selector, clean=False, first=False, _encoding=None):
+    &#34;&#34;&#34;Given an XPath selector, returns a list of
+    :class:`Element &lt;Element&gt;` objects or a single one.
+
+    :param selector: XPath Selector to use.
+    :param clean: Whether or not to sanitize the found HTML of ``&lt;script&gt;`` and ``&lt;style&gt;`` tags.
+    :param first: Whether or not to return just the first result.
+    :param _encoding: The encoding format.
+
+    If a sub-selector is specified (e.g. ``//a/@href``), a simple
+    list of results is returned.
+
+    See W3School&#39;s `XPath Examples
+    &lt;https://www.w3schools.com/xml/xpath_examples.asp&gt;`_
+    for more details.
+
+    If ``first`` is ``True``, only returns the first
+    :class:`Element &lt;Element&gt;` found.
+    &#34;&#34;&#34;
+    if not isinstance(selector, str):
+        raise TypeError(&#34;Expected string, got %r&#34; % type(selector))
+
+    selected = self.lxml.xpath(selector)
+
+    elements = [
+        Element(element=selection, default_encoding=_encoding or self.encoding)
+        if inspect.isclass(selection) and not issubclass(selection, str) else str(selection)
+        for selection in selected
+    ]
+
+    # Sanitize the found HTML.
+    if clean:
+        elements_copy = list(elements)
+        elements = []
+
+        for element in elements_copy:
+            element.raw_html = tostring(cleaner.clean_html(element.lxml))
+            elements.append(element)
+
+    if first and len(elements) &gt; 0:
+        return elements[0]
+    else:
+        return elements</code></pre>
+</details>
+</dd>
+</dl>
+</dd>
+</dl>
+</section>
+</article>
+<nav id="sidebar">
+<h1>Index</h1>
+<div class="toc">
+<ul></ul>
+</div>
+<ul id="index">
+<li><h3>Super-module</h3>
+<ul>
+<li><code><a title="pywebcopy" href="index.html">pywebcopy</a></code></li>
+</ul>
+</li>
+<li><h3><a href="#header-functions">Functions</a></h3>
+<ul class="">
+<li><code><a title="pywebcopy.parsers.iterparse" href="#pywebcopy.parsers.iterparse">iterparse</a></code></li>
+<li><code><a title="pywebcopy.parsers.links" href="#pywebcopy.parsers.links">links</a></code></li>
+<li><code><a title="pywebcopy.parsers.unquote_match" href="#pywebcopy.parsers.unquote_match">unquote_match</a></code></li>
+</ul>
+</li>
+<li><h3><a href="#header-classes">Classes</a></h3>
+<ul>
+<li>
+<h4><code><a title="pywebcopy.parsers.Element" href="#pywebcopy.parsers.Element">Element</a></code></h4>
+<ul class="">
+<li><code><a title="pywebcopy.parsers.Element.attrs" href="#pywebcopy.parsers.Element.attrs">attrs</a></code></li>
+</ul>
+</li>
+<li>
+<h4><code><a title="pywebcopy.parsers.MultiParser" href="#pywebcopy.parsers.MultiParser">MultiParser</a></code></h4>
+<ul class="two-column">
+<li><code><a title="pywebcopy.parsers.MultiParser.bs4" href="#pywebcopy.parsers.MultiParser.bs4">bs4</a></code></li>
+<li><code><a title="pywebcopy.parsers.MultiParser.decode" href="#pywebcopy.parsers.MultiParser.decode">decode</a></code></li>
+<li><code><a title="pywebcopy.parsers.MultiParser.decode_html" href="#pywebcopy.parsers.MultiParser.decode_html">decode_html</a></code></li>
+<li><code><a title="pywebcopy.parsers.MultiParser.encode" href="#pywebcopy.parsers.MultiParser.encode">encode</a></code></li>
+<li><code><a title="pywebcopy.parsers.MultiParser.encoding" href="#pywebcopy.parsers.MultiParser.encoding">encoding</a></code></li>
+<li><code><a title="pywebcopy.parsers.MultiParser.find" href="#pywebcopy.parsers.MultiParser.find">find</a></code></li>
+<li><code><a title="pywebcopy.parsers.MultiParser.full_text" href="#pywebcopy.parsers.MultiParser.full_text">full_text</a></code></li>
+<li><code><a title="pywebcopy.parsers.MultiParser.get" href="#pywebcopy.parsers.MultiParser.get">get</a></code></li>
+<li><code><a title="pywebcopy.parsers.MultiParser.get_forms" href="#pywebcopy.parsers.MultiParser.get_forms">get_forms</a></code></li>
+<li><code><a title="pywebcopy.parsers.MultiParser.html" href="#pywebcopy.parsers.MultiParser.html">html</a></code></li>
+<li><code><a title="pywebcopy.parsers.MultiParser.lxml" href="#pywebcopy.parsers.MultiParser.lxml">lxml</a></code></li>
+<li><code><a title="pywebcopy.parsers.MultiParser.post" href="#pywebcopy.parsers.MultiParser.post">post</a></code></li>
+<li><code><a title="pywebcopy.parsers.MultiParser.pq" href="#pywebcopy.parsers.MultiParser.pq">pq</a></code></li>
+<li><code><a title="pywebcopy.parsers.MultiParser.raw_html" href="#pywebcopy.parsers.MultiParser.raw_html">raw_html</a></code></li>
+<li><code><a title="pywebcopy.parsers.MultiParser.request" href="#pywebcopy.parsers.MultiParser.request">request</a></code></li>
+<li><code><a title="pywebcopy.parsers.MultiParser.search" href="#pywebcopy.parsers.MultiParser.search">search</a></code></li>
+<li><code><a title="pywebcopy.parsers.MultiParser.search_all" href="#pywebcopy.parsers.MultiParser.search_all">search_all</a></code></li>
+<li><code><a title="pywebcopy.parsers.MultiParser.submit_form" href="#pywebcopy.parsers.MultiParser.submit_form">submit_form</a></code></li>
+<li><code><a title="pywebcopy.parsers.MultiParser.text" href="#pywebcopy.parsers.MultiParser.text">text</a></code></li>
+<li><code><a title="pywebcopy.parsers.MultiParser.xpath" href="#pywebcopy.parsers.MultiParser.xpath">xpath</a></code></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</nav>
+</main>
+<footer id="footer">
+<p>Generated by <a href="https://pdoc3.github.io/pdoc" title="pdoc: Python API documentation generator"><cite>pdoc</cite> 0.10.0</a>.</p>
+</footer>
+</body>
+</html>

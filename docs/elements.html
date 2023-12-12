@@ -1,0 +1,2578 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, minimum-scale=1" />
+<meta name="generator" content="pdoc 0.10.0" />
+<title>pywebcopy.elements API documentation</title>
+<meta name="description" content="" />
+<link rel="preload stylesheet" as="style" href="https://cdnjs.cloudflare.com/ajax/libs/10up-sanitize.css/11.0.1/sanitize.min.css" integrity="sha256-PK9q560IAAa6WVRRh76LtCaI8pjTJ2z11v0miyNNjrs=" crossorigin>
+<link rel="preload stylesheet" as="style" href="https://cdnjs.cloudflare.com/ajax/libs/10up-sanitize.css/11.0.1/typography.min.css" integrity="sha256-7l/o7C8jubJiy74VsKTidCy1yBkRtiUGbVkYBylBqUg=" crossorigin>
+<link rel="stylesheet preload" as="style" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/10.1.1/styles/github.min.css" crossorigin>
+<style>:root{--highlight-color:#fe9}.flex{display:flex !important}body{line-height:1.5em}#content{padding:20px}#sidebar{padding:30px;overflow:hidden}#sidebar > *:last-child{margin-bottom:2cm}.http-server-breadcrumbs{font-size:130%;margin:0 0 15px 0}#footer{font-size:.75em;padding:5px 30px;border-top:1px solid #ddd;text-align:right}#footer p{margin:0 0 0 1em;display:inline-block}#footer p:last-child{margin-right:30px}h1,h2,h3,h4,h5{font-weight:300}h1{font-size:2.5em;line-height:1.1em}h2{font-size:1.75em;margin:1em 0 .50em 0}h3{font-size:1.4em;margin:25px 0 10px 0}h4{margin:0;font-size:105%}h1:target,h2:target,h3:target,h4:target,h5:target,h6:target{background:var(--highlight-color);padding:.2em 0}a{color:#058;text-decoration:none;transition:color .3s ease-in-out}a:hover{color:#e82}.title code{font-weight:bold}h2[id^="header-"]{margin-top:2em}.ident{color:#900}pre code{background:#f8f8f8;font-size:.8em;line-height:1.4em}code{background:#f2f2f1;padding:1px 4px;overflow-wrap:break-word}h1 code{background:transparent}pre{background:#f8f8f8;border:0;border-top:1px solid #ccc;border-bottom:1px solid #ccc;margin:1em 0;padding:1ex}#http-server-module-list{display:flex;flex-flow:column}#http-server-module-list div{display:flex}#http-server-module-list dt{min-width:10%}#http-server-module-list p{margin-top:0}.toc ul,#index{list-style-type:none;margin:0;padding:0}#index code{background:transparent}#index h3{border-bottom:1px solid #ddd}#index ul{padding:0}#index h4{margin-top:.6em;font-weight:bold}@media (min-width:200ex){#index .two-column{column-count:2}}@media (min-width:300ex){#index .two-column{column-count:3}}dl{margin-bottom:2em}dl dl:last-child{margin-bottom:4em}dd{margin:0 0 1em 3em}#header-classes + dl > dd{margin-bottom:3em}dd dd{margin-left:2em}dd p{margin:10px 0}.name{background:#eee;font-weight:bold;font-size:.85em;padding:5px 10px;display:inline-block;min-width:40%}.name:hover{background:#e0e0e0}dt:target .name{background:var(--highlight-color)}.name > span:first-child{white-space:nowrap}.name.class > span:nth-child(2){margin-left:.4em}.inherited{color:#999;border-left:5px solid #eee;padding-left:1em}.inheritance em{font-style:normal;font-weight:bold}.desc h2{font-weight:400;font-size:1.25em}.desc h3{font-size:1em}.desc dt code{background:inherit}.source summary,.git-link-div{color:#666;text-align:right;font-weight:400;font-size:.8em;text-transform:uppercase}.source summary > *{white-space:nowrap;cursor:pointer}.git-link{color:inherit;margin-left:1em}.source pre{max-height:500px;overflow:auto;margin:0}.source pre code{font-size:12px;overflow:visible}.hlist{list-style:none}.hlist li{display:inline}.hlist li:after{content:',\2002'}.hlist li:last-child:after{content:none}.hlist .hlist{display:inline;padding-left:1em}img{max-width:100%}td{padding:0 .5em}.admonition{padding:.1em .5em;margin-bottom:1em}.admonition-title{font-weight:bold}.admonition.note,.admonition.info,.admonition.important{background:#aef}.admonition.todo,.admonition.versionadded,.admonition.tip,.admonition.hint{background:#dfd}.admonition.warning,.admonition.versionchanged,.admonition.deprecated{background:#fd4}.admonition.error,.admonition.danger,.admonition.caution{background:lightpink}</style>
+<style media="screen and (min-width: 700px)">@media screen and (min-width:700px){#sidebar{width:30%;height:100vh;overflow:auto;position:sticky;top:0}#content{width:70%;max-width:100ch;padding:3em 4em;border-left:1px solid #ddd}pre code{font-size:1em}.item .name{font-size:1em}main{display:flex;flex-direction:row-reverse;justify-content:flex-end}.toc ul ul,#index ul{padding-left:1.5em}.toc > ul > li{margin-top:.5em}}</style>
+<style media="print">@media print{#sidebar h1{page-break-before:always}.source{display:none}}@media print{*{background:transparent !important;color:#000 !important;box-shadow:none !important;text-shadow:none !important}a[href]:after{content:" (" attr(href) ")";font-size:90%}a[href][title]:after{content:none}abbr[title]:after{content:" (" attr(title) ")"}.ir a:after,a[href^="javascript:"]:after,a[href^="#"]:after{content:""}pre,blockquote{border:1px solid #999;page-break-inside:avoid}thead{display:table-header-group}tr,img{page-break-inside:avoid}img{max-width:100% !important}@page{margin:0.5cm}p,h2,h3{orphans:3;widows:3}h1,h2,h3,h4,h5,h6{page-break-after:avoid}}</style>
+<script defer src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/10.1.1/highlight.min.js" integrity="sha256-Uv3H6lx7dJmRfRvH8TH6kJD1TSK1aFcwgx+mdg3epi8=" crossorigin></script>
+<script>window.addEventListener('DOMContentLoaded', () => hljs.initHighlighting())</script>
+</head>
+<body>
+<main>
+<article id="content">
+<header>
+<h1 class="title">Module <code>pywebcopy.elements</code></h1>
+</header>
+<section id="section-intro">
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python"># Copyright 2020; Raja Tomar
+# See license for more details
+import errno
+import logging
+import os
+import re
+import warnings
+from base64 import b64encode
+from contextlib import closing
+from datetime import datetime
+from functools import partial
+from io import BytesIO
+from shutil import copyfileobj
+from textwrap import dedent
+
+from lxml.html import HtmlComment
+from lxml.html import tostring
+from six import binary_type
+from six import string_types
+from six.moves.urllib.request import pathname2url
+
+from .__version__ import __version__
+from .helpers import cached_property
+from .parsers import iterparse
+from .parsers import unquote_match
+from .urls import get_content_type_from_headers
+from .urls import relate
+
+logger = logging.getLogger(__name__)
+
+#: Binary file permission mode
+fd_mode = 0o777
+#: Binary file flags for kernel based io
+fd_flags = os.O_CREAT | os.O_WRONLY
+if hasattr(os, &#39;O_BINARY&#39;):
+    fd_flags |= os.O_BINARY
+if hasattr(os, &#39;O_NOFOLLOW&#39;):
+    fd_flags |= os.O_NOFOLLOW
+
+
+def make_fd(location, url=None, overwrite=False):
+    &#34;&#34;&#34;Creates a kernel based file descriptor which should be used
+    to write binary data onto the files.
+
+    :rtype: int
+    &#34;&#34;&#34;
+    location = os.path.normpath(location)
+    # Sub-directories creation which suppresses exceptions
+    base_dir = os.path.dirname(location)
+    try:
+        os.makedirs(base_dir)
+    except (OSError, IOError) as e:
+        if e.errno == errno.EEXIST or ((os.name == &#39;nt&#39; and os.path.isdir(
+                base_dir) and os.access(base_dir, os.W_OK))):
+            logger.debug(
+                &#34;[FILE] Sub-directories exists for: &lt;%r&gt;&#34; % location)
+        # dead on arrival
+        else:
+            logger.error(
+                &#34;[File] Failed to create target location &lt;%r&gt; &#34;
+                &#34;for the file &lt;%r&gt; on the disk.&#34; % (location, url))
+            return -1
+    else:
+        logger.debug(
+            &#34;[File] Sub-directories created for: &lt;%r&gt;&#34; % location)
+    try:
+
+        # sys.audit(&#34;%s.resource&#34; % __title__, location)
+        # sys.audit(&#34;os.open&#34;, location)
+        if overwrite:
+            fd = os.open(location, fd_flags | os.O_TRUNC, fd_mode)
+        else:
+            # raises FileExistsError if file exists
+            fd = os.open(location, fd_flags | os.O_EXCL, fd_mode)
+
+    except (OSError, IOError) as e:
+        if e.errno == errno.EEXIST:
+            logger.debug(
+                &#34;[FILE] &lt;%s&gt; already exists at: &lt;%s&gt;&#34; % (url, location))
+        elif e.errno == errno.ENAMETOOLONG:
+            logger.debug(
+                &#34;[FILE] Path too long for &lt;%s&gt; at: &lt;%s&gt;&#34; % (url, location))
+        else:
+            logger.error(
+                &#34;[File] Cannot write &lt;%s&gt; to &lt;%s&gt;! %r&#34; % (url, location, e))
+        return -1
+    else:
+        return fd
+
+
+def retrieve_resource(content, location, url=None, overwrite=False):
+    &#34;&#34;&#34;Retrieves the readable resource to a local file.
+
+    ..todo::
+        Add overwrite modes: Overwrite or True, Update, Ignore or False
+
+    :param BytesIO content: file like object with read method
+    :param location: file name where this content has to be saved.
+    :param url: (optional) url of the resource used for logging purposes.
+    :param overwrite: (optional) whether to overwrite an existing file.
+    :return: rendered location or False if failed.
+    :rtype: string_types
+    &#34;&#34;&#34;
+    if content is None:
+        raise ValueError(&#34;Content can&#39;t be of NoneType.&#34;)
+    if location is None:
+        raise ValueError(&#34;Location can&#39;t be of NoneType or empty str.&#34;)
+    if url is None:
+        raise ValueError(&#34;Url can&#39;t be of NoneType.&#34;)
+
+    logger.debug(
+        &#34;[File] Preparing to write file from &lt;%r&gt; to the disk at &lt;%r&gt;.&#34;
+        % (url, location))
+
+    fd = make_fd(location, url, overwrite)
+    if fd == -1:
+        return location
+
+    with closing(os.fdopen(fd, &#39;w+b&#39;)) as dst:
+        copyfileobj(content, dst)
+
+    logger.info(
+        &#34;[File] Written the file from &lt;%s&gt; to &lt;%s&gt;&#34; % (url, location))
+    return location
+
+
+def urlretrieve(url, location, **params):
+    &#34;&#34;&#34;
+    A extra rewrite of a basic `urllib` function using the
+    tweaks and perks of this library.
+
+    :param url: url of the resource to be retrieved.
+    :param location: destination for the resource.
+    :param params: parameters for the :func:`requests.get`.
+    :return: location of the file retrieved.
+    :rtype: string_types
+    &#34;&#34;&#34;
+    if not isinstance(url, string_types):
+        raise TypeError(&#34;Expected string type, got %r&#34; % url)
+    if not isinstance(location, string_types):
+        raise TypeError(&#34;Expected string type, got %r&#34; % location)
+
+    import requests
+    with closing(requests.get(url, **params)) as src:
+        return retrieve_resource(
+            src.raw, location, url, overwrite=True)
+
+
+class GenericResource(object):
+    def __init__(self, session, config, scheduler, context, response=None):
+        &#34;&#34;&#34;
+        Generic internet resource which processes a server response based on responses
+        content-type. Downloadable file if allowed in config would be downloaded. Css
+        file would be parsed using suitable parser. Html will also be parsed using
+        suitable html parser.
+
+        :param session: http client used for networking.
+        :param config: project configuration handler.
+        :param response: http response from the server.
+        :param scheduler: response processor scheduler.
+        :param context: context of this response; should contain base-location, base-url etc.
+        &#34;&#34;&#34;
+        self.session = session
+        self.config = config
+        self.scheduler = scheduler
+        self.context = context
+        self.response = None
+        if response:
+            self.set_response(response)
+        self.logger = logger.getChild(self.__class__.__name__)
+
+    def __repr__(self):
+        return &#39;&lt;%s(url=%s)&gt;&#39; % (self.__class__.__name__, self.context.url)
+
+    def __del__(self):
+        self.close()
+
+    def close(self):
+        &#34;&#34;&#34;Releases the underlying urllib connection and
+        then deletes the response&#34;&#34;&#34;
+        if self.response is not None:
+            if hasattr(self.response, &#39;raw&#39;):
+                if hasattr(self.response.raw, &#39;release_conn&#39;):
+                    getattr(self.response, &#39;raw&#39;).release_conn()
+            del self.response
+
+    @cached_property
+    def filepath(self):
+        &#34;&#34;&#34;Returns if available a valid filepath
+         where this file should be written.&#34;&#34;&#34;
+        if self.context is None:
+            raise AttributeError(&#34;Context attribute is not set.&#34;)
+        if self.response is not None:
+            ctypes = get_content_type_from_headers(self.response.headers)
+            self.context = self.context.with_values(content_type=ctypes)
+        return self.context.resolve()
+
+    @cached_property
+    def filename(self):
+        &#34;&#34;&#34;Returns a valid filename of this resource if available.&#34;&#34;&#34;
+        return os.path.basename(self.filepath or &#39;&#39;)
+
+    @cached_property
+    def content_type(self):
+        &#34;&#34;&#34;Returns a mimetype descriptor of this resource if available.&#34;&#34;&#34;
+        if self.response is not None and &#39;Content-Type&#39; in self.response.headers:
+            return get_content_type_from_headers(self.response.headers)
+        return &#39;&#39;
+
+    @cached_property
+    def url(self):
+        &#34;&#34;&#34;Returns the actual url of this resource which is resolved if
+        there were any redirects.&#34;&#34;&#34;
+        if self.response is not None:
+            self.context = self.context.with_values(url=self.response.url)
+        return self.context.url
+
+    @cached_property
+    def encoding(self):
+        &#34;&#34;&#34;Returns an explicit encoding if defined in the config else
+        the encoding reported by the server.&#34;&#34;&#34;
+        if self.response is not None:
+            #: Explicit encoding takes precedence
+            return self.config.get(
+                &#39;encoding&#39;, self.response.encoding or &#39;ascii&#39;)
+        return self.config.get(&#39;encoding&#39;, &#39;ascii&#39;)
+
+    html_content_types = tuple([
+        &#39;text/htm&#39;,
+        &#39;text/html&#39;,
+        &#39;text/xhtml&#39;
+    ])
+    # html_content_types.__doc__ = &#34;Set of valid html mimetypes.&#34;
+
+    def viewing_html(self):
+        &#34;&#34;&#34;Checks whether the current resource is a html type or not.&#34;&#34;&#34;
+        return self.content_type in self.html_content_types
+
+    css_content_types = tuple([
+        &#39;text/css&#39;,
+    ])
+    # css_content_types.__doc__ = &#34;Set of valid css mimetypes.&#34;
+
+    def viewing_css(self):
+        &#34;&#34;&#34;Checks whether the current resource is a css type or not.&#34;&#34;&#34;
+        return self.content_type in self.css_content_types
+
+    js_content_types = tuple([
+        &#39;text/javascript&#39;,
+        &#39;application/javascript&#39;
+    ])
+    # js_content_types.__doc__ = &#34;Set of valid javascript mimetypes.&#34;
+
+    def viewing_js(self):
+        &#34;&#34;&#34;Checks whether the current resource is a javascript type or not.&#34;&#34;&#34;
+        return self.content_type in self.js_content_types
+
+    def set_response(self, response):
+        &#34;&#34;&#34;Update the response attribute of this object.
+
+        It also updates the content_type and encoding as reported by the
+        server implicitly for better detection of contents.&#34;&#34;&#34;
+        self.response = response
+
+        #: Clear the cached properties
+        self.__dict__.pop(&#39;url&#39;, None)
+        self.__dict__.pop(&#39;filepath&#39;, None)
+        self.__dict__.pop(&#39;filename&#39;, None)
+        if hasattr(response, &#39;ok&#39;) and response.ok:
+            self.__dict__.pop(&#39;content_type&#39;, None)
+            self.__dict__.pop(&#39;encoding&#39;, None)
+            self.context = self.context.with_values(
+                url=response.url,
+                content_type=self.content_type)
+
+    def request(self, method, url, **params):
+        &#34;&#34;&#34;Fetches the Html content from Internet using the requests.
+        You can any requests params which will be passed to the library
+        itself.
+        The requests arguments you supply will also be applied to the
+        global session meaning all the files will be downloaded using these
+        settings.
+
+        :param method: http verb for transport.
+        :param url: url of the page to fetch
+        :param params: keyword arguments which `requests` module may accept.
+        &#34;&#34;&#34;
+        if params.pop(&#39;stream&#39;, None):
+            warnings.warn(UserWarning(
+                &#34;Stream attribute is True by default for reasons.&#34;
+            ))
+        self.set_response(
+            self.session.request(method, url, stream=True, **params))
+
+    def get(self, url, **params):
+        &#34;&#34;&#34;Initiates an `get` request for the given url.
+        It uses the `.set_response()` method underneath to
+        process the returned response.
+        It is used to manually fetch the starting web-page.
+
+        Example:
+            wp = WebPage()
+            wp.get(&#39;http://www.example.com/&#39;)
+            wp.retrieve()
+        &#34;&#34;&#34;
+        return self.request(&#39;GET&#39;, url, **params)
+
+    def post(self, url, **params):
+        &#34;&#34;&#34;Initiates an `post` request for the given url.
+        It uses the `.set_response()` method underneath to
+        process the returned response.
+        It is required to submit forms.
+
+        Example:
+            wp = WebPage()
+            wp.post(&#39;http://www.example.com/&#39;, data={&#39;key&#39;: &#39;value&#39;})
+            wp.retrieve()
+        &#34;&#34;&#34;
+        return self.request(&#39;POST&#39;, url, **params)
+
+    def get_source(self, buffered=False):
+        &#34;&#34;&#34;
+        Returns a tuple with the response contents in either file-like object
+        i.e. `RewindableResponse` if `buffered=True` or string format
+        if ` buffered=False` and the encoding from the `.encoding` attribute.
+
+        Example:
+            wp.get(url=...)
+            wp.get_source(buffered=False)
+            &#34;&lt;html&gt;&lt;head&gt;&lt;/head&gt;&lt;body&gt;...&lt;/body&gt;&lt;/html&gt;&#34;
+            wp.get_source(buffered=True)
+            &#34;&lt;RewindableResponse(url=...)&gt;&#34;
+
+        Note:
+            An Error would be raised if the `.context` attribute is not set.
+            or the `.response` attribute is not set.
+
+        :rtype: string_types | RewindableResponse
+        &#34;&#34;&#34;
+        if self.context is None:
+            raise ValueError(&#34;Context not set.&#34;)
+        if self.context.base_path is None:
+            raise ValueError(&#34;Context Base Path is not set!&#34;)
+        if self.context.base_url is None:
+            raise ValueError(&#34;Context Base url is not Set!&#34;)
+        if self.response is None:
+            raise ValueError(&#34;Response attribute is not Set!&#34;)
+        if getattr(self.response.raw, &#39;closed&#39;, True):
+            raise ValueError(
+                &#34;I/O operations closed on the response object.&#34;)
+        if not hasattr(self.response.raw, &#39;read&#39;):
+            raise ValueError(
+                &#34;Response must have a raw file like object!&#34;)
+
+        self.response.raw.decode_content = True
+        if buffered:
+            return self.response.raw, self.encoding
+        return self.response.content, self.encoding
+
+    def retrieve(self):
+        &#34;&#34;&#34;Retrieves the readable resource to the local disk.&#34;&#34;&#34;
+        if self.response is None:
+            raise AttributeError(
+                &#34;Response attribute is not set!&#34;
+                &#34;You need to fetch the resource using get method!&#34;
+            )
+        # XXX: Validate resource here?
+        return self._retrieve()
+
+    def _retrieve(self):
+        #: Not ok response received from the server
+        if not 100 &lt;= self.response.status_code &lt;= 400:
+            self.logger.error(
+                &#39;Status Code [&lt;%d&gt;] received from the server [%s]&#39;
+                % (self.response.status_code, self.response.url)
+            )
+            if isinstance(self.response.reason, binary_type):
+                content = BytesIO(self.response.reason)
+            else:
+                content = BytesIO(self.response.reason.encode(self.encoding))
+        else:
+            if not hasattr(self.response, &#39;raw&#39;):
+                self.logger.error(
+                    &#34;Response object for url &lt;%s&gt; has no attribute &#39;raw&#39;!&#34;
+                    % self.url)
+                content = BytesIO(self.response.content)
+            else:
+                content = self.response.raw
+
+        retrieve_resource(
+            content, self.filepath, self.context.url, self.config.get(&#39;overwrite&#39;))
+        del content
+        return self.filepath
+
+    def resolve(self, parent_path=None):
+        &#34;&#34;&#34;Returns a relative url at which this resource should be accessed
+        by the parent file.
+        &#34;&#34;&#34;
+        filepath = self.filepath
+        if not isinstance(filepath, string_types):
+            raise ValueError(&#34;Invalid filepath [%r]&#34; % filepath)
+        if parent_path and isinstance(parent_path, string_types):
+            return pathname2url(relate(filepath, parent_path))
+        return pathname2url(filepath)
+
+
+class HTMLResource(GenericResource):
+    &#34;&#34;&#34;Interpreter for resource written in or reported as html.&#34;&#34;&#34;
+
+    def parse(self, **kwargs):
+        &#34;&#34;&#34;Returns an `pywebcopy.parsers.iterparse` instance with
+        the file-object returned from the `.get_source(buffered=True)`.
+
+        :params kwargs: options to be passed to the `iterparse`.
+        &#34;&#34;&#34;
+        source, encoding = self.get_source(buffered=True)
+        return iterparse(
+            source, encoding, include_meta_charset_tag=True, **kwargs)
+
+    def extract_children(self, parsing_buffer):
+        &#34;&#34;&#34;
+        Iterates over the `pywebcopy.parsers.iterparse` object and
+        extract the elements which are handed over to the `scheduler`
+        for processing. Then the final path of the element is updated
+        in the `pywebcopy.parsers.iterparse` object.
+
+        :param parsing_buffer: `iterparse` object.
+        &#34;&#34;&#34;
+        location = self.filepath
+
+        for elem, attr, url, pos in parsing_buffer:
+            if not self.scheduler.validate_url(url):
+                continue
+
+            sub_context = self.context.create_new_from_url(url)
+            ans = self.scheduler.get_handler(
+                elem.tag,
+                self.session, self.config, self.scheduler, sub_context)
+            self.scheduler.handle_resource(ans)
+            resolved = ans.resolve(location)
+            elem.replace_url(url, resolved, attr, pos)
+
+        return parsing_buffer
+
+    def _retrieve(self):
+        if not self.viewing_html():
+            self.logger.info(
+                &#34;Resource of type [%s] is not HTML.&#34; % self.content_type)
+            return super(HTMLResource, self)._retrieve()
+
+        if not self.response.ok:
+            self.logger.debug(
+                &#34;Resource at [%s] is NOT ok and will be NOT processed.&#34; % self.url)
+            return super(HTMLResource, self)._retrieve()
+
+        context = self.extract_children(self.parse())
+
+        # WaterMarking :)
+        context.root.insert(0, HtmlComment(self._get_watermark()))
+
+        retrieve_resource(
+            BytesIO(tostring(context.root, include_meta_content_type=True)),
+            self.filepath, self.context.url, overwrite=True)
+
+        self.logger.debug(&#39;Retrieved content from the url: [%s]&#39; % self.url)
+        del context
+        return self.filepath
+
+    def _get_watermark(self):
+        # comment text should be in unicode
+        return dedent(&#34;&#34;&#34;
+        * PyWebCopy Engine [version %s]
+        * Copyright 2020; Raja Tomar
+        * File mirrored from [%s]
+        * At UTC datetime: [%s]
+        &#34;&#34;&#34;) % (__version__, self.response.url, datetime.utcnow())
+
+
+class CSSResource(GenericResource):
+    def parse(self):
+        &#34;&#34;&#34;Returns the `.get_source(buffered=False)`.&#34;&#34;&#34;
+        return self.get_source(buffered=False)
+
+    def repl(self, match, encoding=None, fmt=None):
+        &#34;&#34;&#34;
+        Schedules the linked files for downloading then resolves their references.
+        &#34;&#34;&#34;
+        fmt = fmt or &#39;%s&#39;
+
+        url, _ = unquote_match(match.group(1).decode(encoding), match.start(1))
+        self.logger.debug(&#34;Sub-Css resource found: [%s]&#34; % url)
+
+        if not self.scheduler.validate_url(url):
+            return url.encode(encoding)
+
+        sub_context = self.context.create_new_from_url(url)
+        self.logger.debug(&#39;Creating context for url: %s as %s&#39; % (url, sub_context))
+        ans = self.__class__(
+            self.session, self.config, self.scheduler, sub_context
+        )
+        # self.children.add(ans)
+        self.logger.debug(&#34;Submitting resource: [%s] to the scheduler.&#34; % url)
+        self.scheduler.handle_resource(ans)
+        re_enc = (fmt % ans.resolve(self.filepath)).encode(encoding)
+        self.logger.debug(&#34;Re-encoded the resource: [%s] as [%r]&#34; % (url, re_enc))
+        return re_enc
+
+    # noinspection PyTypeChecker
+    def extract_children(self, parsing_buffer):
+        &#34;&#34;&#34;
+        Runs the regex over the source to find the urls that are linked
+        within the css file or style tag using the `url()` construct.
+        &#34;&#34;&#34;
+        source, encoding = parsing_buffer
+        source = re.sub(
+            (r&#39;url\((&#39; + &#39;[&#34;][^&#34;]*[&#34;]|&#39; + &#34;[&#39;][^&#39;]*[&#39;]|&#34; + r&#39;[^)]*)\)&#39;).encode(encoding),
+            partial(self.repl, encoding=encoding, fmt=&#34;url(&#39;%s&#39;)&#34;),
+            source, flags=re.IGNORECASE
+        )
+        source = re.sub(
+            r&#39;@import &#34;(.*?)&#34;&#39;.encode(encoding),
+            partial(self.repl, encoding=encoding, fmt=&#39;&#34;%s&#34;&#39;),
+            source, flags=re.IGNORECASE
+        )
+        return BytesIO(source)
+
+    def _retrieve(self):
+        &#34;&#34;&#34;Writes the modified buffer to the disk.&#34;&#34;&#34;
+        if not self.viewing_css():
+            self.logger.info(
+                &#34;Resource of type [%s] is not CSS.&#34; % self.content_type)
+            return super(CSSResource, self)._retrieve()
+
+        if not self.response.ok:
+            self.logger.debug(
+                &#34;Resource at [%s] is NOT ok and will be NOT processed.&#34; % self.url)
+            return super(CSSResource, self)._retrieve()
+
+        self.logger.debug(
+            &#34;Resource at [%s] is ok and will be processed.&#34; % self.url)
+        retrieve_resource(
+            self.extract_children(self.parse()),
+            self.filepath, self.url, self.config.get(&#39;overwrite&#39;)
+        )
+        self.logger.debug(&#34;Finished processing resource [%s]&#34; % self.url)
+        return self.filepath
+
+
+class JSResource(GenericResource):
+    def parse(self):
+        &#34;&#34;&#34;Returns the `.get_source(buffered=False)`.&#34;&#34;&#34;
+        return self.get_source(buffered=False)
+
+    def repl(self, match, encoding=None, fmt=None):
+        &#34;&#34;&#34;
+        Schedules the linked files for downloading then resolves their references.
+        &#34;&#34;&#34;
+        fmt = fmt or &#39;%s&#39;
+
+        url, _ = unquote_match(match.group(1).decode(encoding), match.start(1))
+        self.logger.debug(&#34;Sub-JS resource found: [%s]&#34; % url)
+
+        if not self.scheduler.validate_url(url):
+            return url.encode(encoding)
+
+        sub_context = self.context.create_new_from_url(url)
+        self.logger.debug(&#39;Creating context for url: %s as %s&#39; % (url, sub_context))
+        ans = self.__class__(
+            self.session, self.config, self.scheduler, sub_context
+        )
+        # self.children.add(ans)
+        self.logger.debug(&#34;Submitting resource: [%s] to the scheduler.&#34; % url)
+        self.scheduler.handle_resource(ans)
+        re_enc = (fmt % ans.resolve(self.filepath)).encode(encoding)
+        self.logger.debug(&#34;Re-encoded the resource: [%s] as [%r]&#34; % (url, re_enc))
+        return re_enc
+
+    # noinspection PyTypeChecker
+    def extract_children(self, parsing_buffer):
+        &#34;&#34;&#34;
+        Runs the regex over the source to find the urls that are linked
+        within the js file or script tag using the `url()` construct.
+
+        ..todo::
+            It only recognises one type of url inside of the js.
+            i.e. `url(&#39;example.com&#39;)`. Make it universal.
+        &#34;&#34;&#34;
+        source, encoding = parsing_buffer
+        # P.S. There is one interesting Regex on this github repo under MIT license
+        # https://github.com/GerbenJavado/LinkFinder/
+        source = re.sub(
+            (r&#39;url\((&#39; + &#39;[&#34;][^&#34;]*[&#34;]|&#39; + &#34;[&#39;][^&#39;]*[&#39;]|&#34; + r&#39;[^)]*)\)&#39;
+             ).encode(encoding),
+            partial(
+                self.repl, encoding=encoding, fmt=&#39;url(&#34;%s&#34;)&#39;
+            ), source, flags=re.IGNORECASE
+        )
+        return BytesIO(source)
+
+    def _retrieve(self):
+        &#34;&#34;&#34;Writes the modified buffer to the disk.&#34;&#34;&#34;
+        if not self.viewing_js():
+            self.logger.info(&#34;Resource of type [%s] is not JS.&#34; % self.content_type)
+            return super(JSResource, self)._retrieve()
+
+        if not self.response.ok:
+            self.logger.debug(&#34;Resource at [%s] is NOT ok and will be NOT processed.&#34; % self.url)
+            return super(JSResource, self)._retrieve()
+
+        self.logger.debug(&#34;Resource at [%s] is ok and will be processed.&#34; % self.url)
+        retrieve_resource(
+            self.extract_children(self.parse()),
+            self.filepath, self.url, self.config.get(&#39;overwrite&#39;)
+        )
+        self.logger.debug(&#34;Finished processing resource [%s]&#34; % self.url)
+        return self.filepath
+
+
+class GenericOnlyResource(GenericResource):
+    &#34;&#34;&#34;Only retrieves a resource if it is NOT HTML.&#34;&#34;&#34;
+
+    def _retrieve(self):
+        if self.viewing_html():
+            self.logger.debug(&#34;Resource [%s] is of HTML type and must not be processed!&#34; % self.url)
+            return False
+        return super(GenericOnlyResource, self)._retrieve()
+
+    def resolve(self, parent_path=None):
+        if self.viewing_html():
+            return self.context.url
+        return super(GenericOnlyResource, self).resolve(parent_path=parent_path)
+
+
+class VoidResource(GenericResource):
+    def get(self, url, **params):
+        return None
+
+    def get_source(self, buffered=False):
+        return None
+
+    def retrieve(self):
+        return None
+
+
+# :)
+NullResource = VoidResource
+
+
+class UrlRemover(VoidResource):
+    def resolve(self, parent_path=None):
+        return &#39;#&#39;
+
+
+class AbsoluteUrlResource(VoidResource):
+    def resolve(self, parent_path=None):
+        return self.context.url
+
+
+class Base64Resource(GenericResource):
+    def resolve(self, parent_path=None):
+        source, encoding = self.get_source()
+        import sys
+        if sys.version &gt; &#39;3&#39;:
+            if type(source) is bytes:
+                return &#39;data:%s;base64,%s&#39; % (self.content_type, bytes.decode(b64encode(source)))
+            else:
+                return &#39;data:%s;base64,%s&#39; % (self.content_type, bytes.decode(b64encode(str.encode(source, encoding))))
+        else:
+            return &#39;data:%s;base64,%s&#39; % (self.content_type, b64encode(source))
+
+    def retrieve(self):
+        #: There are no sub-files to be fetched.
+        return None</code></pre>
+</details>
+</section>
+<section>
+</section>
+<section>
+<h2 class="section-title" id="header-variables">Global variables</h2>
+<dl>
+<dt id="pywebcopy.elements.fd_flags"><code class="name">var <span class="ident">fd_flags</span></code></dt>
+<dd>
+<div class="desc"><p>Binary file flags for kernel based io</p></div>
+</dd>
+<dt id="pywebcopy.elements.fd_mode"><code class="name">var <span class="ident">fd_mode</span></code></dt>
+<dd>
+<div class="desc"><p>Binary file permission mode</p></div>
+</dd>
+</dl>
+</section>
+<section>
+<h2 class="section-title" id="header-functions">Functions</h2>
+<dl>
+<dt id="pywebcopy.elements.make_fd"><code class="name flex">
+<span>def <span class="ident">make_fd</span></span>(<span>location, url=None, overwrite=False)</span>
+</code></dt>
+<dd>
+<div class="desc"><p>Creates a kernel based file descriptor which should be used
+to write binary data onto the files.</p>
+<p>:rtype: int</p></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def make_fd(location, url=None, overwrite=False):
+    &#34;&#34;&#34;Creates a kernel based file descriptor which should be used
+    to write binary data onto the files.
+
+    :rtype: int
+    &#34;&#34;&#34;
+    location = os.path.normpath(location)
+    # Sub-directories creation which suppresses exceptions
+    base_dir = os.path.dirname(location)
+    try:
+        os.makedirs(base_dir)
+    except (OSError, IOError) as e:
+        if e.errno == errno.EEXIST or ((os.name == &#39;nt&#39; and os.path.isdir(
+                base_dir) and os.access(base_dir, os.W_OK))):
+            logger.debug(
+                &#34;[FILE] Sub-directories exists for: &lt;%r&gt;&#34; % location)
+        # dead on arrival
+        else:
+            logger.error(
+                &#34;[File] Failed to create target location &lt;%r&gt; &#34;
+                &#34;for the file &lt;%r&gt; on the disk.&#34; % (location, url))
+            return -1
+    else:
+        logger.debug(
+            &#34;[File] Sub-directories created for: &lt;%r&gt;&#34; % location)
+    try:
+
+        # sys.audit(&#34;%s.resource&#34; % __title__, location)
+        # sys.audit(&#34;os.open&#34;, location)
+        if overwrite:
+            fd = os.open(location, fd_flags | os.O_TRUNC, fd_mode)
+        else:
+            # raises FileExistsError if file exists
+            fd = os.open(location, fd_flags | os.O_EXCL, fd_mode)
+
+    except (OSError, IOError) as e:
+        if e.errno == errno.EEXIST:
+            logger.debug(
+                &#34;[FILE] &lt;%s&gt; already exists at: &lt;%s&gt;&#34; % (url, location))
+        elif e.errno == errno.ENAMETOOLONG:
+            logger.debug(
+                &#34;[FILE] Path too long for &lt;%s&gt; at: &lt;%s&gt;&#34; % (url, location))
+        else:
+            logger.error(
+                &#34;[File] Cannot write &lt;%s&gt; to &lt;%s&gt;! %r&#34; % (url, location, e))
+        return -1
+    else:
+        return fd</code></pre>
+</details>
+</dd>
+<dt id="pywebcopy.elements.retrieve_resource"><code class="name flex">
+<span>def <span class="ident">retrieve_resource</span></span>(<span>content, location, url=None, overwrite=False)</span>
+</code></dt>
+<dd>
+<div class="desc"><p>Retrieves the readable resource to a local file.</p>
+<div class="admonition todo">
+<p class="admonition-title">TODO</p>
+<p>Add overwrite modes: Overwrite or True, Update, Ignore or False</p>
+</div>
+<p>:param BytesIO content: file like object with read method
+:param location: file name where this content has to be saved.
+:param url: (optional) url of the resource used for logging purposes.
+:param overwrite: (optional) whether to overwrite an existing file.
+:return: rendered location or False if failed.
+:rtype: string_types</p></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def retrieve_resource(content, location, url=None, overwrite=False):
+    &#34;&#34;&#34;Retrieves the readable resource to a local file.
+
+    ..todo::
+        Add overwrite modes: Overwrite or True, Update, Ignore or False
+
+    :param BytesIO content: file like object with read method
+    :param location: file name where this content has to be saved.
+    :param url: (optional) url of the resource used for logging purposes.
+    :param overwrite: (optional) whether to overwrite an existing file.
+    :return: rendered location or False if failed.
+    :rtype: string_types
+    &#34;&#34;&#34;
+    if content is None:
+        raise ValueError(&#34;Content can&#39;t be of NoneType.&#34;)
+    if location is None:
+        raise ValueError(&#34;Location can&#39;t be of NoneType or empty str.&#34;)
+    if url is None:
+        raise ValueError(&#34;Url can&#39;t be of NoneType.&#34;)
+
+    logger.debug(
+        &#34;[File] Preparing to write file from &lt;%r&gt; to the disk at &lt;%r&gt;.&#34;
+        % (url, location))
+
+    fd = make_fd(location, url, overwrite)
+    if fd == -1:
+        return location
+
+    with closing(os.fdopen(fd, &#39;w+b&#39;)) as dst:
+        copyfileobj(content, dst)
+
+    logger.info(
+        &#34;[File] Written the file from &lt;%s&gt; to &lt;%s&gt;&#34; % (url, location))
+    return location</code></pre>
+</details>
+</dd>
+<dt id="pywebcopy.elements.urlretrieve"><code class="name flex">
+<span>def <span class="ident">urlretrieve</span></span>(<span>url, location, **params)</span>
+</code></dt>
+<dd>
+<div class="desc"><p>A extra rewrite of a basic <code>urllib</code> function using the
+tweaks and perks of this library.</p>
+<p>:param url: url of the resource to be retrieved.
+:param location: destination for the resource.
+:param params: parameters for the :func:<code>requests.get</code>.
+:return: location of the file retrieved.
+:rtype: string_types</p></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def urlretrieve(url, location, **params):
+    &#34;&#34;&#34;
+    A extra rewrite of a basic `urllib` function using the
+    tweaks and perks of this library.
+
+    :param url: url of the resource to be retrieved.
+    :param location: destination for the resource.
+    :param params: parameters for the :func:`requests.get`.
+    :return: location of the file retrieved.
+    :rtype: string_types
+    &#34;&#34;&#34;
+    if not isinstance(url, string_types):
+        raise TypeError(&#34;Expected string type, got %r&#34; % url)
+    if not isinstance(location, string_types):
+        raise TypeError(&#34;Expected string type, got %r&#34; % location)
+
+    import requests
+    with closing(requests.get(url, **params)) as src:
+        return retrieve_resource(
+            src.raw, location, url, overwrite=True)</code></pre>
+</details>
+</dd>
+</dl>
+</section>
+<section>
+<h2 class="section-title" id="header-classes">Classes</h2>
+<dl>
+<dt id="pywebcopy.elements.AbsoluteUrlResource"><code class="flex name class">
+<span>class <span class="ident">AbsoluteUrlResource</span></span>
+<span>(</span><span>session, config, scheduler, context, response=None)</span>
+</code></dt>
+<dd>
+<div class="desc"><p>Generic internet resource which processes a server response based on responses
+content-type. Downloadable file if allowed in config would be downloaded. Css
+file would be parsed using suitable parser. Html will also be parsed using
+suitable html parser.</p>
+<p>:param session: http client used for networking.
+:param config: project configuration handler.
+:param response: http response from the server.
+:param scheduler: response processor scheduler.
+:param context: context of this response; should contain base-location, base-url etc.</p></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">class AbsoluteUrlResource(VoidResource):
+    def resolve(self, parent_path=None):
+        return self.context.url</code></pre>
+</details>
+<h3>Ancestors</h3>
+<ul class="hlist">
+<li><a title="pywebcopy.elements.VoidResource" href="#pywebcopy.elements.VoidResource">VoidResource</a></li>
+<li><a title="pywebcopy.elements.GenericResource" href="#pywebcopy.elements.GenericResource">GenericResource</a></li>
+</ul>
+<h3>Inherited members</h3>
+<ul class="hlist">
+<li><code><b><a title="pywebcopy.elements.VoidResource" href="#pywebcopy.elements.VoidResource">VoidResource</a></b></code>:
+<ul class="hlist">
+<li><code><a title="pywebcopy.elements.VoidResource.close" href="#pywebcopy.elements.GenericResource.close">close</a></code></li>
+<li><code><a title="pywebcopy.elements.VoidResource.content_type" href="#pywebcopy.elements.GenericResource.content_type">content_type</a></code></li>
+<li><code><a title="pywebcopy.elements.VoidResource.encoding" href="#pywebcopy.elements.GenericResource.encoding">encoding</a></code></li>
+<li><code><a title="pywebcopy.elements.VoidResource.filename" href="#pywebcopy.elements.GenericResource.filename">filename</a></code></li>
+<li><code><a title="pywebcopy.elements.VoidResource.filepath" href="#pywebcopy.elements.GenericResource.filepath">filepath</a></code></li>
+<li><code><a title="pywebcopy.elements.VoidResource.get" href="#pywebcopy.elements.GenericResource.get">get</a></code></li>
+<li><code><a title="pywebcopy.elements.VoidResource.get_source" href="#pywebcopy.elements.GenericResource.get_source">get_source</a></code></li>
+<li><code><a title="pywebcopy.elements.VoidResource.post" href="#pywebcopy.elements.GenericResource.post">post</a></code></li>
+<li><code><a title="pywebcopy.elements.VoidResource.request" href="#pywebcopy.elements.GenericResource.request">request</a></code></li>
+<li><code><a title="pywebcopy.elements.VoidResource.resolve" href="#pywebcopy.elements.GenericResource.resolve">resolve</a></code></li>
+<li><code><a title="pywebcopy.elements.VoidResource.retrieve" href="#pywebcopy.elements.GenericResource.retrieve">retrieve</a></code></li>
+<li><code><a title="pywebcopy.elements.VoidResource.set_response" href="#pywebcopy.elements.GenericResource.set_response">set_response</a></code></li>
+<li><code><a title="pywebcopy.elements.VoidResource.url" href="#pywebcopy.elements.GenericResource.url">url</a></code></li>
+<li><code><a title="pywebcopy.elements.VoidResource.viewing_css" href="#pywebcopy.elements.GenericResource.viewing_css">viewing_css</a></code></li>
+<li><code><a title="pywebcopy.elements.VoidResource.viewing_html" href="#pywebcopy.elements.GenericResource.viewing_html">viewing_html</a></code></li>
+<li><code><a title="pywebcopy.elements.VoidResource.viewing_js" href="#pywebcopy.elements.GenericResource.viewing_js">viewing_js</a></code></li>
+</ul>
+</li>
+</ul>
+</dd>
+<dt id="pywebcopy.elements.Base64Resource"><code class="flex name class">
+<span>class <span class="ident">Base64Resource</span></span>
+<span>(</span><span>session, config, scheduler, context, response=None)</span>
+</code></dt>
+<dd>
+<div class="desc"><p>Generic internet resource which processes a server response based on responses
+content-type. Downloadable file if allowed in config would be downloaded. Css
+file would be parsed using suitable parser. Html will also be parsed using
+suitable html parser.</p>
+<p>:param session: http client used for networking.
+:param config: project configuration handler.
+:param response: http response from the server.
+:param scheduler: response processor scheduler.
+:param context: context of this response; should contain base-location, base-url etc.</p></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">class Base64Resource(GenericResource):
+    def resolve(self, parent_path=None):
+        source, encoding = self.get_source()
+        import sys
+        if sys.version &gt; &#39;3&#39;:
+            if type(source) is bytes:
+                return &#39;data:%s;base64,%s&#39; % (self.content_type, bytes.decode(b64encode(source)))
+            else:
+                return &#39;data:%s;base64,%s&#39; % (self.content_type, bytes.decode(b64encode(str.encode(source, encoding))))
+        else:
+            return &#39;data:%s;base64,%s&#39; % (self.content_type, b64encode(source))
+
+    def retrieve(self):
+        #: There are no sub-files to be fetched.
+        return None</code></pre>
+</details>
+<h3>Ancestors</h3>
+<ul class="hlist">
+<li><a title="pywebcopy.elements.GenericResource" href="#pywebcopy.elements.GenericResource">GenericResource</a></li>
+</ul>
+<h3>Inherited members</h3>
+<ul class="hlist">
+<li><code><b><a title="pywebcopy.elements.GenericResource" href="#pywebcopy.elements.GenericResource">GenericResource</a></b></code>:
+<ul class="hlist">
+<li><code><a title="pywebcopy.elements.GenericResource.close" href="#pywebcopy.elements.GenericResource.close">close</a></code></li>
+<li><code><a title="pywebcopy.elements.GenericResource.content_type" href="#pywebcopy.elements.GenericResource.content_type">content_type</a></code></li>
+<li><code><a title="pywebcopy.elements.GenericResource.encoding" href="#pywebcopy.elements.GenericResource.encoding">encoding</a></code></li>
+<li><code><a title="pywebcopy.elements.GenericResource.filename" href="#pywebcopy.elements.GenericResource.filename">filename</a></code></li>
+<li><code><a title="pywebcopy.elements.GenericResource.filepath" href="#pywebcopy.elements.GenericResource.filepath">filepath</a></code></li>
+<li><code><a title="pywebcopy.elements.GenericResource.get" href="#pywebcopy.elements.GenericResource.get">get</a></code></li>
+<li><code><a title="pywebcopy.elements.GenericResource.get_source" href="#pywebcopy.elements.GenericResource.get_source">get_source</a></code></li>
+<li><code><a title="pywebcopy.elements.GenericResource.post" href="#pywebcopy.elements.GenericResource.post">post</a></code></li>
+<li><code><a title="pywebcopy.elements.GenericResource.request" href="#pywebcopy.elements.GenericResource.request">request</a></code></li>
+<li><code><a title="pywebcopy.elements.GenericResource.resolve" href="#pywebcopy.elements.GenericResource.resolve">resolve</a></code></li>
+<li><code><a title="pywebcopy.elements.GenericResource.retrieve" href="#pywebcopy.elements.GenericResource.retrieve">retrieve</a></code></li>
+<li><code><a title="pywebcopy.elements.GenericResource.set_response" href="#pywebcopy.elements.GenericResource.set_response">set_response</a></code></li>
+<li><code><a title="pywebcopy.elements.GenericResource.url" href="#pywebcopy.elements.GenericResource.url">url</a></code></li>
+<li><code><a title="pywebcopy.elements.GenericResource.viewing_css" href="#pywebcopy.elements.GenericResource.viewing_css">viewing_css</a></code></li>
+<li><code><a title="pywebcopy.elements.GenericResource.viewing_html" href="#pywebcopy.elements.GenericResource.viewing_html">viewing_html</a></code></li>
+<li><code><a title="pywebcopy.elements.GenericResource.viewing_js" href="#pywebcopy.elements.GenericResource.viewing_js">viewing_js</a></code></li>
+</ul>
+</li>
+</ul>
+</dd>
+<dt id="pywebcopy.elements.CSSResource"><code class="flex name class">
+<span>class <span class="ident">CSSResource</span></span>
+<span>(</span><span>session, config, scheduler, context, response=None)</span>
+</code></dt>
+<dd>
+<div class="desc"><p>Generic internet resource which processes a server response based on responses
+content-type. Downloadable file if allowed in config would be downloaded. Css
+file would be parsed using suitable parser. Html will also be parsed using
+suitable html parser.</p>
+<p>:param session: http client used for networking.
+:param config: project configuration handler.
+:param response: http response from the server.
+:param scheduler: response processor scheduler.
+:param context: context of this response; should contain base-location, base-url etc.</p></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">class CSSResource(GenericResource):
+    def parse(self):
+        &#34;&#34;&#34;Returns the `.get_source(buffered=False)`.&#34;&#34;&#34;
+        return self.get_source(buffered=False)
+
+    def repl(self, match, encoding=None, fmt=None):
+        &#34;&#34;&#34;
+        Schedules the linked files for downloading then resolves their references.
+        &#34;&#34;&#34;
+        fmt = fmt or &#39;%s&#39;
+
+        url, _ = unquote_match(match.group(1).decode(encoding), match.start(1))
+        self.logger.debug(&#34;Sub-Css resource found: [%s]&#34; % url)
+
+        if not self.scheduler.validate_url(url):
+            return url.encode(encoding)
+
+        sub_context = self.context.create_new_from_url(url)
+        self.logger.debug(&#39;Creating context for url: %s as %s&#39; % (url, sub_context))
+        ans = self.__class__(
+            self.session, self.config, self.scheduler, sub_context
+        )
+        # self.children.add(ans)
+        self.logger.debug(&#34;Submitting resource: [%s] to the scheduler.&#34; % url)
+        self.scheduler.handle_resource(ans)
+        re_enc = (fmt % ans.resolve(self.filepath)).encode(encoding)
+        self.logger.debug(&#34;Re-encoded the resource: [%s] as [%r]&#34; % (url, re_enc))
+        return re_enc
+
+    # noinspection PyTypeChecker
+    def extract_children(self, parsing_buffer):
+        &#34;&#34;&#34;
+        Runs the regex over the source to find the urls that are linked
+        within the css file or style tag using the `url()` construct.
+        &#34;&#34;&#34;
+        source, encoding = parsing_buffer
+        source = re.sub(
+            (r&#39;url\((&#39; + &#39;[&#34;][^&#34;]*[&#34;]|&#39; + &#34;[&#39;][^&#39;]*[&#39;]|&#34; + r&#39;[^)]*)\)&#39;).encode(encoding),
+            partial(self.repl, encoding=encoding, fmt=&#34;url(&#39;%s&#39;)&#34;),
+            source, flags=re.IGNORECASE
+        )
+        source = re.sub(
+            r&#39;@import &#34;(.*?)&#34;&#39;.encode(encoding),
+            partial(self.repl, encoding=encoding, fmt=&#39;&#34;%s&#34;&#39;),
+            source, flags=re.IGNORECASE
+        )
+        return BytesIO(source)
+
+    def _retrieve(self):
+        &#34;&#34;&#34;Writes the modified buffer to the disk.&#34;&#34;&#34;
+        if not self.viewing_css():
+            self.logger.info(
+                &#34;Resource of type [%s] is not CSS.&#34; % self.content_type)
+            return super(CSSResource, self)._retrieve()
+
+        if not self.response.ok:
+            self.logger.debug(
+                &#34;Resource at [%s] is NOT ok and will be NOT processed.&#34; % self.url)
+            return super(CSSResource, self)._retrieve()
+
+        self.logger.debug(
+            &#34;Resource at [%s] is ok and will be processed.&#34; % self.url)
+        retrieve_resource(
+            self.extract_children(self.parse()),
+            self.filepath, self.url, self.config.get(&#39;overwrite&#39;)
+        )
+        self.logger.debug(&#34;Finished processing resource [%s]&#34; % self.url)
+        return self.filepath</code></pre>
+</details>
+<h3>Ancestors</h3>
+<ul class="hlist">
+<li><a title="pywebcopy.elements.GenericResource" href="#pywebcopy.elements.GenericResource">GenericResource</a></li>
+</ul>
+<h3>Methods</h3>
+<dl>
+<dt id="pywebcopy.elements.CSSResource.extract_children"><code class="name flex">
+<span>def <span class="ident">extract_children</span></span>(<span>self, parsing_buffer)</span>
+</code></dt>
+<dd>
+<div class="desc"><p>Runs the regex over the source to find the urls that are linked
+within the css file or style tag using the <code>url()</code> construct.</p></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def extract_children(self, parsing_buffer):
+    &#34;&#34;&#34;
+    Runs the regex over the source to find the urls that are linked
+    within the css file or style tag using the `url()` construct.
+    &#34;&#34;&#34;
+    source, encoding = parsing_buffer
+    source = re.sub(
+        (r&#39;url\((&#39; + &#39;[&#34;][^&#34;]*[&#34;]|&#39; + &#34;[&#39;][^&#39;]*[&#39;]|&#34; + r&#39;[^)]*)\)&#39;).encode(encoding),
+        partial(self.repl, encoding=encoding, fmt=&#34;url(&#39;%s&#39;)&#34;),
+        source, flags=re.IGNORECASE
+    )
+    source = re.sub(
+        r&#39;@import &#34;(.*?)&#34;&#39;.encode(encoding),
+        partial(self.repl, encoding=encoding, fmt=&#39;&#34;%s&#34;&#39;),
+        source, flags=re.IGNORECASE
+    )
+    return BytesIO(source)</code></pre>
+</details>
+</dd>
+<dt id="pywebcopy.elements.CSSResource.parse"><code class="name flex">
+<span>def <span class="ident">parse</span></span>(<span>self)</span>
+</code></dt>
+<dd>
+<div class="desc"><p>Returns the <code>.get_source(buffered=False)</code>.</p></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def parse(self):
+    &#34;&#34;&#34;Returns the `.get_source(buffered=False)`.&#34;&#34;&#34;
+    return self.get_source(buffered=False)</code></pre>
+</details>
+</dd>
+<dt id="pywebcopy.elements.CSSResource.repl"><code class="name flex">
+<span>def <span class="ident">repl</span></span>(<span>self, match, encoding=None, fmt=None)</span>
+</code></dt>
+<dd>
+<div class="desc"><p>Schedules the linked files for downloading then resolves their references.</p></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def repl(self, match, encoding=None, fmt=None):
+    &#34;&#34;&#34;
+    Schedules the linked files for downloading then resolves their references.
+    &#34;&#34;&#34;
+    fmt = fmt or &#39;%s&#39;
+
+    url, _ = unquote_match(match.group(1).decode(encoding), match.start(1))
+    self.logger.debug(&#34;Sub-Css resource found: [%s]&#34; % url)
+
+    if not self.scheduler.validate_url(url):
+        return url.encode(encoding)
+
+    sub_context = self.context.create_new_from_url(url)
+    self.logger.debug(&#39;Creating context for url: %s as %s&#39; % (url, sub_context))
+    ans = self.__class__(
+        self.session, self.config, self.scheduler, sub_context
+    )
+    # self.children.add(ans)
+    self.logger.debug(&#34;Submitting resource: [%s] to the scheduler.&#34; % url)
+    self.scheduler.handle_resource(ans)
+    re_enc = (fmt % ans.resolve(self.filepath)).encode(encoding)
+    self.logger.debug(&#34;Re-encoded the resource: [%s] as [%r]&#34; % (url, re_enc))
+    return re_enc</code></pre>
+</details>
+</dd>
+</dl>
+<h3>Inherited members</h3>
+<ul class="hlist">
+<li><code><b><a title="pywebcopy.elements.GenericResource" href="#pywebcopy.elements.GenericResource">GenericResource</a></b></code>:
+<ul class="hlist">
+<li><code><a title="pywebcopy.elements.GenericResource.close" href="#pywebcopy.elements.GenericResource.close">close</a></code></li>
+<li><code><a title="pywebcopy.elements.GenericResource.content_type" href="#pywebcopy.elements.GenericResource.content_type">content_type</a></code></li>
+<li><code><a title="pywebcopy.elements.GenericResource.encoding" href="#pywebcopy.elements.GenericResource.encoding">encoding</a></code></li>
+<li><code><a title="pywebcopy.elements.GenericResource.filename" href="#pywebcopy.elements.GenericResource.filename">filename</a></code></li>
+<li><code><a title="pywebcopy.elements.GenericResource.filepath" href="#pywebcopy.elements.GenericResource.filepath">filepath</a></code></li>
+<li><code><a title="pywebcopy.elements.GenericResource.get" href="#pywebcopy.elements.GenericResource.get">get</a></code></li>
+<li><code><a title="pywebcopy.elements.GenericResource.get_source" href="#pywebcopy.elements.GenericResource.get_source">get_source</a></code></li>
+<li><code><a title="pywebcopy.elements.GenericResource.post" href="#pywebcopy.elements.GenericResource.post">post</a></code></li>
+<li><code><a title="pywebcopy.elements.GenericResource.request" href="#pywebcopy.elements.GenericResource.request">request</a></code></li>
+<li><code><a title="pywebcopy.elements.GenericResource.resolve" href="#pywebcopy.elements.GenericResource.resolve">resolve</a></code></li>
+<li><code><a title="pywebcopy.elements.GenericResource.retrieve" href="#pywebcopy.elements.GenericResource.retrieve">retrieve</a></code></li>
+<li><code><a title="pywebcopy.elements.GenericResource.set_response" href="#pywebcopy.elements.GenericResource.set_response">set_response</a></code></li>
+<li><code><a title="pywebcopy.elements.GenericResource.url" href="#pywebcopy.elements.GenericResource.url">url</a></code></li>
+<li><code><a title="pywebcopy.elements.GenericResource.viewing_css" href="#pywebcopy.elements.GenericResource.viewing_css">viewing_css</a></code></li>
+<li><code><a title="pywebcopy.elements.GenericResource.viewing_html" href="#pywebcopy.elements.GenericResource.viewing_html">viewing_html</a></code></li>
+<li><code><a title="pywebcopy.elements.GenericResource.viewing_js" href="#pywebcopy.elements.GenericResource.viewing_js">viewing_js</a></code></li>
+</ul>
+</li>
+</ul>
+</dd>
+<dt id="pywebcopy.elements.GenericOnlyResource"><code class="flex name class">
+<span>class <span class="ident">GenericOnlyResource</span></span>
+<span>(</span><span>session, config, scheduler, context, response=None)</span>
+</code></dt>
+<dd>
+<div class="desc"><p>Only retrieves a resource if it is NOT HTML.</p>
+<p>Generic internet resource which processes a server response based on responses
+content-type. Downloadable file if allowed in config would be downloaded. Css
+file would be parsed using suitable parser. Html will also be parsed using
+suitable html parser.</p>
+<p>:param session: http client used for networking.
+:param config: project configuration handler.
+:param response: http response from the server.
+:param scheduler: response processor scheduler.
+:param context: context of this response; should contain base-location, base-url etc.</p></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">class GenericOnlyResource(GenericResource):
+    &#34;&#34;&#34;Only retrieves a resource if it is NOT HTML.&#34;&#34;&#34;
+
+    def _retrieve(self):
+        if self.viewing_html():
+            self.logger.debug(&#34;Resource [%s] is of HTML type and must not be processed!&#34; % self.url)
+            return False
+        return super(GenericOnlyResource, self)._retrieve()
+
+    def resolve(self, parent_path=None):
+        if self.viewing_html():
+            return self.context.url
+        return super(GenericOnlyResource, self).resolve(parent_path=parent_path)</code></pre>
+</details>
+<h3>Ancestors</h3>
+<ul class="hlist">
+<li><a title="pywebcopy.elements.GenericResource" href="#pywebcopy.elements.GenericResource">GenericResource</a></li>
+</ul>
+<h3>Inherited members</h3>
+<ul class="hlist">
+<li><code><b><a title="pywebcopy.elements.GenericResource" href="#pywebcopy.elements.GenericResource">GenericResource</a></b></code>:
+<ul class="hlist">
+<li><code><a title="pywebcopy.elements.GenericResource.close" href="#pywebcopy.elements.GenericResource.close">close</a></code></li>
+<li><code><a title="pywebcopy.elements.GenericResource.content_type" href="#pywebcopy.elements.GenericResource.content_type">content_type</a></code></li>
+<li><code><a title="pywebcopy.elements.GenericResource.encoding" href="#pywebcopy.elements.GenericResource.encoding">encoding</a></code></li>
+<li><code><a title="pywebcopy.elements.GenericResource.filename" href="#pywebcopy.elements.GenericResource.filename">filename</a></code></li>
+<li><code><a title="pywebcopy.elements.GenericResource.filepath" href="#pywebcopy.elements.GenericResource.filepath">filepath</a></code></li>
+<li><code><a title="pywebcopy.elements.GenericResource.get" href="#pywebcopy.elements.GenericResource.get">get</a></code></li>
+<li><code><a title="pywebcopy.elements.GenericResource.get_source" href="#pywebcopy.elements.GenericResource.get_source">get_source</a></code></li>
+<li><code><a title="pywebcopy.elements.GenericResource.post" href="#pywebcopy.elements.GenericResource.post">post</a></code></li>
+<li><code><a title="pywebcopy.elements.GenericResource.request" href="#pywebcopy.elements.GenericResource.request">request</a></code></li>
+<li><code><a title="pywebcopy.elements.GenericResource.resolve" href="#pywebcopy.elements.GenericResource.resolve">resolve</a></code></li>
+<li><code><a title="pywebcopy.elements.GenericResource.retrieve" href="#pywebcopy.elements.GenericResource.retrieve">retrieve</a></code></li>
+<li><code><a title="pywebcopy.elements.GenericResource.set_response" href="#pywebcopy.elements.GenericResource.set_response">set_response</a></code></li>
+<li><code><a title="pywebcopy.elements.GenericResource.url" href="#pywebcopy.elements.GenericResource.url">url</a></code></li>
+<li><code><a title="pywebcopy.elements.GenericResource.viewing_css" href="#pywebcopy.elements.GenericResource.viewing_css">viewing_css</a></code></li>
+<li><code><a title="pywebcopy.elements.GenericResource.viewing_html" href="#pywebcopy.elements.GenericResource.viewing_html">viewing_html</a></code></li>
+<li><code><a title="pywebcopy.elements.GenericResource.viewing_js" href="#pywebcopy.elements.GenericResource.viewing_js">viewing_js</a></code></li>
+</ul>
+</li>
+</ul>
+</dd>
+<dt id="pywebcopy.elements.GenericResource"><code class="flex name class">
+<span>class <span class="ident">GenericResource</span></span>
+<span>(</span><span>session, config, scheduler, context, response=None)</span>
+</code></dt>
+<dd>
+<div class="desc"><p>Generic internet resource which processes a server response based on responses
+content-type. Downloadable file if allowed in config would be downloaded. Css
+file would be parsed using suitable parser. Html will also be parsed using
+suitable html parser.</p>
+<p>:param session: http client used for networking.
+:param config: project configuration handler.
+:param response: http response from the server.
+:param scheduler: response processor scheduler.
+:param context: context of this response; should contain base-location, base-url etc.</p></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">class GenericResource(object):
+    def __init__(self, session, config, scheduler, context, response=None):
+        &#34;&#34;&#34;
+        Generic internet resource which processes a server response based on responses
+        content-type. Downloadable file if allowed in config would be downloaded. Css
+        file would be parsed using suitable parser. Html will also be parsed using
+        suitable html parser.
+
+        :param session: http client used for networking.
+        :param config: project configuration handler.
+        :param response: http response from the server.
+        :param scheduler: response processor scheduler.
+        :param context: context of this response; should contain base-location, base-url etc.
+        &#34;&#34;&#34;
+        self.session = session
+        self.config = config
+        self.scheduler = scheduler
+        self.context = context
+        self.response = None
+        if response:
+            self.set_response(response)
+        self.logger = logger.getChild(self.__class__.__name__)
+
+    def __repr__(self):
+        return &#39;&lt;%s(url=%s)&gt;&#39; % (self.__class__.__name__, self.context.url)
+
+    def __del__(self):
+        self.close()
+
+    def close(self):
+        &#34;&#34;&#34;Releases the underlying urllib connection and
+        then deletes the response&#34;&#34;&#34;
+        if self.response is not None:
+            if hasattr(self.response, &#39;raw&#39;):
+                if hasattr(self.response.raw, &#39;release_conn&#39;):
+                    getattr(self.response, &#39;raw&#39;).release_conn()
+            del self.response
+
+    @cached_property
+    def filepath(self):
+        &#34;&#34;&#34;Returns if available a valid filepath
+         where this file should be written.&#34;&#34;&#34;
+        if self.context is None:
+            raise AttributeError(&#34;Context attribute is not set.&#34;)
+        if self.response is not None:
+            ctypes = get_content_type_from_headers(self.response.headers)
+            self.context = self.context.with_values(content_type=ctypes)
+        return self.context.resolve()
+
+    @cached_property
+    def filename(self):
+        &#34;&#34;&#34;Returns a valid filename of this resource if available.&#34;&#34;&#34;
+        return os.path.basename(self.filepath or &#39;&#39;)
+
+    @cached_property
+    def content_type(self):
+        &#34;&#34;&#34;Returns a mimetype descriptor of this resource if available.&#34;&#34;&#34;
+        if self.response is not None and &#39;Content-Type&#39; in self.response.headers:
+            return get_content_type_from_headers(self.response.headers)
+        return &#39;&#39;
+
+    @cached_property
+    def url(self):
+        &#34;&#34;&#34;Returns the actual url of this resource which is resolved if
+        there were any redirects.&#34;&#34;&#34;
+        if self.response is not None:
+            self.context = self.context.with_values(url=self.response.url)
+        return self.context.url
+
+    @cached_property
+    def encoding(self):
+        &#34;&#34;&#34;Returns an explicit encoding if defined in the config else
+        the encoding reported by the server.&#34;&#34;&#34;
+        if self.response is not None:
+            #: Explicit encoding takes precedence
+            return self.config.get(
+                &#39;encoding&#39;, self.response.encoding or &#39;ascii&#39;)
+        return self.config.get(&#39;encoding&#39;, &#39;ascii&#39;)
+
+    html_content_types = tuple([
+        &#39;text/htm&#39;,
+        &#39;text/html&#39;,
+        &#39;text/xhtml&#39;
+    ])
+    # html_content_types.__doc__ = &#34;Set of valid html mimetypes.&#34;
+
+    def viewing_html(self):
+        &#34;&#34;&#34;Checks whether the current resource is a html type or not.&#34;&#34;&#34;
+        return self.content_type in self.html_content_types
+
+    css_content_types = tuple([
+        &#39;text/css&#39;,
+    ])
+    # css_content_types.__doc__ = &#34;Set of valid css mimetypes.&#34;
+
+    def viewing_css(self):
+        &#34;&#34;&#34;Checks whether the current resource is a css type or not.&#34;&#34;&#34;
+        return self.content_type in self.css_content_types
+
+    js_content_types = tuple([
+        &#39;text/javascript&#39;,
+        &#39;application/javascript&#39;
+    ])
+    # js_content_types.__doc__ = &#34;Set of valid javascript mimetypes.&#34;
+
+    def viewing_js(self):
+        &#34;&#34;&#34;Checks whether the current resource is a javascript type or not.&#34;&#34;&#34;
+        return self.content_type in self.js_content_types
+
+    def set_response(self, response):
+        &#34;&#34;&#34;Update the response attribute of this object.
+
+        It also updates the content_type and encoding as reported by the
+        server implicitly for better detection of contents.&#34;&#34;&#34;
+        self.response = response
+
+        #: Clear the cached properties
+        self.__dict__.pop(&#39;url&#39;, None)
+        self.__dict__.pop(&#39;filepath&#39;, None)
+        self.__dict__.pop(&#39;filename&#39;, None)
+        if hasattr(response, &#39;ok&#39;) and response.ok:
+            self.__dict__.pop(&#39;content_type&#39;, None)
+            self.__dict__.pop(&#39;encoding&#39;, None)
+            self.context = self.context.with_values(
+                url=response.url,
+                content_type=self.content_type)
+
+    def request(self, method, url, **params):
+        &#34;&#34;&#34;Fetches the Html content from Internet using the requests.
+        You can any requests params which will be passed to the library
+        itself.
+        The requests arguments you supply will also be applied to the
+        global session meaning all the files will be downloaded using these
+        settings.
+
+        :param method: http verb for transport.
+        :param url: url of the page to fetch
+        :param params: keyword arguments which `requests` module may accept.
+        &#34;&#34;&#34;
+        if params.pop(&#39;stream&#39;, None):
+            warnings.warn(UserWarning(
+                &#34;Stream attribute is True by default for reasons.&#34;
+            ))
+        self.set_response(
+            self.session.request(method, url, stream=True, **params))
+
+    def get(self, url, **params):
+        &#34;&#34;&#34;Initiates an `get` request for the given url.
+        It uses the `.set_response()` method underneath to
+        process the returned response.
+        It is used to manually fetch the starting web-page.
+
+        Example:
+            wp = WebPage()
+            wp.get(&#39;http://www.example.com/&#39;)
+            wp.retrieve()
+        &#34;&#34;&#34;
+        return self.request(&#39;GET&#39;, url, **params)
+
+    def post(self, url, **params):
+        &#34;&#34;&#34;Initiates an `post` request for the given url.
+        It uses the `.set_response()` method underneath to
+        process the returned response.
+        It is required to submit forms.
+
+        Example:
+            wp = WebPage()
+            wp.post(&#39;http://www.example.com/&#39;, data={&#39;key&#39;: &#39;value&#39;})
+            wp.retrieve()
+        &#34;&#34;&#34;
+        return self.request(&#39;POST&#39;, url, **params)
+
+    def get_source(self, buffered=False):
+        &#34;&#34;&#34;
+        Returns a tuple with the response contents in either file-like object
+        i.e. `RewindableResponse` if `buffered=True` or string format
+        if ` buffered=False` and the encoding from the `.encoding` attribute.
+
+        Example:
+            wp.get(url=...)
+            wp.get_source(buffered=False)
+            &#34;&lt;html&gt;&lt;head&gt;&lt;/head&gt;&lt;body&gt;...&lt;/body&gt;&lt;/html&gt;&#34;
+            wp.get_source(buffered=True)
+            &#34;&lt;RewindableResponse(url=...)&gt;&#34;
+
+        Note:
+            An Error would be raised if the `.context` attribute is not set.
+            or the `.response` attribute is not set.
+
+        :rtype: string_types | RewindableResponse
+        &#34;&#34;&#34;
+        if self.context is None:
+            raise ValueError(&#34;Context not set.&#34;)
+        if self.context.base_path is None:
+            raise ValueError(&#34;Context Base Path is not set!&#34;)
+        if self.context.base_url is None:
+            raise ValueError(&#34;Context Base url is not Set!&#34;)
+        if self.response is None:
+            raise ValueError(&#34;Response attribute is not Set!&#34;)
+        if getattr(self.response.raw, &#39;closed&#39;, True):
+            raise ValueError(
+                &#34;I/O operations closed on the response object.&#34;)
+        if not hasattr(self.response.raw, &#39;read&#39;):
+            raise ValueError(
+                &#34;Response must have a raw file like object!&#34;)
+
+        self.response.raw.decode_content = True
+        if buffered:
+            return self.response.raw, self.encoding
+        return self.response.content, self.encoding
+
+    def retrieve(self):
+        &#34;&#34;&#34;Retrieves the readable resource to the local disk.&#34;&#34;&#34;
+        if self.response is None:
+            raise AttributeError(
+                &#34;Response attribute is not set!&#34;
+                &#34;You need to fetch the resource using get method!&#34;
+            )
+        # XXX: Validate resource here?
+        return self._retrieve()
+
+    def _retrieve(self):
+        #: Not ok response received from the server
+        if not 100 &lt;= self.response.status_code &lt;= 400:
+            self.logger.error(
+                &#39;Status Code [&lt;%d&gt;] received from the server [%s]&#39;
+                % (self.response.status_code, self.response.url)
+            )
+            if isinstance(self.response.reason, binary_type):
+                content = BytesIO(self.response.reason)
+            else:
+                content = BytesIO(self.response.reason.encode(self.encoding))
+        else:
+            if not hasattr(self.response, &#39;raw&#39;):
+                self.logger.error(
+                    &#34;Response object for url &lt;%s&gt; has no attribute &#39;raw&#39;!&#34;
+                    % self.url)
+                content = BytesIO(self.response.content)
+            else:
+                content = self.response.raw
+
+        retrieve_resource(
+            content, self.filepath, self.context.url, self.config.get(&#39;overwrite&#39;))
+        del content
+        return self.filepath
+
+    def resolve(self, parent_path=None):
+        &#34;&#34;&#34;Returns a relative url at which this resource should be accessed
+        by the parent file.
+        &#34;&#34;&#34;
+        filepath = self.filepath
+        if not isinstance(filepath, string_types):
+            raise ValueError(&#34;Invalid filepath [%r]&#34; % filepath)
+        if parent_path and isinstance(parent_path, string_types):
+            return pathname2url(relate(filepath, parent_path))
+        return pathname2url(filepath)</code></pre>
+</details>
+<h3>Subclasses</h3>
+<ul class="hlist">
+<li><a title="pywebcopy.elements.Base64Resource" href="#pywebcopy.elements.Base64Resource">Base64Resource</a></li>
+<li><a title="pywebcopy.elements.CSSResource" href="#pywebcopy.elements.CSSResource">CSSResource</a></li>
+<li><a title="pywebcopy.elements.GenericOnlyResource" href="#pywebcopy.elements.GenericOnlyResource">GenericOnlyResource</a></li>
+<li><a title="pywebcopy.elements.HTMLResource" href="#pywebcopy.elements.HTMLResource">HTMLResource</a></li>
+<li><a title="pywebcopy.elements.JSResource" href="#pywebcopy.elements.JSResource">JSResource</a></li>
+<li><a title="pywebcopy.elements.VoidResource" href="#pywebcopy.elements.VoidResource">VoidResource</a></li>
+</ul>
+<h3>Class variables</h3>
+<dl>
+<dt id="pywebcopy.elements.GenericResource.css_content_types"><code class="name">var <span class="ident">css_content_types</span></code></dt>
+<dd>
+<div class="desc"></div>
+</dd>
+<dt id="pywebcopy.elements.GenericResource.html_content_types"><code class="name">var <span class="ident">html_content_types</span></code></dt>
+<dd>
+<div class="desc"></div>
+</dd>
+<dt id="pywebcopy.elements.GenericResource.js_content_types"><code class="name">var <span class="ident">js_content_types</span></code></dt>
+<dd>
+<div class="desc"></div>
+</dd>
+</dl>
+<h3>Instance variables</h3>
+<dl>
+<dt id="pywebcopy.elements.GenericResource.content_type"><code class="name">var <span class="ident">content_type</span></code></dt>
+<dd>
+<div class="desc"><p>Returns a mimetype descriptor of this resource if available.</p></div>
+</dd>
+<dt id="pywebcopy.elements.GenericResource.encoding"><code class="name">var <span class="ident">encoding</span></code></dt>
+<dd>
+<div class="desc"><p>Returns an explicit encoding if defined in the config else
+the encoding reported by the server.</p></div>
+</dd>
+<dt id="pywebcopy.elements.GenericResource.filename"><code class="name">var <span class="ident">filename</span></code></dt>
+<dd>
+<div class="desc"><p>Returns a valid filename of this resource if available.</p></div>
+</dd>
+<dt id="pywebcopy.elements.GenericResource.filepath"><code class="name">var <span class="ident">filepath</span></code></dt>
+<dd>
+<div class="desc"><p>Returns if available a valid filepath
+where this file should be written.</p></div>
+</dd>
+<dt id="pywebcopy.elements.GenericResource.url"><code class="name">var <span class="ident">url</span></code></dt>
+<dd>
+<div class="desc"><p>Returns the actual url of this resource which is resolved if
+there were any redirects.</p></div>
+</dd>
+</dl>
+<h3>Methods</h3>
+<dl>
+<dt id="pywebcopy.elements.GenericResource.close"><code class="name flex">
+<span>def <span class="ident">close</span></span>(<span>self)</span>
+</code></dt>
+<dd>
+<div class="desc"><p>Releases the underlying urllib connection and
+then deletes the response</p></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def close(self):
+    &#34;&#34;&#34;Releases the underlying urllib connection and
+    then deletes the response&#34;&#34;&#34;
+    if self.response is not None:
+        if hasattr(self.response, &#39;raw&#39;):
+            if hasattr(self.response.raw, &#39;release_conn&#39;):
+                getattr(self.response, &#39;raw&#39;).release_conn()
+        del self.response</code></pre>
+</details>
+</dd>
+<dt id="pywebcopy.elements.GenericResource.get"><code class="name flex">
+<span>def <span class="ident">get</span></span>(<span>self, url, **params)</span>
+</code></dt>
+<dd>
+<div class="desc"><p>Initiates an <code>get</code> request for the given url.
+It uses the <code>.set_response()</code> method underneath to
+process the returned response.
+It is used to manually fetch the starting web-page.</p>
+<h2 id="example">Example</h2>
+<p>wp = WebPage()
+wp.get('http://www.example.com/')
+wp.retrieve()</p></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def get(self, url, **params):
+    &#34;&#34;&#34;Initiates an `get` request for the given url.
+    It uses the `.set_response()` method underneath to
+    process the returned response.
+    It is used to manually fetch the starting web-page.
+
+    Example:
+        wp = WebPage()
+        wp.get(&#39;http://www.example.com/&#39;)
+        wp.retrieve()
+    &#34;&#34;&#34;
+    return self.request(&#39;GET&#39;, url, **params)</code></pre>
+</details>
+</dd>
+<dt id="pywebcopy.elements.GenericResource.get_source"><code class="name flex">
+<span>def <span class="ident">get_source</span></span>(<span>self, buffered=False)</span>
+</code></dt>
+<dd>
+<div class="desc"><p>Returns a tuple with the response contents in either file-like object
+i.e. <code>RewindableResponse</code> if <code>buffered=True</code> or string format
+if <code>buffered=False</code> and the encoding from the <code>.encoding</code> attribute.</p>
+<h2 id="example">Example</h2>
+<p>wp.get(url=&hellip;)
+wp.get_source(buffered=False)
+"<html><head></head><body>&hellip;</body></html>"
+wp.get_source(buffered=True)
+"<RewindableResponse(url=...)>"</p>
+<h2 id="note">Note</h2>
+<p>An Error would be raised if the <code>.context</code> attribute is not set.
+or the <code>.response</code> attribute is not set.</p>
+<p>:rtype: string_types | RewindableResponse</p></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def get_source(self, buffered=False):
+    &#34;&#34;&#34;
+    Returns a tuple with the response contents in either file-like object
+    i.e. `RewindableResponse` if `buffered=True` or string format
+    if ` buffered=False` and the encoding from the `.encoding` attribute.
+
+    Example:
+        wp.get(url=...)
+        wp.get_source(buffered=False)
+        &#34;&lt;html&gt;&lt;head&gt;&lt;/head&gt;&lt;body&gt;...&lt;/body&gt;&lt;/html&gt;&#34;
+        wp.get_source(buffered=True)
+        &#34;&lt;RewindableResponse(url=...)&gt;&#34;
+
+    Note:
+        An Error would be raised if the `.context` attribute is not set.
+        or the `.response` attribute is not set.
+
+    :rtype: string_types | RewindableResponse
+    &#34;&#34;&#34;
+    if self.context is None:
+        raise ValueError(&#34;Context not set.&#34;)
+    if self.context.base_path is None:
+        raise ValueError(&#34;Context Base Path is not set!&#34;)
+    if self.context.base_url is None:
+        raise ValueError(&#34;Context Base url is not Set!&#34;)
+    if self.response is None:
+        raise ValueError(&#34;Response attribute is not Set!&#34;)
+    if getattr(self.response.raw, &#39;closed&#39;, True):
+        raise ValueError(
+            &#34;I/O operations closed on the response object.&#34;)
+    if not hasattr(self.response.raw, &#39;read&#39;):
+        raise ValueError(
+            &#34;Response must have a raw file like object!&#34;)
+
+    self.response.raw.decode_content = True
+    if buffered:
+        return self.response.raw, self.encoding
+    return self.response.content, self.encoding</code></pre>
+</details>
+</dd>
+<dt id="pywebcopy.elements.GenericResource.post"><code class="name flex">
+<span>def <span class="ident">post</span></span>(<span>self, url, **params)</span>
+</code></dt>
+<dd>
+<div class="desc"><p>Initiates an <code>post</code> request for the given url.
+It uses the <code>.set_response()</code> method underneath to
+process the returned response.
+It is required to submit forms.</p>
+<h2 id="example">Example</h2>
+<p>wp = WebPage()
+wp.post('http://www.example.com/', data={'key': 'value'})
+wp.retrieve()</p></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def post(self, url, **params):
+    &#34;&#34;&#34;Initiates an `post` request for the given url.
+    It uses the `.set_response()` method underneath to
+    process the returned response.
+    It is required to submit forms.
+
+    Example:
+        wp = WebPage()
+        wp.post(&#39;http://www.example.com/&#39;, data={&#39;key&#39;: &#39;value&#39;})
+        wp.retrieve()
+    &#34;&#34;&#34;
+    return self.request(&#39;POST&#39;, url, **params)</code></pre>
+</details>
+</dd>
+<dt id="pywebcopy.elements.GenericResource.request"><code class="name flex">
+<span>def <span class="ident">request</span></span>(<span>self, method, url, **params)</span>
+</code></dt>
+<dd>
+<div class="desc"><p>Fetches the Html content from Internet using the requests.
+You can any requests params which will be passed to the library
+itself.
+The requests arguments you supply will also be applied to the
+global session meaning all the files will be downloaded using these
+settings.</p>
+<p>:param method: http verb for transport.
+:param url: url of the page to fetch
+:param params: keyword arguments which <code>requests</code> module may accept.</p></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def request(self, method, url, **params):
+    &#34;&#34;&#34;Fetches the Html content from Internet using the requests.
+    You can any requests params which will be passed to the library
+    itself.
+    The requests arguments you supply will also be applied to the
+    global session meaning all the files will be downloaded using these
+    settings.
+
+    :param method: http verb for transport.
+    :param url: url of the page to fetch
+    :param params: keyword arguments which `requests` module may accept.
+    &#34;&#34;&#34;
+    if params.pop(&#39;stream&#39;, None):
+        warnings.warn(UserWarning(
+            &#34;Stream attribute is True by default for reasons.&#34;
+        ))
+    self.set_response(
+        self.session.request(method, url, stream=True, **params))</code></pre>
+</details>
+</dd>
+<dt id="pywebcopy.elements.GenericResource.resolve"><code class="name flex">
+<span>def <span class="ident">resolve</span></span>(<span>self, parent_path=None)</span>
+</code></dt>
+<dd>
+<div class="desc"><p>Returns a relative url at which this resource should be accessed
+by the parent file.</p></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def resolve(self, parent_path=None):
+    &#34;&#34;&#34;Returns a relative url at which this resource should be accessed
+    by the parent file.
+    &#34;&#34;&#34;
+    filepath = self.filepath
+    if not isinstance(filepath, string_types):
+        raise ValueError(&#34;Invalid filepath [%r]&#34; % filepath)
+    if parent_path and isinstance(parent_path, string_types):
+        return pathname2url(relate(filepath, parent_path))
+    return pathname2url(filepath)</code></pre>
+</details>
+</dd>
+<dt id="pywebcopy.elements.GenericResource.retrieve"><code class="name flex">
+<span>def <span class="ident">retrieve</span></span>(<span>self)</span>
+</code></dt>
+<dd>
+<div class="desc"><p>Retrieves the readable resource to the local disk.</p></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def retrieve(self):
+    &#34;&#34;&#34;Retrieves the readable resource to the local disk.&#34;&#34;&#34;
+    if self.response is None:
+        raise AttributeError(
+            &#34;Response attribute is not set!&#34;
+            &#34;You need to fetch the resource using get method!&#34;
+        )
+    # XXX: Validate resource here?
+    return self._retrieve()</code></pre>
+</details>
+</dd>
+<dt id="pywebcopy.elements.GenericResource.set_response"><code class="name flex">
+<span>def <span class="ident">set_response</span></span>(<span>self, response)</span>
+</code></dt>
+<dd>
+<div class="desc"><p>Update the response attribute of this object.</p>
+<p>It also updates the content_type and encoding as reported by the
+server implicitly for better detection of contents.</p></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def set_response(self, response):
+    &#34;&#34;&#34;Update the response attribute of this object.
+
+    It also updates the content_type and encoding as reported by the
+    server implicitly for better detection of contents.&#34;&#34;&#34;
+    self.response = response
+
+    #: Clear the cached properties
+    self.__dict__.pop(&#39;url&#39;, None)
+    self.__dict__.pop(&#39;filepath&#39;, None)
+    self.__dict__.pop(&#39;filename&#39;, None)
+    if hasattr(response, &#39;ok&#39;) and response.ok:
+        self.__dict__.pop(&#39;content_type&#39;, None)
+        self.__dict__.pop(&#39;encoding&#39;, None)
+        self.context = self.context.with_values(
+            url=response.url,
+            content_type=self.content_type)</code></pre>
+</details>
+</dd>
+<dt id="pywebcopy.elements.GenericResource.viewing_css"><code class="name flex">
+<span>def <span class="ident">viewing_css</span></span>(<span>self)</span>
+</code></dt>
+<dd>
+<div class="desc"><p>Checks whether the current resource is a css type or not.</p></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def viewing_css(self):
+    &#34;&#34;&#34;Checks whether the current resource is a css type or not.&#34;&#34;&#34;
+    return self.content_type in self.css_content_types</code></pre>
+</details>
+</dd>
+<dt id="pywebcopy.elements.GenericResource.viewing_html"><code class="name flex">
+<span>def <span class="ident">viewing_html</span></span>(<span>self)</span>
+</code></dt>
+<dd>
+<div class="desc"><p>Checks whether the current resource is a html type or not.</p></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def viewing_html(self):
+    &#34;&#34;&#34;Checks whether the current resource is a html type or not.&#34;&#34;&#34;
+    return self.content_type in self.html_content_types</code></pre>
+</details>
+</dd>
+<dt id="pywebcopy.elements.GenericResource.viewing_js"><code class="name flex">
+<span>def <span class="ident">viewing_js</span></span>(<span>self)</span>
+</code></dt>
+<dd>
+<div class="desc"><p>Checks whether the current resource is a javascript type or not.</p></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def viewing_js(self):
+    &#34;&#34;&#34;Checks whether the current resource is a javascript type or not.&#34;&#34;&#34;
+    return self.content_type in self.js_content_types</code></pre>
+</details>
+</dd>
+</dl>
+</dd>
+<dt id="pywebcopy.elements.HTMLResource"><code class="flex name class">
+<span>class <span class="ident">HTMLResource</span></span>
+<span>(</span><span>session, config, scheduler, context, response=None)</span>
+</code></dt>
+<dd>
+<div class="desc"><p>Interpreter for resource written in or reported as html.</p>
+<p>Generic internet resource which processes a server response based on responses
+content-type. Downloadable file if allowed in config would be downloaded. Css
+file would be parsed using suitable parser. Html will also be parsed using
+suitable html parser.</p>
+<p>:param session: http client used for networking.
+:param config: project configuration handler.
+:param response: http response from the server.
+:param scheduler: response processor scheduler.
+:param context: context of this response; should contain base-location, base-url etc.</p></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">class HTMLResource(GenericResource):
+    &#34;&#34;&#34;Interpreter for resource written in or reported as html.&#34;&#34;&#34;
+
+    def parse(self, **kwargs):
+        &#34;&#34;&#34;Returns an `pywebcopy.parsers.iterparse` instance with
+        the file-object returned from the `.get_source(buffered=True)`.
+
+        :params kwargs: options to be passed to the `iterparse`.
+        &#34;&#34;&#34;
+        source, encoding = self.get_source(buffered=True)
+        return iterparse(
+            source, encoding, include_meta_charset_tag=True, **kwargs)
+
+    def extract_children(self, parsing_buffer):
+        &#34;&#34;&#34;
+        Iterates over the `pywebcopy.parsers.iterparse` object and
+        extract the elements which are handed over to the `scheduler`
+        for processing. Then the final path of the element is updated
+        in the `pywebcopy.parsers.iterparse` object.
+
+        :param parsing_buffer: `iterparse` object.
+        &#34;&#34;&#34;
+        location = self.filepath
+
+        for elem, attr, url, pos in parsing_buffer:
+            if not self.scheduler.validate_url(url):
+                continue
+
+            sub_context = self.context.create_new_from_url(url)
+            ans = self.scheduler.get_handler(
+                elem.tag,
+                self.session, self.config, self.scheduler, sub_context)
+            self.scheduler.handle_resource(ans)
+            resolved = ans.resolve(location)
+            elem.replace_url(url, resolved, attr, pos)
+
+        return parsing_buffer
+
+    def _retrieve(self):
+        if not self.viewing_html():
+            self.logger.info(
+                &#34;Resource of type [%s] is not HTML.&#34; % self.content_type)
+            return super(HTMLResource, self)._retrieve()
+
+        if not self.response.ok:
+            self.logger.debug(
+                &#34;Resource at [%s] is NOT ok and will be NOT processed.&#34; % self.url)
+            return super(HTMLResource, self)._retrieve()
+
+        context = self.extract_children(self.parse())
+
+        # WaterMarking :)
+        context.root.insert(0, HtmlComment(self._get_watermark()))
+
+        retrieve_resource(
+            BytesIO(tostring(context.root, include_meta_content_type=True)),
+            self.filepath, self.context.url, overwrite=True)
+
+        self.logger.debug(&#39;Retrieved content from the url: [%s]&#39; % self.url)
+        del context
+        return self.filepath
+
+    def _get_watermark(self):
+        # comment text should be in unicode
+        return dedent(&#34;&#34;&#34;
+        * PyWebCopy Engine [version %s]
+        * Copyright 2020; Raja Tomar
+        * File mirrored from [%s]
+        * At UTC datetime: [%s]
+        &#34;&#34;&#34;) % (__version__, self.response.url, datetime.utcnow())</code></pre>
+</details>
+<h3>Ancestors</h3>
+<ul class="hlist">
+<li><a title="pywebcopy.elements.GenericResource" href="#pywebcopy.elements.GenericResource">GenericResource</a></li>
+</ul>
+<h3>Subclasses</h3>
+<ul class="hlist">
+<li><a title="pywebcopy.core.WebPage" href="core.html#pywebcopy.core.WebPage">WebPage</a></li>
+</ul>
+<h3>Methods</h3>
+<dl>
+<dt id="pywebcopy.elements.HTMLResource.extract_children"><code class="name flex">
+<span>def <span class="ident">extract_children</span></span>(<span>self, parsing_buffer)</span>
+</code></dt>
+<dd>
+<div class="desc"><p>Iterates over the <code><a title="pywebcopy.parsers.iterparse" href="parsers.html#pywebcopy.parsers.iterparse">iterparse()</a></code> object and
+extract the elements which are handed over to the <code>scheduler</code>
+for processing. Then the final path of the element is updated
+in the <code><a title="pywebcopy.parsers.iterparse" href="parsers.html#pywebcopy.parsers.iterparse">iterparse()</a></code> object.</p>
+<p>:param parsing_buffer: <code>iterparse</code> object.</p></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def extract_children(self, parsing_buffer):
+    &#34;&#34;&#34;
+    Iterates over the `pywebcopy.parsers.iterparse` object and
+    extract the elements which are handed over to the `scheduler`
+    for processing. Then the final path of the element is updated
+    in the `pywebcopy.parsers.iterparse` object.
+
+    :param parsing_buffer: `iterparse` object.
+    &#34;&#34;&#34;
+    location = self.filepath
+
+    for elem, attr, url, pos in parsing_buffer:
+        if not self.scheduler.validate_url(url):
+            continue
+
+        sub_context = self.context.create_new_from_url(url)
+        ans = self.scheduler.get_handler(
+            elem.tag,
+            self.session, self.config, self.scheduler, sub_context)
+        self.scheduler.handle_resource(ans)
+        resolved = ans.resolve(location)
+        elem.replace_url(url, resolved, attr, pos)
+
+    return parsing_buffer</code></pre>
+</details>
+</dd>
+<dt id="pywebcopy.elements.HTMLResource.parse"><code class="name flex">
+<span>def <span class="ident">parse</span></span>(<span>self, **kwargs)</span>
+</code></dt>
+<dd>
+<div class="desc"><p>Returns an <code><a title="pywebcopy.parsers.iterparse" href="parsers.html#pywebcopy.parsers.iterparse">iterparse()</a></code> instance with
+the file-object returned from the <code>.get_source(buffered=True)</code>.</p>
+<p>:params kwargs: options to be passed to the <code>iterparse</code>.</p></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def parse(self, **kwargs):
+    &#34;&#34;&#34;Returns an `pywebcopy.parsers.iterparse` instance with
+    the file-object returned from the `.get_source(buffered=True)`.
+
+    :params kwargs: options to be passed to the `iterparse`.
+    &#34;&#34;&#34;
+    source, encoding = self.get_source(buffered=True)
+    return iterparse(
+        source, encoding, include_meta_charset_tag=True, **kwargs)</code></pre>
+</details>
+</dd>
+</dl>
+<h3>Inherited members</h3>
+<ul class="hlist">
+<li><code><b><a title="pywebcopy.elements.GenericResource" href="#pywebcopy.elements.GenericResource">GenericResource</a></b></code>:
+<ul class="hlist">
+<li><code><a title="pywebcopy.elements.GenericResource.close" href="#pywebcopy.elements.GenericResource.close">close</a></code></li>
+<li><code><a title="pywebcopy.elements.GenericResource.content_type" href="#pywebcopy.elements.GenericResource.content_type">content_type</a></code></li>
+<li><code><a title="pywebcopy.elements.GenericResource.encoding" href="#pywebcopy.elements.GenericResource.encoding">encoding</a></code></li>
+<li><code><a title="pywebcopy.elements.GenericResource.filename" href="#pywebcopy.elements.GenericResource.filename">filename</a></code></li>
+<li><code><a title="pywebcopy.elements.GenericResource.filepath" href="#pywebcopy.elements.GenericResource.filepath">filepath</a></code></li>
+<li><code><a title="pywebcopy.elements.GenericResource.get" href="#pywebcopy.elements.GenericResource.get">get</a></code></li>
+<li><code><a title="pywebcopy.elements.GenericResource.get_source" href="#pywebcopy.elements.GenericResource.get_source">get_source</a></code></li>
+<li><code><a title="pywebcopy.elements.GenericResource.post" href="#pywebcopy.elements.GenericResource.post">post</a></code></li>
+<li><code><a title="pywebcopy.elements.GenericResource.request" href="#pywebcopy.elements.GenericResource.request">request</a></code></li>
+<li><code><a title="pywebcopy.elements.GenericResource.resolve" href="#pywebcopy.elements.GenericResource.resolve">resolve</a></code></li>
+<li><code><a title="pywebcopy.elements.GenericResource.retrieve" href="#pywebcopy.elements.GenericResource.retrieve">retrieve</a></code></li>
+<li><code><a title="pywebcopy.elements.GenericResource.set_response" href="#pywebcopy.elements.GenericResource.set_response">set_response</a></code></li>
+<li><code><a title="pywebcopy.elements.GenericResource.url" href="#pywebcopy.elements.GenericResource.url">url</a></code></li>
+<li><code><a title="pywebcopy.elements.GenericResource.viewing_css" href="#pywebcopy.elements.GenericResource.viewing_css">viewing_css</a></code></li>
+<li><code><a title="pywebcopy.elements.GenericResource.viewing_html" href="#pywebcopy.elements.GenericResource.viewing_html">viewing_html</a></code></li>
+<li><code><a title="pywebcopy.elements.GenericResource.viewing_js" href="#pywebcopy.elements.GenericResource.viewing_js">viewing_js</a></code></li>
+</ul>
+</li>
+</ul>
+</dd>
+<dt id="pywebcopy.elements.JSResource"><code class="flex name class">
+<span>class <span class="ident">JSResource</span></span>
+<span>(</span><span>session, config, scheduler, context, response=None)</span>
+</code></dt>
+<dd>
+<div class="desc"><p>Generic internet resource which processes a server response based on responses
+content-type. Downloadable file if allowed in config would be downloaded. Css
+file would be parsed using suitable parser. Html will also be parsed using
+suitable html parser.</p>
+<p>:param session: http client used for networking.
+:param config: project configuration handler.
+:param response: http response from the server.
+:param scheduler: response processor scheduler.
+:param context: context of this response; should contain base-location, base-url etc.</p></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">class JSResource(GenericResource):
+    def parse(self):
+        &#34;&#34;&#34;Returns the `.get_source(buffered=False)`.&#34;&#34;&#34;
+        return self.get_source(buffered=False)
+
+    def repl(self, match, encoding=None, fmt=None):
+        &#34;&#34;&#34;
+        Schedules the linked files for downloading then resolves their references.
+        &#34;&#34;&#34;
+        fmt = fmt or &#39;%s&#39;
+
+        url, _ = unquote_match(match.group(1).decode(encoding), match.start(1))
+        self.logger.debug(&#34;Sub-JS resource found: [%s]&#34; % url)
+
+        if not self.scheduler.validate_url(url):
+            return url.encode(encoding)
+
+        sub_context = self.context.create_new_from_url(url)
+        self.logger.debug(&#39;Creating context for url: %s as %s&#39; % (url, sub_context))
+        ans = self.__class__(
+            self.session, self.config, self.scheduler, sub_context
+        )
+        # self.children.add(ans)
+        self.logger.debug(&#34;Submitting resource: [%s] to the scheduler.&#34; % url)
+        self.scheduler.handle_resource(ans)
+        re_enc = (fmt % ans.resolve(self.filepath)).encode(encoding)
+        self.logger.debug(&#34;Re-encoded the resource: [%s] as [%r]&#34; % (url, re_enc))
+        return re_enc
+
+    # noinspection PyTypeChecker
+    def extract_children(self, parsing_buffer):
+        &#34;&#34;&#34;
+        Runs the regex over the source to find the urls that are linked
+        within the js file or script tag using the `url()` construct.
+
+        ..todo::
+            It only recognises one type of url inside of the js.
+            i.e. `url(&#39;example.com&#39;)`. Make it universal.
+        &#34;&#34;&#34;
+        source, encoding = parsing_buffer
+        # P.S. There is one interesting Regex on this github repo under MIT license
+        # https://github.com/GerbenJavado/LinkFinder/
+        source = re.sub(
+            (r&#39;url\((&#39; + &#39;[&#34;][^&#34;]*[&#34;]|&#39; + &#34;[&#39;][^&#39;]*[&#39;]|&#34; + r&#39;[^)]*)\)&#39;
+             ).encode(encoding),
+            partial(
+                self.repl, encoding=encoding, fmt=&#39;url(&#34;%s&#34;)&#39;
+            ), source, flags=re.IGNORECASE
+        )
+        return BytesIO(source)
+
+    def _retrieve(self):
+        &#34;&#34;&#34;Writes the modified buffer to the disk.&#34;&#34;&#34;
+        if not self.viewing_js():
+            self.logger.info(&#34;Resource of type [%s] is not JS.&#34; % self.content_type)
+            return super(JSResource, self)._retrieve()
+
+        if not self.response.ok:
+            self.logger.debug(&#34;Resource at [%s] is NOT ok and will be NOT processed.&#34; % self.url)
+            return super(JSResource, self)._retrieve()
+
+        self.logger.debug(&#34;Resource at [%s] is ok and will be processed.&#34; % self.url)
+        retrieve_resource(
+            self.extract_children(self.parse()),
+            self.filepath, self.url, self.config.get(&#39;overwrite&#39;)
+        )
+        self.logger.debug(&#34;Finished processing resource [%s]&#34; % self.url)
+        return self.filepath</code></pre>
+</details>
+<h3>Ancestors</h3>
+<ul class="hlist">
+<li><a title="pywebcopy.elements.GenericResource" href="#pywebcopy.elements.GenericResource">GenericResource</a></li>
+</ul>
+<h3>Methods</h3>
+<dl>
+<dt id="pywebcopy.elements.JSResource.extract_children"><code class="name flex">
+<span>def <span class="ident">extract_children</span></span>(<span>self, parsing_buffer)</span>
+</code></dt>
+<dd>
+<div class="desc"><p>Runs the regex over the source to find the urls that are linked
+within the js file or script tag using the <code>url()</code> construct.</p>
+<div class="admonition todo">
+<p class="admonition-title">TODO</p>
+<p>It only recognises one type of url inside of the js.
+i.e. <code>url('example.com')</code>. Make it universal.</p>
+</div></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def extract_children(self, parsing_buffer):
+    &#34;&#34;&#34;
+    Runs the regex over the source to find the urls that are linked
+    within the js file or script tag using the `url()` construct.
+
+    ..todo::
+        It only recognises one type of url inside of the js.
+        i.e. `url(&#39;example.com&#39;)`. Make it universal.
+    &#34;&#34;&#34;
+    source, encoding = parsing_buffer
+    # P.S. There is one interesting Regex on this github repo under MIT license
+    # https://github.com/GerbenJavado/LinkFinder/
+    source = re.sub(
+        (r&#39;url\((&#39; + &#39;[&#34;][^&#34;]*[&#34;]|&#39; + &#34;[&#39;][^&#39;]*[&#39;]|&#34; + r&#39;[^)]*)\)&#39;
+         ).encode(encoding),
+        partial(
+            self.repl, encoding=encoding, fmt=&#39;url(&#34;%s&#34;)&#39;
+        ), source, flags=re.IGNORECASE
+    )
+    return BytesIO(source)</code></pre>
+</details>
+</dd>
+<dt id="pywebcopy.elements.JSResource.parse"><code class="name flex">
+<span>def <span class="ident">parse</span></span>(<span>self)</span>
+</code></dt>
+<dd>
+<div class="desc"><p>Returns the <code>.get_source(buffered=False)</code>.</p></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def parse(self):
+    &#34;&#34;&#34;Returns the `.get_source(buffered=False)`.&#34;&#34;&#34;
+    return self.get_source(buffered=False)</code></pre>
+</details>
+</dd>
+<dt id="pywebcopy.elements.JSResource.repl"><code class="name flex">
+<span>def <span class="ident">repl</span></span>(<span>self, match, encoding=None, fmt=None)</span>
+</code></dt>
+<dd>
+<div class="desc"><p>Schedules the linked files for downloading then resolves their references.</p></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def repl(self, match, encoding=None, fmt=None):
+    &#34;&#34;&#34;
+    Schedules the linked files for downloading then resolves their references.
+    &#34;&#34;&#34;
+    fmt = fmt or &#39;%s&#39;
+
+    url, _ = unquote_match(match.group(1).decode(encoding), match.start(1))
+    self.logger.debug(&#34;Sub-JS resource found: [%s]&#34; % url)
+
+    if not self.scheduler.validate_url(url):
+        return url.encode(encoding)
+
+    sub_context = self.context.create_new_from_url(url)
+    self.logger.debug(&#39;Creating context for url: %s as %s&#39; % (url, sub_context))
+    ans = self.__class__(
+        self.session, self.config, self.scheduler, sub_context
+    )
+    # self.children.add(ans)
+    self.logger.debug(&#34;Submitting resource: [%s] to the scheduler.&#34; % url)
+    self.scheduler.handle_resource(ans)
+    re_enc = (fmt % ans.resolve(self.filepath)).encode(encoding)
+    self.logger.debug(&#34;Re-encoded the resource: [%s] as [%r]&#34; % (url, re_enc))
+    return re_enc</code></pre>
+</details>
+</dd>
+</dl>
+<h3>Inherited members</h3>
+<ul class="hlist">
+<li><code><b><a title="pywebcopy.elements.GenericResource" href="#pywebcopy.elements.GenericResource">GenericResource</a></b></code>:
+<ul class="hlist">
+<li><code><a title="pywebcopy.elements.GenericResource.close" href="#pywebcopy.elements.GenericResource.close">close</a></code></li>
+<li><code><a title="pywebcopy.elements.GenericResource.content_type" href="#pywebcopy.elements.GenericResource.content_type">content_type</a></code></li>
+<li><code><a title="pywebcopy.elements.GenericResource.encoding" href="#pywebcopy.elements.GenericResource.encoding">encoding</a></code></li>
+<li><code><a title="pywebcopy.elements.GenericResource.filename" href="#pywebcopy.elements.GenericResource.filename">filename</a></code></li>
+<li><code><a title="pywebcopy.elements.GenericResource.filepath" href="#pywebcopy.elements.GenericResource.filepath">filepath</a></code></li>
+<li><code><a title="pywebcopy.elements.GenericResource.get" href="#pywebcopy.elements.GenericResource.get">get</a></code></li>
+<li><code><a title="pywebcopy.elements.GenericResource.get_source" href="#pywebcopy.elements.GenericResource.get_source">get_source</a></code></li>
+<li><code><a title="pywebcopy.elements.GenericResource.post" href="#pywebcopy.elements.GenericResource.post">post</a></code></li>
+<li><code><a title="pywebcopy.elements.GenericResource.request" href="#pywebcopy.elements.GenericResource.request">request</a></code></li>
+<li><code><a title="pywebcopy.elements.GenericResource.resolve" href="#pywebcopy.elements.GenericResource.resolve">resolve</a></code></li>
+<li><code><a title="pywebcopy.elements.GenericResource.retrieve" href="#pywebcopy.elements.GenericResource.retrieve">retrieve</a></code></li>
+<li><code><a title="pywebcopy.elements.GenericResource.set_response" href="#pywebcopy.elements.GenericResource.set_response">set_response</a></code></li>
+<li><code><a title="pywebcopy.elements.GenericResource.url" href="#pywebcopy.elements.GenericResource.url">url</a></code></li>
+<li><code><a title="pywebcopy.elements.GenericResource.viewing_css" href="#pywebcopy.elements.GenericResource.viewing_css">viewing_css</a></code></li>
+<li><code><a title="pywebcopy.elements.GenericResource.viewing_html" href="#pywebcopy.elements.GenericResource.viewing_html">viewing_html</a></code></li>
+<li><code><a title="pywebcopy.elements.GenericResource.viewing_js" href="#pywebcopy.elements.GenericResource.viewing_js">viewing_js</a></code></li>
+</ul>
+</li>
+</ul>
+</dd>
+<dt id="pywebcopy.elements.UrlRemover"><code class="flex name class">
+<span>class <span class="ident">UrlRemover</span></span>
+<span>(</span><span>session, config, scheduler, context, response=None)</span>
+</code></dt>
+<dd>
+<div class="desc"><p>Generic internet resource which processes a server response based on responses
+content-type. Downloadable file if allowed in config would be downloaded. Css
+file would be parsed using suitable parser. Html will also be parsed using
+suitable html parser.</p>
+<p>:param session: http client used for networking.
+:param config: project configuration handler.
+:param response: http response from the server.
+:param scheduler: response processor scheduler.
+:param context: context of this response; should contain base-location, base-url etc.</p></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">class UrlRemover(VoidResource):
+    def resolve(self, parent_path=None):
+        return &#39;#&#39;</code></pre>
+</details>
+<h3>Ancestors</h3>
+<ul class="hlist">
+<li><a title="pywebcopy.elements.VoidResource" href="#pywebcopy.elements.VoidResource">VoidResource</a></li>
+<li><a title="pywebcopy.elements.GenericResource" href="#pywebcopy.elements.GenericResource">GenericResource</a></li>
+</ul>
+<h3>Inherited members</h3>
+<ul class="hlist">
+<li><code><b><a title="pywebcopy.elements.VoidResource" href="#pywebcopy.elements.VoidResource">VoidResource</a></b></code>:
+<ul class="hlist">
+<li><code><a title="pywebcopy.elements.VoidResource.close" href="#pywebcopy.elements.GenericResource.close">close</a></code></li>
+<li><code><a title="pywebcopy.elements.VoidResource.content_type" href="#pywebcopy.elements.GenericResource.content_type">content_type</a></code></li>
+<li><code><a title="pywebcopy.elements.VoidResource.encoding" href="#pywebcopy.elements.GenericResource.encoding">encoding</a></code></li>
+<li><code><a title="pywebcopy.elements.VoidResource.filename" href="#pywebcopy.elements.GenericResource.filename">filename</a></code></li>
+<li><code><a title="pywebcopy.elements.VoidResource.filepath" href="#pywebcopy.elements.GenericResource.filepath">filepath</a></code></li>
+<li><code><a title="pywebcopy.elements.VoidResource.get" href="#pywebcopy.elements.GenericResource.get">get</a></code></li>
+<li><code><a title="pywebcopy.elements.VoidResource.get_source" href="#pywebcopy.elements.GenericResource.get_source">get_source</a></code></li>
+<li><code><a title="pywebcopy.elements.VoidResource.post" href="#pywebcopy.elements.GenericResource.post">post</a></code></li>
+<li><code><a title="pywebcopy.elements.VoidResource.request" href="#pywebcopy.elements.GenericResource.request">request</a></code></li>
+<li><code><a title="pywebcopy.elements.VoidResource.resolve" href="#pywebcopy.elements.GenericResource.resolve">resolve</a></code></li>
+<li><code><a title="pywebcopy.elements.VoidResource.retrieve" href="#pywebcopy.elements.GenericResource.retrieve">retrieve</a></code></li>
+<li><code><a title="pywebcopy.elements.VoidResource.set_response" href="#pywebcopy.elements.GenericResource.set_response">set_response</a></code></li>
+<li><code><a title="pywebcopy.elements.VoidResource.url" href="#pywebcopy.elements.GenericResource.url">url</a></code></li>
+<li><code><a title="pywebcopy.elements.VoidResource.viewing_css" href="#pywebcopy.elements.GenericResource.viewing_css">viewing_css</a></code></li>
+<li><code><a title="pywebcopy.elements.VoidResource.viewing_html" href="#pywebcopy.elements.GenericResource.viewing_html">viewing_html</a></code></li>
+<li><code><a title="pywebcopy.elements.VoidResource.viewing_js" href="#pywebcopy.elements.GenericResource.viewing_js">viewing_js</a></code></li>
+</ul>
+</li>
+</ul>
+</dd>
+<dt id="pywebcopy.elements.VoidResource"><code class="flex name class">
+<span>class <span class="ident">VoidResource</span></span>
+<span>(</span><span>session, config, scheduler, context, response=None)</span>
+</code></dt>
+<dd>
+<div class="desc"><p>Generic internet resource which processes a server response based on responses
+content-type. Downloadable file if allowed in config would be downloaded. Css
+file would be parsed using suitable parser. Html will also be parsed using
+suitable html parser.</p>
+<p>:param session: http client used for networking.
+:param config: project configuration handler.
+:param response: http response from the server.
+:param scheduler: response processor scheduler.
+:param context: context of this response; should contain base-location, base-url etc.</p></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">class VoidResource(GenericResource):
+    def get(self, url, **params):
+        return None
+
+    def get_source(self, buffered=False):
+        return None
+
+    def retrieve(self):
+        return None</code></pre>
+</details>
+<h3>Ancestors</h3>
+<ul class="hlist">
+<li><a title="pywebcopy.elements.GenericResource" href="#pywebcopy.elements.GenericResource">GenericResource</a></li>
+</ul>
+<h3>Subclasses</h3>
+<ul class="hlist">
+<li><a title="pywebcopy.elements.AbsoluteUrlResource" href="#pywebcopy.elements.AbsoluteUrlResource">AbsoluteUrlResource</a></li>
+<li><a title="pywebcopy.elements.UrlRemover" href="#pywebcopy.elements.UrlRemover">UrlRemover</a></li>
+</ul>
+<h3>Methods</h3>
+<dl>
+<dt id="pywebcopy.elements.VoidResource.get"><code class="name flex">
+<span>def <span class="ident">get</span></span>(<span>self, url, **params)</span>
+</code></dt>
+<dd>
+<div class="desc"><p>Initiates an <code>get</code> request for the given url.
+It uses the <code>.set_response()</code> method underneath to
+process the returned response.
+It is used to manually fetch the starting web-page.</p>
+<h2 id="example">Example</h2>
+<p>wp = WebPage()
+wp.get('http://www.example.com/')
+wp.retrieve()</p></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def get(self, url, **params):
+    return None</code></pre>
+</details>
+</dd>
+<dt id="pywebcopy.elements.VoidResource.get_source"><code class="name flex">
+<span>def <span class="ident">get_source</span></span>(<span>self, buffered=False)</span>
+</code></dt>
+<dd>
+<div class="desc"><p>Returns a tuple with the response contents in either file-like object
+i.e. <code>RewindableResponse</code> if <code>buffered=True</code> or string format
+if <code>buffered=False</code> and the encoding from the <code>.encoding</code> attribute.</p>
+<h2 id="example">Example</h2>
+<p>wp.get(url=&hellip;)
+wp.get_source(buffered=False)
+"<html><head></head><body>&hellip;</body></html>"
+wp.get_source(buffered=True)
+"<RewindableResponse(url=...)>"</p>
+<h2 id="note">Note</h2>
+<p>An Error would be raised if the <code>.context</code> attribute is not set.
+or the <code>.response</code> attribute is not set.</p>
+<p>:rtype: string_types | RewindableResponse</p></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def get_source(self, buffered=False):
+    return None</code></pre>
+</details>
+</dd>
+<dt id="pywebcopy.elements.VoidResource.retrieve"><code class="name flex">
+<span>def <span class="ident">retrieve</span></span>(<span>self)</span>
+</code></dt>
+<dd>
+<div class="desc"><p>Retrieves the readable resource to the local disk.</p></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def retrieve(self):
+    return None</code></pre>
+</details>
+</dd>
+</dl>
+</dd>
+<dt id="pywebcopy.elements.VoidResource"><code class="flex name class">
+<span>class <span class="ident">NullResource</span></span>
+<span>(</span><span>session, config, scheduler, context, response=None)</span>
+</code></dt>
+<dd>
+<div class="desc"><p>Generic internet resource which processes a server response based on responses
+content-type. Downloadable file if allowed in config would be downloaded. Css
+file would be parsed using suitable parser. Html will also be parsed using
+suitable html parser.</p>
+<p>:param session: http client used for networking.
+:param config: project configuration handler.
+:param response: http response from the server.
+:param scheduler: response processor scheduler.
+:param context: context of this response; should contain base-location, base-url etc.</p></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">class VoidResource(GenericResource):
+    def get(self, url, **params):
+        return None
+
+    def get_source(self, buffered=False):
+        return None
+
+    def retrieve(self):
+        return None</code></pre>
+</details>
+<h3>Ancestors</h3>
+<ul class="hlist">
+<li><a title="pywebcopy.elements.GenericResource" href="#pywebcopy.elements.GenericResource">GenericResource</a></li>
+</ul>
+<h3>Subclasses</h3>
+<ul class="hlist">
+<li><a title="pywebcopy.elements.AbsoluteUrlResource" href="#pywebcopy.elements.AbsoluteUrlResource">AbsoluteUrlResource</a></li>
+<li><a title="pywebcopy.elements.UrlRemover" href="#pywebcopy.elements.UrlRemover">UrlRemover</a></li>
+</ul>
+<h3>Inherited members</h3>
+<ul class="hlist">
+<li><code><b><a title="pywebcopy.elements.GenericResource" href="#pywebcopy.elements.GenericResource">GenericResource</a></b></code>:
+<ul class="hlist">
+<li><code><a title="pywebcopy.elements.GenericResource.close" href="#pywebcopy.elements.GenericResource.close">close</a></code></li>
+<li><code><a title="pywebcopy.elements.GenericResource.content_type" href="#pywebcopy.elements.GenericResource.content_type">content_type</a></code></li>
+<li><code><a title="pywebcopy.elements.GenericResource.encoding" href="#pywebcopy.elements.GenericResource.encoding">encoding</a></code></li>
+<li><code><a title="pywebcopy.elements.GenericResource.filename" href="#pywebcopy.elements.GenericResource.filename">filename</a></code></li>
+<li><code><a title="pywebcopy.elements.GenericResource.filepath" href="#pywebcopy.elements.GenericResource.filepath">filepath</a></code></li>
+<li><code><a title="pywebcopy.elements.GenericResource.get" href="#pywebcopy.elements.GenericResource.get">get</a></code></li>
+<li><code><a title="pywebcopy.elements.GenericResource.get_source" href="#pywebcopy.elements.GenericResource.get_source">get_source</a></code></li>
+<li><code><a title="pywebcopy.elements.GenericResource.post" href="#pywebcopy.elements.GenericResource.post">post</a></code></li>
+<li><code><a title="pywebcopy.elements.GenericResource.request" href="#pywebcopy.elements.GenericResource.request">request</a></code></li>
+<li><code><a title="pywebcopy.elements.GenericResource.resolve" href="#pywebcopy.elements.GenericResource.resolve">resolve</a></code></li>
+<li><code><a title="pywebcopy.elements.GenericResource.retrieve" href="#pywebcopy.elements.GenericResource.retrieve">retrieve</a></code></li>
+<li><code><a title="pywebcopy.elements.GenericResource.set_response" href="#pywebcopy.elements.GenericResource.set_response">set_response</a></code></li>
+<li><code><a title="pywebcopy.elements.GenericResource.url" href="#pywebcopy.elements.GenericResource.url">url</a></code></li>
+<li><code><a title="pywebcopy.elements.GenericResource.viewing_css" href="#pywebcopy.elements.GenericResource.viewing_css">viewing_css</a></code></li>
+<li><code><a title="pywebcopy.elements.GenericResource.viewing_html" href="#pywebcopy.elements.GenericResource.viewing_html">viewing_html</a></code></li>
+<li><code><a title="pywebcopy.elements.GenericResource.viewing_js" href="#pywebcopy.elements.GenericResource.viewing_js">viewing_js</a></code></li>
+</ul>
+</li>
+</ul>
+</dd>
+</dl>
+</section>
+</article>
+<nav id="sidebar">
+<h1>Index</h1>
+<div class="toc">
+<ul></ul>
+</div>
+<ul id="index">
+<li><h3>Super-module</h3>
+<ul>
+<li><code><a title="pywebcopy" href="index.html">pywebcopy</a></code></li>
+</ul>
+</li>
+<li><h3><a href="#header-variables">Global variables</a></h3>
+<ul class="">
+<li><code><a title="pywebcopy.elements.fd_flags" href="#pywebcopy.elements.fd_flags">fd_flags</a></code></li>
+<li><code><a title="pywebcopy.elements.fd_mode" href="#pywebcopy.elements.fd_mode">fd_mode</a></code></li>
+</ul>
+</li>
+<li><h3><a href="#header-functions">Functions</a></h3>
+<ul class="">
+<li><code><a title="pywebcopy.elements.make_fd" href="#pywebcopy.elements.make_fd">make_fd</a></code></li>
+<li><code><a title="pywebcopy.elements.retrieve_resource" href="#pywebcopy.elements.retrieve_resource">retrieve_resource</a></code></li>
+<li><code><a title="pywebcopy.elements.urlretrieve" href="#pywebcopy.elements.urlretrieve">urlretrieve</a></code></li>
+</ul>
+</li>
+<li><h3><a href="#header-classes">Classes</a></h3>
+<ul>
+<li>
+<h4><code><a title="pywebcopy.elements.AbsoluteUrlResource" href="#pywebcopy.elements.AbsoluteUrlResource">AbsoluteUrlResource</a></code></h4>
+</li>
+<li>
+<h4><code><a title="pywebcopy.elements.Base64Resource" href="#pywebcopy.elements.Base64Resource">Base64Resource</a></code></h4>
+</li>
+<li>
+<h4><code><a title="pywebcopy.elements.CSSResource" href="#pywebcopy.elements.CSSResource">CSSResource</a></code></h4>
+<ul class="">
+<li><code><a title="pywebcopy.elements.CSSResource.extract_children" href="#pywebcopy.elements.CSSResource.extract_children">extract_children</a></code></li>
+<li><code><a title="pywebcopy.elements.CSSResource.parse" href="#pywebcopy.elements.CSSResource.parse">parse</a></code></li>
+<li><code><a title="pywebcopy.elements.CSSResource.repl" href="#pywebcopy.elements.CSSResource.repl">repl</a></code></li>
+</ul>
+</li>
+<li>
+<h4><code><a title="pywebcopy.elements.GenericOnlyResource" href="#pywebcopy.elements.GenericOnlyResource">GenericOnlyResource</a></code></h4>
+</li>
+<li>
+<h4><code><a title="pywebcopy.elements.GenericResource" href="#pywebcopy.elements.GenericResource">GenericResource</a></code></h4>
+<ul class="two-column">
+<li><code><a title="pywebcopy.elements.GenericResource.close" href="#pywebcopy.elements.GenericResource.close">close</a></code></li>
+<li><code><a title="pywebcopy.elements.GenericResource.content_type" href="#pywebcopy.elements.GenericResource.content_type">content_type</a></code></li>
+<li><code><a title="pywebcopy.elements.GenericResource.css_content_types" href="#pywebcopy.elements.GenericResource.css_content_types">css_content_types</a></code></li>
+<li><code><a title="pywebcopy.elements.GenericResource.encoding" href="#pywebcopy.elements.GenericResource.encoding">encoding</a></code></li>
+<li><code><a title="pywebcopy.elements.GenericResource.filename" href="#pywebcopy.elements.GenericResource.filename">filename</a></code></li>
+<li><code><a title="pywebcopy.elements.GenericResource.filepath" href="#pywebcopy.elements.GenericResource.filepath">filepath</a></code></li>
+<li><code><a title="pywebcopy.elements.GenericResource.get" href="#pywebcopy.elements.GenericResource.get">get</a></code></li>
+<li><code><a title="pywebcopy.elements.GenericResource.get_source" href="#pywebcopy.elements.GenericResource.get_source">get_source</a></code></li>
+<li><code><a title="pywebcopy.elements.GenericResource.html_content_types" href="#pywebcopy.elements.GenericResource.html_content_types">html_content_types</a></code></li>
+<li><code><a title="pywebcopy.elements.GenericResource.js_content_types" href="#pywebcopy.elements.GenericResource.js_content_types">js_content_types</a></code></li>
+<li><code><a title="pywebcopy.elements.GenericResource.post" href="#pywebcopy.elements.GenericResource.post">post</a></code></li>
+<li><code><a title="pywebcopy.elements.GenericResource.request" href="#pywebcopy.elements.GenericResource.request">request</a></code></li>
+<li><code><a title="pywebcopy.elements.GenericResource.resolve" href="#pywebcopy.elements.GenericResource.resolve">resolve</a></code></li>
+<li><code><a title="pywebcopy.elements.GenericResource.retrieve" href="#pywebcopy.elements.GenericResource.retrieve">retrieve</a></code></li>
+<li><code><a title="pywebcopy.elements.GenericResource.set_response" href="#pywebcopy.elements.GenericResource.set_response">set_response</a></code></li>
+<li><code><a title="pywebcopy.elements.GenericResource.url" href="#pywebcopy.elements.GenericResource.url">url</a></code></li>
+<li><code><a title="pywebcopy.elements.GenericResource.viewing_css" href="#pywebcopy.elements.GenericResource.viewing_css">viewing_css</a></code></li>
+<li><code><a title="pywebcopy.elements.GenericResource.viewing_html" href="#pywebcopy.elements.GenericResource.viewing_html">viewing_html</a></code></li>
+<li><code><a title="pywebcopy.elements.GenericResource.viewing_js" href="#pywebcopy.elements.GenericResource.viewing_js">viewing_js</a></code></li>
+</ul>
+</li>
+<li>
+<h4><code><a title="pywebcopy.elements.HTMLResource" href="#pywebcopy.elements.HTMLResource">HTMLResource</a></code></h4>
+<ul class="">
+<li><code><a title="pywebcopy.elements.HTMLResource.extract_children" href="#pywebcopy.elements.HTMLResource.extract_children">extract_children</a></code></li>
+<li><code><a title="pywebcopy.elements.HTMLResource.parse" href="#pywebcopy.elements.HTMLResource.parse">parse</a></code></li>
+</ul>
+</li>
+<li>
+<h4><code><a title="pywebcopy.elements.JSResource" href="#pywebcopy.elements.JSResource">JSResource</a></code></h4>
+<ul class="">
+<li><code><a title="pywebcopy.elements.JSResource.extract_children" href="#pywebcopy.elements.JSResource.extract_children">extract_children</a></code></li>
+<li><code><a title="pywebcopy.elements.JSResource.parse" href="#pywebcopy.elements.JSResource.parse">parse</a></code></li>
+<li><code><a title="pywebcopy.elements.JSResource.repl" href="#pywebcopy.elements.JSResource.repl">repl</a></code></li>
+</ul>
+</li>
+<li>
+<h4><code><a title="pywebcopy.elements.UrlRemover" href="#pywebcopy.elements.UrlRemover">UrlRemover</a></code></h4>
+</li>
+<li>
+<h4><code><a title="pywebcopy.elements.VoidResource" href="#pywebcopy.elements.VoidResource">VoidResource</a></code></h4>
+<ul class="">
+<li><code><a title="pywebcopy.elements.VoidResource.get" href="#pywebcopy.elements.VoidResource.get">get</a></code></li>
+<li><code><a title="pywebcopy.elements.VoidResource.get_source" href="#pywebcopy.elements.VoidResource.get_source">get_source</a></code></li>
+<li><code><a title="pywebcopy.elements.VoidResource.retrieve" href="#pywebcopy.elements.VoidResource.retrieve">retrieve</a></code></li>
+</ul>
+</li>
+<li>
+<h4><code><a title="pywebcopy.elements.VoidResource" href="#pywebcopy.elements.VoidResource">VoidResource</a></code></h4>
+</li>
+</ul>
+</li>
+</ul>
+</nav>
+</main>
+<footer id="footer">
+<p>Generated by <a href="https://pdoc3.github.io/pdoc" title="pdoc: Python API documentation generator"><cite>pdoc</cite> 0.10.0</a>.</p>
+</footer>
+</body>
+</html>

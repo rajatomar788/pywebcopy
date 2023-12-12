@@ -1,0 +1,1239 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, minimum-scale=1" />
+<meta name="generator" content="pdoc 0.10.0" />
+<title>pywebcopy.core API documentation</title>
+<meta name="description" content="" />
+<link rel="preload stylesheet" as="style" href="https://cdnjs.cloudflare.com/ajax/libs/10up-sanitize.css/11.0.1/sanitize.min.css" integrity="sha256-PK9q560IAAa6WVRRh76LtCaI8pjTJ2z11v0miyNNjrs=" crossorigin>
+<link rel="preload stylesheet" as="style" href="https://cdnjs.cloudflare.com/ajax/libs/10up-sanitize.css/11.0.1/typography.min.css" integrity="sha256-7l/o7C8jubJiy74VsKTidCy1yBkRtiUGbVkYBylBqUg=" crossorigin>
+<link rel="stylesheet preload" as="style" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/10.1.1/styles/github.min.css" crossorigin>
+<style>:root{--highlight-color:#fe9}.flex{display:flex !important}body{line-height:1.5em}#content{padding:20px}#sidebar{padding:30px;overflow:hidden}#sidebar > *:last-child{margin-bottom:2cm}.http-server-breadcrumbs{font-size:130%;margin:0 0 15px 0}#footer{font-size:.75em;padding:5px 30px;border-top:1px solid #ddd;text-align:right}#footer p{margin:0 0 0 1em;display:inline-block}#footer p:last-child{margin-right:30px}h1,h2,h3,h4,h5{font-weight:300}h1{font-size:2.5em;line-height:1.1em}h2{font-size:1.75em;margin:1em 0 .50em 0}h3{font-size:1.4em;margin:25px 0 10px 0}h4{margin:0;font-size:105%}h1:target,h2:target,h3:target,h4:target,h5:target,h6:target{background:var(--highlight-color);padding:.2em 0}a{color:#058;text-decoration:none;transition:color .3s ease-in-out}a:hover{color:#e82}.title code{font-weight:bold}h2[id^="header-"]{margin-top:2em}.ident{color:#900}pre code{background:#f8f8f8;font-size:.8em;line-height:1.4em}code{background:#f2f2f1;padding:1px 4px;overflow-wrap:break-word}h1 code{background:transparent}pre{background:#f8f8f8;border:0;border-top:1px solid #ccc;border-bottom:1px solid #ccc;margin:1em 0;padding:1ex}#http-server-module-list{display:flex;flex-flow:column}#http-server-module-list div{display:flex}#http-server-module-list dt{min-width:10%}#http-server-module-list p{margin-top:0}.toc ul,#index{list-style-type:none;margin:0;padding:0}#index code{background:transparent}#index h3{border-bottom:1px solid #ddd}#index ul{padding:0}#index h4{margin-top:.6em;font-weight:bold}@media (min-width:200ex){#index .two-column{column-count:2}}@media (min-width:300ex){#index .two-column{column-count:3}}dl{margin-bottom:2em}dl dl:last-child{margin-bottom:4em}dd{margin:0 0 1em 3em}#header-classes + dl > dd{margin-bottom:3em}dd dd{margin-left:2em}dd p{margin:10px 0}.name{background:#eee;font-weight:bold;font-size:.85em;padding:5px 10px;display:inline-block;min-width:40%}.name:hover{background:#e0e0e0}dt:target .name{background:var(--highlight-color)}.name > span:first-child{white-space:nowrap}.name.class > span:nth-child(2){margin-left:.4em}.inherited{color:#999;border-left:5px solid #eee;padding-left:1em}.inheritance em{font-style:normal;font-weight:bold}.desc h2{font-weight:400;font-size:1.25em}.desc h3{font-size:1em}.desc dt code{background:inherit}.source summary,.git-link-div{color:#666;text-align:right;font-weight:400;font-size:.8em;text-transform:uppercase}.source summary > *{white-space:nowrap;cursor:pointer}.git-link{color:inherit;margin-left:1em}.source pre{max-height:500px;overflow:auto;margin:0}.source pre code{font-size:12px;overflow:visible}.hlist{list-style:none}.hlist li{display:inline}.hlist li:after{content:',\2002'}.hlist li:last-child:after{content:none}.hlist .hlist{display:inline;padding-left:1em}img{max-width:100%}td{padding:0 .5em}.admonition{padding:.1em .5em;margin-bottom:1em}.admonition-title{font-weight:bold}.admonition.note,.admonition.info,.admonition.important{background:#aef}.admonition.todo,.admonition.versionadded,.admonition.tip,.admonition.hint{background:#dfd}.admonition.warning,.admonition.versionchanged,.admonition.deprecated{background:#fd4}.admonition.error,.admonition.danger,.admonition.caution{background:lightpink}</style>
+<style media="screen and (min-width: 700px)">@media screen and (min-width:700px){#sidebar{width:30%;height:100vh;overflow:auto;position:sticky;top:0}#content{width:70%;max-width:100ch;padding:3em 4em;border-left:1px solid #ddd}pre code{font-size:1em}.item .name{font-size:1em}main{display:flex;flex-direction:row-reverse;justify-content:flex-end}.toc ul ul,#index ul{padding-left:1.5em}.toc > ul > li{margin-top:.5em}}</style>
+<style media="print">@media print{#sidebar h1{page-break-before:always}.source{display:none}}@media print{*{background:transparent !important;color:#000 !important;box-shadow:none !important;text-shadow:none !important}a[href]:after{content:" (" attr(href) ")";font-size:90%}a[href][title]:after{content:none}abbr[title]:after{content:" (" attr(title) ")"}.ir a:after,a[href^="javascript:"]:after,a[href^="#"]:after{content:""}pre,blockquote{border:1px solid #999;page-break-inside:avoid}thead{display:table-header-group}tr,img{page-break-inside:avoid}img{max-width:100% !important}@page{margin:0.5cm}p,h2,h3{orphans:3;widows:3}h1,h2,h3,h4,h5,h6{page-break-after:avoid}}</style>
+<script defer src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/10.1.1/highlight.min.js" integrity="sha256-Uv3H6lx7dJmRfRvH8TH6kJD1TSK1aFcwgx+mdg3epi8=" crossorigin></script>
+<script>window.addEventListener('DOMContentLoaded', () => hljs.initHighlighting())</script>
+</head>
+<body>
+<main>
+<article id="content">
+<header>
+<h1 class="title">Module <code>pywebcopy.core</code></h1>
+</header>
+<section id="section-intro">
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python"># Copyright 2020; Raja Tomar
+# See license for more details
+import logging
+import operator
+import os
+
+from lxml.html import HTMLParser
+from lxml.html import XHTML_NAMESPACE
+from lxml.html import parse
+from requests.models import Response
+
+from .elements import HTMLResource
+from .helpers import RewindableResponse
+from .schedulers import crawler_scheduler
+from .schedulers import default_scheduler
+from .schedulers import threading_crawler_scheduler
+from .schedulers import threading_default_scheduler
+
+__all__ = [&#39;WebPage&#39;, &#39;Crawler&#39;]
+
+logger = logging.getLogger(__name__)
+
+
+class WebPage(HTMLResource):
+    &#34;&#34;&#34;
+    WebPage built upon HTMLResource element.
+    It provides various utilities like form-filling,
+    external response processing, getting list of links,
+    dumping html and opening the html in the browser.
+    &#34;&#34;&#34;
+    @classmethod
+    def from_config(cls, config):
+        &#34;&#34;&#34;It creates a `WebPage` object from a set config object.
+        Under the hood it checks whether the config is set or not,
+        then it creates a `session` using the `config.create_session()` method.
+        It then creates a `scheduler` based on whether the threading is enabled or not.
+        It also defines a `context` object which stores the path metadata for this structure.
+        &#34;&#34;&#34;
+        if config and not config.is_set():
+            raise AttributeError(&#34;Configuration is not setup.&#34;)
+
+        session = config.create_session()
+        if config.get(&#39;threaded&#39;):
+            scheduler = threading_default_scheduler(
+                timeout=config.get_thread_join_timeout())
+        else:
+            scheduler = default_scheduler()
+        context = config.create_context()
+        ans = cls(session, config, scheduler, context)
+        # XXX: Check connection to the url here?
+        return ans
+
+    def __repr__(self):
+        &#34;&#34;&#34;Short representation of this instance.&#34;&#34;&#34;
+        return &#39;&lt;{}: {}&gt;&#39;.format(self.__class__.__name__, self.url)
+
+    element_map = property(
+        operator.attrgetter(&#39;scheduler.data&#39;),
+        doc=&#34;Registry of different handler for different tags.&#34;
+    )
+
+    def set_response(self, response):
+        &#34;&#34;&#34;
+        Set an explicit `requests.Response` object directly.
+        It accepts a `requests.Response` object and wraps it in a `RewindableResponse` object.
+        It also enables decoding in the original `urllib3` response object.
+
+        You can use it like this
+            import requests
+            resp = requests.get(&#39;https://www.httpbin.org/&#39;)
+            wp = WebPage()
+            wp.set_response(resp)
+            wp.get_forms()
+        &#34;&#34;&#34;
+        if not isinstance(response, Response):
+            raise ValueError(&#34;Expected %r, got %r&#34; % (Response, response))
+        response.raw.decode_content = True
+        response.raw = RewindableResponse(response.raw)
+        return super(WebPage, self).set_response(response)
+
+    def get_source(self, buffered=False):
+        &#34;&#34;&#34;Returns the `requests.Response` object
+        in a rewindable io wrapper. Contents can be consumed then
+        the `.rewind()` method should be called to restore the contents
+        of the original response.
+
+            wp = WebPage()
+            wp.get(&#39;http://httpbin.org/forms/&#39;)
+            src = WebPage.get_source(buffered=True)
+            contents = src.read()
+            src.rewind()
+
+        :param buffered: whether to return an Readable file-like object
+            or just a plain string.
+        :rtype: RewindableResponse
+        &#34;&#34;&#34;
+        raw = getattr(self.response, &#39;raw&#39;, None)
+        if raw is None:
+            raise ValueError(
+                &#34;HTTP Response is not set at the `.response` attribute!&#34;
+                &#34;Use the `.get()` method or `.set_response()` methods to set it.&#34;)
+
+        # if raw.closed:
+        #     raise ValueError(
+        #         &#34;I/O operations are closed for the raw source.&#34;)
+
+        # Return the raw object which will decode the
+        # buffer while reading otherwise errors will follow
+        raw.decode_content = True
+
+        # fp = getattr(raw, &#39;_fp&#39;, None)
+        # assert fp is not None, &#34;Raw source wrapper is missing!&#34;
+        # assert isinstance(fp, CallbackFileWrapper), \
+        #     &#34;Raw source wrapper is missing!&#34;
+        raw.rewind()
+        if buffered:
+            return raw, self.encoding
+        return raw.read(), self.encoding
+
+    def refresh(self):
+        &#34;&#34;&#34;Re-fetches the resource from the internet using the session.&#34;&#34;&#34;
+        self.set_response(self.session.get(self.url, stream=True))
+
+    def get_forms(self):
+        &#34;&#34;&#34;Returns a list of form elements available on the page.&#34;&#34;&#34;
+        source, encoding = self.get_source(buffered=True)
+        return parse(
+            source, parser=HTMLParser(encoding=encoding, collect_ids=False)
+        ).xpath(
+            &#34;descendant-or-self::form|descendant-or-self::x:form&#34;,
+            namespaces={&#39;x&#39;: XHTML_NAMESPACE}
+        )
+
+    def submit_form(self, form, **extra_values):
+        &#34;&#34;&#34;
+        Helper function to submit a `lxml` form.
+
+        Example:
+
+            wp = WebPage()
+            wp.get(&#39;http://httpbin.org/forms/&#39;)
+            form = wp.get_forms()[0]
+            form.inputs[&#39;email&#39;].value = &#39;bar&#39; # etc
+            form.inputs[&#39;password&#39;].value = &#39;baz&#39; # etc
+            wp.submit_form(form)
+            wp.get_links()
+
+        The action is one of &#39;GET&#39; or &#39;POST&#39;, the URL is the target URL as a
+        string, and the values are a sequence of ``(name, value)`` tuples
+        with the form data.
+        &#34;&#34;&#34;
+        values = form.form_values()
+        if extra_values:
+            if hasattr(extra_values, &#39;items&#39;):
+                extra_values = extra_values.items()
+            values.extend(extra_values)
+
+        if form.action:
+            url = form.action
+        elif form.base_url:
+            url = form.base_url
+        else:
+            url = self.url
+        return self.request(form.method, url, data=values)
+
+    def get_files(self):
+        &#34;&#34;&#34;
+        Returns a list of urls, css, js, images etc.
+        &#34;&#34;&#34;
+        return (e[2] for e in self.parse())
+
+    def get_links(self):
+        &#34;&#34;&#34;
+        Returns a list of urls in the anchor tags only.
+        &#34;&#34;&#34;
+        return (e[2] for e in self.parse() if e[0].tag == &#39;a&#39;)
+
+    def scrap_html(self, url):
+        &#34;&#34;&#34;Returns the html of the given url.
+
+        :param url: address of the target page.
+        &#34;&#34;&#34;
+        response = self.session.get(url)
+        response.raise_for_status()
+        return response.content
+
+    def scrap_links(self, url):
+        &#34;&#34;&#34;Returns all the links from a given url.
+
+        :param url: address of the target page.
+        &#34;&#34;&#34;
+        response = self.session.get(url)
+        response.raise_for_status()
+        return response.links()
+
+    def dump_html(self, filename=None):
+        &#34;&#34;&#34;Saves the html of the page to a default or specified file.
+
+        :param filename: path of the file to write the contents to
+        &#34;&#34;&#34;
+        filename = filename or self.filepath
+        with open(filename, &#39;w+b&#39;) as fh:
+            source, enc = self.get_source()
+            fh.write(source)
+        return filename
+
+    def save_complete(self, pop=False):
+        &#34;&#34;&#34;Saves the complete html+assets on page to a file and
+        also writes its linked files to the disk.
+
+        Implements the combined logic of save_assets and save_html in
+        compact form with checks and validation.
+        &#34;&#34;&#34;
+        if not self.viewing_html():
+            raise TypeError(
+                &#34;Not viewing a html page. Please check the link!&#34;)
+
+        self.scheduler.handle_resource(self)
+        if pop:
+            self.open_in_browser()
+        return self.filepath
+
+    def open_in_browser(self):
+        &#34;&#34;&#34;Open the page in the default browser if it has been saved.
+
+        You need to use the :meth:`~WebPage.save_complete` to make it work.
+        &#34;&#34;&#34;
+        if not os.path.exists(self.filepath):
+            self.logger.info(
+                &#34;Can&#39;t find the file to open in browser: %s&#34; % self.filepath)
+            return False
+
+        self.logger.info(
+            &#34;Opening default browser with file: %s&#34; % self.filepath)
+        import webbrowser
+        return webbrowser.open(&#39;file:///&#39; + self.filepath)
+
+    # handy shortcuts
+    run = crawl = save_assets = save_complete
+
+
+class Crawler(WebPage):
+    @classmethod
+    def from_config(cls, config):
+        &#34;&#34;&#34;
+        It creates a `Crawler` object from a set config object.
+        Under the hood it checks whether the config is set or not,
+        then it creates a `session` using the `config.create_session()` method.
+        It then creates a `scheduler` based on whether the threading is enabled or not.
+        The scheduler is different from the `WebPage` objects scheduler due to its
+        ability to process the anchor tags links to different pages.
+        It also defines a `context` object which stores the path metadata for this structure.
+        &#34;&#34;&#34;
+        if config and not config.is_set():
+            raise AttributeError(&#34;Configuration is not setup.&#34;)
+
+        session = config.create_session()
+        if config.get(&#39;threaded&#39;):
+            scheduler = threading_crawler_scheduler(
+                timeout=config.get_thread_join_timeout())
+        else:
+            scheduler = crawler_scheduler()
+        context = config.create_context()
+        ans = cls(session, config, scheduler, context)
+        # XXX: Check connection to the url here?
+        return ans</code></pre>
+</details>
+</section>
+<section>
+</section>
+<section>
+</section>
+<section>
+</section>
+<section>
+<h2 class="section-title" id="header-classes">Classes</h2>
+<dl>
+<dt id="pywebcopy.core.Crawler"><code class="flex name class">
+<span>class <span class="ident">Crawler</span></span>
+<span>(</span><span>session, config, scheduler, context, response=None)</span>
+</code></dt>
+<dd>
+<div class="desc"><p>WebPage built upon HTMLResource element.
+It provides various utilities like form-filling,
+external response processing, getting list of links,
+dumping html and opening the html in the browser.</p>
+<p>Generic internet resource which processes a server response based on responses
+content-type. Downloadable file if allowed in config would be downloaded. Css
+file would be parsed using suitable parser. Html will also be parsed using
+suitable html parser.</p>
+<p>:param session: http client used for networking.
+:param config: project configuration handler.
+:param response: http response from the server.
+:param scheduler: response processor scheduler.
+:param context: context of this response; should contain base-location, base-url etc.</p></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">class Crawler(WebPage):
+    @classmethod
+    def from_config(cls, config):
+        &#34;&#34;&#34;
+        It creates a `Crawler` object from a set config object.
+        Under the hood it checks whether the config is set or not,
+        then it creates a `session` using the `config.create_session()` method.
+        It then creates a `scheduler` based on whether the threading is enabled or not.
+        The scheduler is different from the `WebPage` objects scheduler due to its
+        ability to process the anchor tags links to different pages.
+        It also defines a `context` object which stores the path metadata for this structure.
+        &#34;&#34;&#34;
+        if config and not config.is_set():
+            raise AttributeError(&#34;Configuration is not setup.&#34;)
+
+        session = config.create_session()
+        if config.get(&#39;threaded&#39;):
+            scheduler = threading_crawler_scheduler(
+                timeout=config.get_thread_join_timeout())
+        else:
+            scheduler = crawler_scheduler()
+        context = config.create_context()
+        ans = cls(session, config, scheduler, context)
+        # XXX: Check connection to the url here?
+        return ans</code></pre>
+</details>
+<h3>Ancestors</h3>
+<ul class="hlist">
+<li><a title="pywebcopy.core.WebPage" href="#pywebcopy.core.WebPage">WebPage</a></li>
+<li><a title="pywebcopy.elements.HTMLResource" href="elements.html#pywebcopy.elements.HTMLResource">HTMLResource</a></li>
+<li><a title="pywebcopy.elements.GenericResource" href="elements.html#pywebcopy.elements.GenericResource">GenericResource</a></li>
+</ul>
+<h3>Static methods</h3>
+<dl>
+<dt id="pywebcopy.core.Crawler.from_config"><code class="name flex">
+<span>def <span class="ident">from_config</span></span>(<span>config)</span>
+</code></dt>
+<dd>
+<div class="desc"><p>It creates a <code><a title="pywebcopy.core.Crawler" href="#pywebcopy.core.Crawler">Crawler</a></code> object from a set config object.
+Under the hood it checks whether the config is set or not,
+then it creates a <code>session</code> using the <code>config.create_session()</code> method.
+It then creates a <code>scheduler</code> based on whether the threading is enabled or not.
+The scheduler is different from the <code><a title="pywebcopy.core.WebPage" href="#pywebcopy.core.WebPage">WebPage</a></code> objects scheduler due to its
+ability to process the anchor tags links to different pages.
+It also defines a <code>context</code> object which stores the path metadata for this structure.</p></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">@classmethod
+def from_config(cls, config):
+    &#34;&#34;&#34;
+    It creates a `Crawler` object from a set config object.
+    Under the hood it checks whether the config is set or not,
+    then it creates a `session` using the `config.create_session()` method.
+    It then creates a `scheduler` based on whether the threading is enabled or not.
+    The scheduler is different from the `WebPage` objects scheduler due to its
+    ability to process the anchor tags links to different pages.
+    It also defines a `context` object which stores the path metadata for this structure.
+    &#34;&#34;&#34;
+    if config and not config.is_set():
+        raise AttributeError(&#34;Configuration is not setup.&#34;)
+
+    session = config.create_session()
+    if config.get(&#39;threaded&#39;):
+        scheduler = threading_crawler_scheduler(
+            timeout=config.get_thread_join_timeout())
+    else:
+        scheduler = crawler_scheduler()
+    context = config.create_context()
+    ans = cls(session, config, scheduler, context)
+    # XXX: Check connection to the url here?
+    return ans</code></pre>
+</details>
+</dd>
+</dl>
+<h3>Inherited members</h3>
+<ul class="hlist">
+<li><code><b><a title="pywebcopy.core.WebPage" href="#pywebcopy.core.WebPage">WebPage</a></b></code>:
+<ul class="hlist">
+<li><code><a title="pywebcopy.core.WebPage.close" href="elements.html#pywebcopy.elements.GenericResource.close">close</a></code></li>
+<li><code><a title="pywebcopy.core.WebPage.content_type" href="elements.html#pywebcopy.elements.GenericResource.content_type">content_type</a></code></li>
+<li><code><a title="pywebcopy.core.WebPage.crawl" href="#pywebcopy.core.WebPage.crawl">crawl</a></code></li>
+<li><code><a title="pywebcopy.core.WebPage.dump_html" href="#pywebcopy.core.WebPage.dump_html">dump_html</a></code></li>
+<li><code><a title="pywebcopy.core.WebPage.element_map" href="#pywebcopy.core.WebPage.element_map">element_map</a></code></li>
+<li><code><a title="pywebcopy.core.WebPage.encoding" href="elements.html#pywebcopy.elements.GenericResource.encoding">encoding</a></code></li>
+<li><code><a title="pywebcopy.core.WebPage.extract_children" href="elements.html#pywebcopy.elements.HTMLResource.extract_children">extract_children</a></code></li>
+<li><code><a title="pywebcopy.core.WebPage.filename" href="elements.html#pywebcopy.elements.GenericResource.filename">filename</a></code></li>
+<li><code><a title="pywebcopy.core.WebPage.filepath" href="elements.html#pywebcopy.elements.GenericResource.filepath">filepath</a></code></li>
+<li><code><a title="pywebcopy.core.WebPage.get" href="elements.html#pywebcopy.elements.GenericResource.get">get</a></code></li>
+<li><code><a title="pywebcopy.core.WebPage.get_files" href="#pywebcopy.core.WebPage.get_files">get_files</a></code></li>
+<li><code><a title="pywebcopy.core.WebPage.get_forms" href="#pywebcopy.core.WebPage.get_forms">get_forms</a></code></li>
+<li><code><a title="pywebcopy.core.WebPage.get_links" href="#pywebcopy.core.WebPage.get_links">get_links</a></code></li>
+<li><code><a title="pywebcopy.core.WebPage.get_source" href="#pywebcopy.core.WebPage.get_source">get_source</a></code></li>
+<li><code><a title="pywebcopy.core.WebPage.open_in_browser" href="#pywebcopy.core.WebPage.open_in_browser">open_in_browser</a></code></li>
+<li><code><a title="pywebcopy.core.WebPage.parse" href="elements.html#pywebcopy.elements.HTMLResource.parse">parse</a></code></li>
+<li><code><a title="pywebcopy.core.WebPage.post" href="elements.html#pywebcopy.elements.GenericResource.post">post</a></code></li>
+<li><code><a title="pywebcopy.core.WebPage.refresh" href="#pywebcopy.core.WebPage.refresh">refresh</a></code></li>
+<li><code><a title="pywebcopy.core.WebPage.request" href="elements.html#pywebcopy.elements.GenericResource.request">request</a></code></li>
+<li><code><a title="pywebcopy.core.WebPage.resolve" href="elements.html#pywebcopy.elements.GenericResource.resolve">resolve</a></code></li>
+<li><code><a title="pywebcopy.core.WebPage.retrieve" href="elements.html#pywebcopy.elements.GenericResource.retrieve">retrieve</a></code></li>
+<li><code><a title="pywebcopy.core.WebPage.run" href="#pywebcopy.core.WebPage.run">run</a></code></li>
+<li><code><a title="pywebcopy.core.WebPage.save_assets" href="#pywebcopy.core.WebPage.save_assets">save_assets</a></code></li>
+<li><code><a title="pywebcopy.core.WebPage.save_complete" href="#pywebcopy.core.WebPage.save_complete">save_complete</a></code></li>
+<li><code><a title="pywebcopy.core.WebPage.scrap_html" href="#pywebcopy.core.WebPage.scrap_html">scrap_html</a></code></li>
+<li><code><a title="pywebcopy.core.WebPage.scrap_links" href="#pywebcopy.core.WebPage.scrap_links">scrap_links</a></code></li>
+<li><code><a title="pywebcopy.core.WebPage.set_response" href="#pywebcopy.core.WebPage.set_response">set_response</a></code></li>
+<li><code><a title="pywebcopy.core.WebPage.submit_form" href="#pywebcopy.core.WebPage.submit_form">submit_form</a></code></li>
+<li><code><a title="pywebcopy.core.WebPage.url" href="elements.html#pywebcopy.elements.GenericResource.url">url</a></code></li>
+<li><code><a title="pywebcopy.core.WebPage.viewing_css" href="elements.html#pywebcopy.elements.GenericResource.viewing_css">viewing_css</a></code></li>
+<li><code><a title="pywebcopy.core.WebPage.viewing_html" href="elements.html#pywebcopy.elements.GenericResource.viewing_html">viewing_html</a></code></li>
+<li><code><a title="pywebcopy.core.WebPage.viewing_js" href="elements.html#pywebcopy.elements.GenericResource.viewing_js">viewing_js</a></code></li>
+</ul>
+</li>
+</ul>
+</dd>
+<dt id="pywebcopy.core.WebPage"><code class="flex name class">
+<span>class <span class="ident">WebPage</span></span>
+<span>(</span><span>session, config, scheduler, context, response=None)</span>
+</code></dt>
+<dd>
+<div class="desc"><p>WebPage built upon HTMLResource element.
+It provides various utilities like form-filling,
+external response processing, getting list of links,
+dumping html and opening the html in the browser.</p>
+<p>Generic internet resource which processes a server response based on responses
+content-type. Downloadable file if allowed in config would be downloaded. Css
+file would be parsed using suitable parser. Html will also be parsed using
+suitable html parser.</p>
+<p>:param session: http client used for networking.
+:param config: project configuration handler.
+:param response: http response from the server.
+:param scheduler: response processor scheduler.
+:param context: context of this response; should contain base-location, base-url etc.</p></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">class WebPage(HTMLResource):
+    &#34;&#34;&#34;
+    WebPage built upon HTMLResource element.
+    It provides various utilities like form-filling,
+    external response processing, getting list of links,
+    dumping html and opening the html in the browser.
+    &#34;&#34;&#34;
+    @classmethod
+    def from_config(cls, config):
+        &#34;&#34;&#34;It creates a `WebPage` object from a set config object.
+        Under the hood it checks whether the config is set or not,
+        then it creates a `session` using the `config.create_session()` method.
+        It then creates a `scheduler` based on whether the threading is enabled or not.
+        It also defines a `context` object which stores the path metadata for this structure.
+        &#34;&#34;&#34;
+        if config and not config.is_set():
+            raise AttributeError(&#34;Configuration is not setup.&#34;)
+
+        session = config.create_session()
+        if config.get(&#39;threaded&#39;):
+            scheduler = threading_default_scheduler(
+                timeout=config.get_thread_join_timeout())
+        else:
+            scheduler = default_scheduler()
+        context = config.create_context()
+        ans = cls(session, config, scheduler, context)
+        # XXX: Check connection to the url here?
+        return ans
+
+    def __repr__(self):
+        &#34;&#34;&#34;Short representation of this instance.&#34;&#34;&#34;
+        return &#39;&lt;{}: {}&gt;&#39;.format(self.__class__.__name__, self.url)
+
+    element_map = property(
+        operator.attrgetter(&#39;scheduler.data&#39;),
+        doc=&#34;Registry of different handler for different tags.&#34;
+    )
+
+    def set_response(self, response):
+        &#34;&#34;&#34;
+        Set an explicit `requests.Response` object directly.
+        It accepts a `requests.Response` object and wraps it in a `RewindableResponse` object.
+        It also enables decoding in the original `urllib3` response object.
+
+        You can use it like this
+            import requests
+            resp = requests.get(&#39;https://www.httpbin.org/&#39;)
+            wp = WebPage()
+            wp.set_response(resp)
+            wp.get_forms()
+        &#34;&#34;&#34;
+        if not isinstance(response, Response):
+            raise ValueError(&#34;Expected %r, got %r&#34; % (Response, response))
+        response.raw.decode_content = True
+        response.raw = RewindableResponse(response.raw)
+        return super(WebPage, self).set_response(response)
+
+    def get_source(self, buffered=False):
+        &#34;&#34;&#34;Returns the `requests.Response` object
+        in a rewindable io wrapper. Contents can be consumed then
+        the `.rewind()` method should be called to restore the contents
+        of the original response.
+
+            wp = WebPage()
+            wp.get(&#39;http://httpbin.org/forms/&#39;)
+            src = WebPage.get_source(buffered=True)
+            contents = src.read()
+            src.rewind()
+
+        :param buffered: whether to return an Readable file-like object
+            or just a plain string.
+        :rtype: RewindableResponse
+        &#34;&#34;&#34;
+        raw = getattr(self.response, &#39;raw&#39;, None)
+        if raw is None:
+            raise ValueError(
+                &#34;HTTP Response is not set at the `.response` attribute!&#34;
+                &#34;Use the `.get()` method or `.set_response()` methods to set it.&#34;)
+
+        # if raw.closed:
+        #     raise ValueError(
+        #         &#34;I/O operations are closed for the raw source.&#34;)
+
+        # Return the raw object which will decode the
+        # buffer while reading otherwise errors will follow
+        raw.decode_content = True
+
+        # fp = getattr(raw, &#39;_fp&#39;, None)
+        # assert fp is not None, &#34;Raw source wrapper is missing!&#34;
+        # assert isinstance(fp, CallbackFileWrapper), \
+        #     &#34;Raw source wrapper is missing!&#34;
+        raw.rewind()
+        if buffered:
+            return raw, self.encoding
+        return raw.read(), self.encoding
+
+    def refresh(self):
+        &#34;&#34;&#34;Re-fetches the resource from the internet using the session.&#34;&#34;&#34;
+        self.set_response(self.session.get(self.url, stream=True))
+
+    def get_forms(self):
+        &#34;&#34;&#34;Returns a list of form elements available on the page.&#34;&#34;&#34;
+        source, encoding = self.get_source(buffered=True)
+        return parse(
+            source, parser=HTMLParser(encoding=encoding, collect_ids=False)
+        ).xpath(
+            &#34;descendant-or-self::form|descendant-or-self::x:form&#34;,
+            namespaces={&#39;x&#39;: XHTML_NAMESPACE}
+        )
+
+    def submit_form(self, form, **extra_values):
+        &#34;&#34;&#34;
+        Helper function to submit a `lxml` form.
+
+        Example:
+
+            wp = WebPage()
+            wp.get(&#39;http://httpbin.org/forms/&#39;)
+            form = wp.get_forms()[0]
+            form.inputs[&#39;email&#39;].value = &#39;bar&#39; # etc
+            form.inputs[&#39;password&#39;].value = &#39;baz&#39; # etc
+            wp.submit_form(form)
+            wp.get_links()
+
+        The action is one of &#39;GET&#39; or &#39;POST&#39;, the URL is the target URL as a
+        string, and the values are a sequence of ``(name, value)`` tuples
+        with the form data.
+        &#34;&#34;&#34;
+        values = form.form_values()
+        if extra_values:
+            if hasattr(extra_values, &#39;items&#39;):
+                extra_values = extra_values.items()
+            values.extend(extra_values)
+
+        if form.action:
+            url = form.action
+        elif form.base_url:
+            url = form.base_url
+        else:
+            url = self.url
+        return self.request(form.method, url, data=values)
+
+    def get_files(self):
+        &#34;&#34;&#34;
+        Returns a list of urls, css, js, images etc.
+        &#34;&#34;&#34;
+        return (e[2] for e in self.parse())
+
+    def get_links(self):
+        &#34;&#34;&#34;
+        Returns a list of urls in the anchor tags only.
+        &#34;&#34;&#34;
+        return (e[2] for e in self.parse() if e[0].tag == &#39;a&#39;)
+
+    def scrap_html(self, url):
+        &#34;&#34;&#34;Returns the html of the given url.
+
+        :param url: address of the target page.
+        &#34;&#34;&#34;
+        response = self.session.get(url)
+        response.raise_for_status()
+        return response.content
+
+    def scrap_links(self, url):
+        &#34;&#34;&#34;Returns all the links from a given url.
+
+        :param url: address of the target page.
+        &#34;&#34;&#34;
+        response = self.session.get(url)
+        response.raise_for_status()
+        return response.links()
+
+    def dump_html(self, filename=None):
+        &#34;&#34;&#34;Saves the html of the page to a default or specified file.
+
+        :param filename: path of the file to write the contents to
+        &#34;&#34;&#34;
+        filename = filename or self.filepath
+        with open(filename, &#39;w+b&#39;) as fh:
+            source, enc = self.get_source()
+            fh.write(source)
+        return filename
+
+    def save_complete(self, pop=False):
+        &#34;&#34;&#34;Saves the complete html+assets on page to a file and
+        also writes its linked files to the disk.
+
+        Implements the combined logic of save_assets and save_html in
+        compact form with checks and validation.
+        &#34;&#34;&#34;
+        if not self.viewing_html():
+            raise TypeError(
+                &#34;Not viewing a html page. Please check the link!&#34;)
+
+        self.scheduler.handle_resource(self)
+        if pop:
+            self.open_in_browser()
+        return self.filepath
+
+    def open_in_browser(self):
+        &#34;&#34;&#34;Open the page in the default browser if it has been saved.
+
+        You need to use the :meth:`~WebPage.save_complete` to make it work.
+        &#34;&#34;&#34;
+        if not os.path.exists(self.filepath):
+            self.logger.info(
+                &#34;Can&#39;t find the file to open in browser: %s&#34; % self.filepath)
+            return False
+
+        self.logger.info(
+            &#34;Opening default browser with file: %s&#34; % self.filepath)
+        import webbrowser
+        return webbrowser.open(&#39;file:///&#39; + self.filepath)
+
+    # handy shortcuts
+    run = crawl = save_assets = save_complete</code></pre>
+</details>
+<h3>Ancestors</h3>
+<ul class="hlist">
+<li><a title="pywebcopy.elements.HTMLResource" href="elements.html#pywebcopy.elements.HTMLResource">HTMLResource</a></li>
+<li><a title="pywebcopy.elements.GenericResource" href="elements.html#pywebcopy.elements.GenericResource">GenericResource</a></li>
+</ul>
+<h3>Subclasses</h3>
+<ul class="hlist">
+<li><a title="pywebcopy.core.Crawler" href="#pywebcopy.core.Crawler">Crawler</a></li>
+</ul>
+<h3>Static methods</h3>
+<dl>
+<dt id="pywebcopy.core.WebPage.from_config"><code class="name flex">
+<span>def <span class="ident">from_config</span></span>(<span>config)</span>
+</code></dt>
+<dd>
+<div class="desc"><p>It creates a <code><a title="pywebcopy.core.WebPage" href="#pywebcopy.core.WebPage">WebPage</a></code> object from a set config object.
+Under the hood it checks whether the config is set or not,
+then it creates a <code>session</code> using the <code>config.create_session()</code> method.
+It then creates a <code>scheduler</code> based on whether the threading is enabled or not.
+It also defines a <code>context</code> object which stores the path metadata for this structure.</p></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">@classmethod
+def from_config(cls, config):
+    &#34;&#34;&#34;It creates a `WebPage` object from a set config object.
+    Under the hood it checks whether the config is set or not,
+    then it creates a `session` using the `config.create_session()` method.
+    It then creates a `scheduler` based on whether the threading is enabled or not.
+    It also defines a `context` object which stores the path metadata for this structure.
+    &#34;&#34;&#34;
+    if config and not config.is_set():
+        raise AttributeError(&#34;Configuration is not setup.&#34;)
+
+    session = config.create_session()
+    if config.get(&#39;threaded&#39;):
+        scheduler = threading_default_scheduler(
+            timeout=config.get_thread_join_timeout())
+    else:
+        scheduler = default_scheduler()
+    context = config.create_context()
+    ans = cls(session, config, scheduler, context)
+    # XXX: Check connection to the url here?
+    return ans</code></pre>
+</details>
+</dd>
+</dl>
+<h3>Instance variables</h3>
+<dl>
+<dt id="pywebcopy.core.WebPage.element_map"><code class="name">var <span class="ident">element_map</span></code></dt>
+<dd>
+<div class="desc"><p>Registry of different handler for different tags.</p></div>
+</dd>
+</dl>
+<h3>Methods</h3>
+<dl>
+<dt id="pywebcopy.core.WebPage.crawl"><code class="name flex">
+<span>def <span class="ident">crawl</span></span>(<span>self, pop=False)</span>
+</code></dt>
+<dd>
+<div class="desc"><p>Saves the complete html+assets on page to a file and
+also writes its linked files to the disk.</p>
+<p>Implements the combined logic of save_assets and save_html in
+compact form with checks and validation.</p></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def save_complete(self, pop=False):
+    &#34;&#34;&#34;Saves the complete html+assets on page to a file and
+    also writes its linked files to the disk.
+
+    Implements the combined logic of save_assets and save_html in
+    compact form with checks and validation.
+    &#34;&#34;&#34;
+    if not self.viewing_html():
+        raise TypeError(
+            &#34;Not viewing a html page. Please check the link!&#34;)
+
+    self.scheduler.handle_resource(self)
+    if pop:
+        self.open_in_browser()
+    return self.filepath</code></pre>
+</details>
+</dd>
+<dt id="pywebcopy.core.WebPage.dump_html"><code class="name flex">
+<span>def <span class="ident">dump_html</span></span>(<span>self, filename=None)</span>
+</code></dt>
+<dd>
+<div class="desc"><p>Saves the html of the page to a default or specified file.</p>
+<p>:param filename: path of the file to write the contents to</p></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def dump_html(self, filename=None):
+    &#34;&#34;&#34;Saves the html of the page to a default or specified file.
+
+    :param filename: path of the file to write the contents to
+    &#34;&#34;&#34;
+    filename = filename or self.filepath
+    with open(filename, &#39;w+b&#39;) as fh:
+        source, enc = self.get_source()
+        fh.write(source)
+    return filename</code></pre>
+</details>
+</dd>
+<dt id="pywebcopy.core.WebPage.get_files"><code class="name flex">
+<span>def <span class="ident">get_files</span></span>(<span>self)</span>
+</code></dt>
+<dd>
+<div class="desc"><p>Returns a list of urls, css, js, images etc.</p></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def get_files(self):
+    &#34;&#34;&#34;
+    Returns a list of urls, css, js, images etc.
+    &#34;&#34;&#34;
+    return (e[2] for e in self.parse())</code></pre>
+</details>
+</dd>
+<dt id="pywebcopy.core.WebPage.get_forms"><code class="name flex">
+<span>def <span class="ident">get_forms</span></span>(<span>self)</span>
+</code></dt>
+<dd>
+<div class="desc"><p>Returns a list of form elements available on the page.</p></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def get_forms(self):
+    &#34;&#34;&#34;Returns a list of form elements available on the page.&#34;&#34;&#34;
+    source, encoding = self.get_source(buffered=True)
+    return parse(
+        source, parser=HTMLParser(encoding=encoding, collect_ids=False)
+    ).xpath(
+        &#34;descendant-or-self::form|descendant-or-self::x:form&#34;,
+        namespaces={&#39;x&#39;: XHTML_NAMESPACE}
+    )</code></pre>
+</details>
+</dd>
+<dt id="pywebcopy.core.WebPage.get_links"><code class="name flex">
+<span>def <span class="ident">get_links</span></span>(<span>self)</span>
+</code></dt>
+<dd>
+<div class="desc"><p>Returns a list of urls in the anchor tags only.</p></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def get_links(self):
+    &#34;&#34;&#34;
+    Returns a list of urls in the anchor tags only.
+    &#34;&#34;&#34;
+    return (e[2] for e in self.parse() if e[0].tag == &#39;a&#39;)</code></pre>
+</details>
+</dd>
+<dt id="pywebcopy.core.WebPage.get_source"><code class="name flex">
+<span>def <span class="ident">get_source</span></span>(<span>self, buffered=False)</span>
+</code></dt>
+<dd>
+<div class="desc"><p>Returns the <code>requests.Response</code> object
+in a rewindable io wrapper. Contents can be consumed then
+the <code>.rewind()</code> method should be called to restore the contents
+of the original response.</p>
+<pre><code>wp = WebPage()
+wp.get('http://httpbin.org/forms/')
+src = WebPage.get_source(buffered=True)
+contents = src.read()
+src.rewind()
+</code></pre>
+<p>:param buffered: whether to return an Readable file-like object
+or just a plain string.
+:rtype: RewindableResponse</p></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def get_source(self, buffered=False):
+    &#34;&#34;&#34;Returns the `requests.Response` object
+    in a rewindable io wrapper. Contents can be consumed then
+    the `.rewind()` method should be called to restore the contents
+    of the original response.
+
+        wp = WebPage()
+        wp.get(&#39;http://httpbin.org/forms/&#39;)
+        src = WebPage.get_source(buffered=True)
+        contents = src.read()
+        src.rewind()
+
+    :param buffered: whether to return an Readable file-like object
+        or just a plain string.
+    :rtype: RewindableResponse
+    &#34;&#34;&#34;
+    raw = getattr(self.response, &#39;raw&#39;, None)
+    if raw is None:
+        raise ValueError(
+            &#34;HTTP Response is not set at the `.response` attribute!&#34;
+            &#34;Use the `.get()` method or `.set_response()` methods to set it.&#34;)
+
+    # if raw.closed:
+    #     raise ValueError(
+    #         &#34;I/O operations are closed for the raw source.&#34;)
+
+    # Return the raw object which will decode the
+    # buffer while reading otherwise errors will follow
+    raw.decode_content = True
+
+    # fp = getattr(raw, &#39;_fp&#39;, None)
+    # assert fp is not None, &#34;Raw source wrapper is missing!&#34;
+    # assert isinstance(fp, CallbackFileWrapper), \
+    #     &#34;Raw source wrapper is missing!&#34;
+    raw.rewind()
+    if buffered:
+        return raw, self.encoding
+    return raw.read(), self.encoding</code></pre>
+</details>
+</dd>
+<dt id="pywebcopy.core.WebPage.open_in_browser"><code class="name flex">
+<span>def <span class="ident">open_in_browser</span></span>(<span>self)</span>
+</code></dt>
+<dd>
+<div class="desc"><p>Open the page in the default browser if it has been saved.</p>
+<p>You need to use the :meth:<code>~WebPage.save_complete</code> to make it work.</p></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def open_in_browser(self):
+    &#34;&#34;&#34;Open the page in the default browser if it has been saved.
+
+    You need to use the :meth:`~WebPage.save_complete` to make it work.
+    &#34;&#34;&#34;
+    if not os.path.exists(self.filepath):
+        self.logger.info(
+            &#34;Can&#39;t find the file to open in browser: %s&#34; % self.filepath)
+        return False
+
+    self.logger.info(
+        &#34;Opening default browser with file: %s&#34; % self.filepath)
+    import webbrowser
+    return webbrowser.open(&#39;file:///&#39; + self.filepath)</code></pre>
+</details>
+</dd>
+<dt id="pywebcopy.core.WebPage.refresh"><code class="name flex">
+<span>def <span class="ident">refresh</span></span>(<span>self)</span>
+</code></dt>
+<dd>
+<div class="desc"><p>Re-fetches the resource from the internet using the session.</p></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def refresh(self):
+    &#34;&#34;&#34;Re-fetches the resource from the internet using the session.&#34;&#34;&#34;
+    self.set_response(self.session.get(self.url, stream=True))</code></pre>
+</details>
+</dd>
+<dt id="pywebcopy.core.WebPage.run"><code class="name flex">
+<span>def <span class="ident">run</span></span>(<span>self, pop=False)</span>
+</code></dt>
+<dd>
+<div class="desc"><p>Saves the complete html+assets on page to a file and
+also writes its linked files to the disk.</p>
+<p>Implements the combined logic of save_assets and save_html in
+compact form with checks and validation.</p></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def save_complete(self, pop=False):
+    &#34;&#34;&#34;Saves the complete html+assets on page to a file and
+    also writes its linked files to the disk.
+
+    Implements the combined logic of save_assets and save_html in
+    compact form with checks and validation.
+    &#34;&#34;&#34;
+    if not self.viewing_html():
+        raise TypeError(
+            &#34;Not viewing a html page. Please check the link!&#34;)
+
+    self.scheduler.handle_resource(self)
+    if pop:
+        self.open_in_browser()
+    return self.filepath</code></pre>
+</details>
+</dd>
+<dt id="pywebcopy.core.WebPage.save_assets"><code class="name flex">
+<span>def <span class="ident">save_assets</span></span>(<span>self, pop=False)</span>
+</code></dt>
+<dd>
+<div class="desc"><p>Saves the complete html+assets on page to a file and
+also writes its linked files to the disk.</p>
+<p>Implements the combined logic of save_assets and save_html in
+compact form with checks and validation.</p></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def save_complete(self, pop=False):
+    &#34;&#34;&#34;Saves the complete html+assets on page to a file and
+    also writes its linked files to the disk.
+
+    Implements the combined logic of save_assets and save_html in
+    compact form with checks and validation.
+    &#34;&#34;&#34;
+    if not self.viewing_html():
+        raise TypeError(
+            &#34;Not viewing a html page. Please check the link!&#34;)
+
+    self.scheduler.handle_resource(self)
+    if pop:
+        self.open_in_browser()
+    return self.filepath</code></pre>
+</details>
+</dd>
+<dt id="pywebcopy.core.WebPage.save_complete"><code class="name flex">
+<span>def <span class="ident">save_complete</span></span>(<span>self, pop=False)</span>
+</code></dt>
+<dd>
+<div class="desc"><p>Saves the complete html+assets on page to a file and
+also writes its linked files to the disk.</p>
+<p>Implements the combined logic of save_assets and save_html in
+compact form with checks and validation.</p></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def save_complete(self, pop=False):
+    &#34;&#34;&#34;Saves the complete html+assets on page to a file and
+    also writes its linked files to the disk.
+
+    Implements the combined logic of save_assets and save_html in
+    compact form with checks and validation.
+    &#34;&#34;&#34;
+    if not self.viewing_html():
+        raise TypeError(
+            &#34;Not viewing a html page. Please check the link!&#34;)
+
+    self.scheduler.handle_resource(self)
+    if pop:
+        self.open_in_browser()
+    return self.filepath</code></pre>
+</details>
+</dd>
+<dt id="pywebcopy.core.WebPage.scrap_html"><code class="name flex">
+<span>def <span class="ident">scrap_html</span></span>(<span>self, url)</span>
+</code></dt>
+<dd>
+<div class="desc"><p>Returns the html of the given url.</p>
+<p>:param url: address of the target page.</p></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def scrap_html(self, url):
+    &#34;&#34;&#34;Returns the html of the given url.
+
+    :param url: address of the target page.
+    &#34;&#34;&#34;
+    response = self.session.get(url)
+    response.raise_for_status()
+    return response.content</code></pre>
+</details>
+</dd>
+<dt id="pywebcopy.core.WebPage.scrap_links"><code class="name flex">
+<span>def <span class="ident">scrap_links</span></span>(<span>self, url)</span>
+</code></dt>
+<dd>
+<div class="desc"><p>Returns all the links from a given url.</p>
+<p>:param url: address of the target page.</p></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def scrap_links(self, url):
+    &#34;&#34;&#34;Returns all the links from a given url.
+
+    :param url: address of the target page.
+    &#34;&#34;&#34;
+    response = self.session.get(url)
+    response.raise_for_status()
+    return response.links()</code></pre>
+</details>
+</dd>
+<dt id="pywebcopy.core.WebPage.set_response"><code class="name flex">
+<span>def <span class="ident">set_response</span></span>(<span>self, response)</span>
+</code></dt>
+<dd>
+<div class="desc"><p>Set an explicit <code>requests.Response</code> object directly.
+It accepts a <code>requests.Response</code> object and wraps it in a <code>RewindableResponse</code> object.
+It also enables decoding in the original <code>urllib3</code> response object.</p>
+<p>You can use it like this
+import requests
+resp = requests.get('https://www.httpbin.org/')
+wp = WebPage()
+wp.set_response(resp)
+wp.get_forms()</p></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def set_response(self, response):
+    &#34;&#34;&#34;
+    Set an explicit `requests.Response` object directly.
+    It accepts a `requests.Response` object and wraps it in a `RewindableResponse` object.
+    It also enables decoding in the original `urllib3` response object.
+
+    You can use it like this
+        import requests
+        resp = requests.get(&#39;https://www.httpbin.org/&#39;)
+        wp = WebPage()
+        wp.set_response(resp)
+        wp.get_forms()
+    &#34;&#34;&#34;
+    if not isinstance(response, Response):
+        raise ValueError(&#34;Expected %r, got %r&#34; % (Response, response))
+    response.raw.decode_content = True
+    response.raw = RewindableResponse(response.raw)
+    return super(WebPage, self).set_response(response)</code></pre>
+</details>
+</dd>
+<dt id="pywebcopy.core.WebPage.submit_form"><code class="name flex">
+<span>def <span class="ident">submit_form</span></span>(<span>self, form, **extra_values)</span>
+</code></dt>
+<dd>
+<div class="desc"><p>Helper function to submit a <code>lxml</code> form.</p>
+<h2 id="example">Example</h2>
+<p>wp = WebPage()
+wp.get('http://httpbin.org/forms/')
+form = wp.get_forms()[0]
+form.inputs['email'].value = 'bar' # etc
+form.inputs['password'].value = 'baz' # etc
+wp.submit_form(form)
+wp.get_links()</p>
+<p>The action is one of 'GET' or 'POST', the URL is the target URL as a
+string, and the values are a sequence of <code>(name, value)</code> tuples
+with the form data.</p></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def submit_form(self, form, **extra_values):
+    &#34;&#34;&#34;
+    Helper function to submit a `lxml` form.
+
+    Example:
+
+        wp = WebPage()
+        wp.get(&#39;http://httpbin.org/forms/&#39;)
+        form = wp.get_forms()[0]
+        form.inputs[&#39;email&#39;].value = &#39;bar&#39; # etc
+        form.inputs[&#39;password&#39;].value = &#39;baz&#39; # etc
+        wp.submit_form(form)
+        wp.get_links()
+
+    The action is one of &#39;GET&#39; or &#39;POST&#39;, the URL is the target URL as a
+    string, and the values are a sequence of ``(name, value)`` tuples
+    with the form data.
+    &#34;&#34;&#34;
+    values = form.form_values()
+    if extra_values:
+        if hasattr(extra_values, &#39;items&#39;):
+            extra_values = extra_values.items()
+        values.extend(extra_values)
+
+    if form.action:
+        url = form.action
+    elif form.base_url:
+        url = form.base_url
+    else:
+        url = self.url
+    return self.request(form.method, url, data=values)</code></pre>
+</details>
+</dd>
+</dl>
+<h3>Inherited members</h3>
+<ul class="hlist">
+<li><code><b><a title="pywebcopy.elements.HTMLResource" href="elements.html#pywebcopy.elements.HTMLResource">HTMLResource</a></b></code>:
+<ul class="hlist">
+<li><code><a title="pywebcopy.elements.HTMLResource.close" href="elements.html#pywebcopy.elements.GenericResource.close">close</a></code></li>
+<li><code><a title="pywebcopy.elements.HTMLResource.content_type" href="elements.html#pywebcopy.elements.GenericResource.content_type">content_type</a></code></li>
+<li><code><a title="pywebcopy.elements.HTMLResource.encoding" href="elements.html#pywebcopy.elements.GenericResource.encoding">encoding</a></code></li>
+<li><code><a title="pywebcopy.elements.HTMLResource.extract_children" href="elements.html#pywebcopy.elements.HTMLResource.extract_children">extract_children</a></code></li>
+<li><code><a title="pywebcopy.elements.HTMLResource.filename" href="elements.html#pywebcopy.elements.GenericResource.filename">filename</a></code></li>
+<li><code><a title="pywebcopy.elements.HTMLResource.filepath" href="elements.html#pywebcopy.elements.GenericResource.filepath">filepath</a></code></li>
+<li><code><a title="pywebcopy.elements.HTMLResource.get" href="elements.html#pywebcopy.elements.GenericResource.get">get</a></code></li>
+<li><code><a title="pywebcopy.elements.HTMLResource.parse" href="elements.html#pywebcopy.elements.HTMLResource.parse">parse</a></code></li>
+<li><code><a title="pywebcopy.elements.HTMLResource.post" href="elements.html#pywebcopy.elements.GenericResource.post">post</a></code></li>
+<li><code><a title="pywebcopy.elements.HTMLResource.request" href="elements.html#pywebcopy.elements.GenericResource.request">request</a></code></li>
+<li><code><a title="pywebcopy.elements.HTMLResource.resolve" href="elements.html#pywebcopy.elements.GenericResource.resolve">resolve</a></code></li>
+<li><code><a title="pywebcopy.elements.HTMLResource.retrieve" href="elements.html#pywebcopy.elements.GenericResource.retrieve">retrieve</a></code></li>
+<li><code><a title="pywebcopy.elements.HTMLResource.url" href="elements.html#pywebcopy.elements.GenericResource.url">url</a></code></li>
+<li><code><a title="pywebcopy.elements.HTMLResource.viewing_css" href="elements.html#pywebcopy.elements.GenericResource.viewing_css">viewing_css</a></code></li>
+<li><code><a title="pywebcopy.elements.HTMLResource.viewing_html" href="elements.html#pywebcopy.elements.GenericResource.viewing_html">viewing_html</a></code></li>
+<li><code><a title="pywebcopy.elements.HTMLResource.viewing_js" href="elements.html#pywebcopy.elements.GenericResource.viewing_js">viewing_js</a></code></li>
+</ul>
+</li>
+</ul>
+</dd>
+</dl>
+</section>
+</article>
+<nav id="sidebar">
+<h1>Index</h1>
+<div class="toc">
+<ul></ul>
+</div>
+<ul id="index">
+<li><h3>Super-module</h3>
+<ul>
+<li><code><a title="pywebcopy" href="index.html">pywebcopy</a></code></li>
+</ul>
+</li>
+<li><h3><a href="#header-classes">Classes</a></h3>
+<ul>
+<li>
+<h4><code><a title="pywebcopy.core.Crawler" href="#pywebcopy.core.Crawler">Crawler</a></code></h4>
+<ul class="">
+<li><code><a title="pywebcopy.core.Crawler.from_config" href="#pywebcopy.core.Crawler.from_config">from_config</a></code></li>
+</ul>
+</li>
+<li>
+<h4><code><a title="pywebcopy.core.WebPage" href="#pywebcopy.core.WebPage">WebPage</a></code></h4>
+<ul class="two-column">
+<li><code><a title="pywebcopy.core.WebPage.crawl" href="#pywebcopy.core.WebPage.crawl">crawl</a></code></li>
+<li><code><a title="pywebcopy.core.WebPage.dump_html" href="#pywebcopy.core.WebPage.dump_html">dump_html</a></code></li>
+<li><code><a title="pywebcopy.core.WebPage.element_map" href="#pywebcopy.core.WebPage.element_map">element_map</a></code></li>
+<li><code><a title="pywebcopy.core.WebPage.from_config" href="#pywebcopy.core.WebPage.from_config">from_config</a></code></li>
+<li><code><a title="pywebcopy.core.WebPage.get_files" href="#pywebcopy.core.WebPage.get_files">get_files</a></code></li>
+<li><code><a title="pywebcopy.core.WebPage.get_forms" href="#pywebcopy.core.WebPage.get_forms">get_forms</a></code></li>
+<li><code><a title="pywebcopy.core.WebPage.get_links" href="#pywebcopy.core.WebPage.get_links">get_links</a></code></li>
+<li><code><a title="pywebcopy.core.WebPage.get_source" href="#pywebcopy.core.WebPage.get_source">get_source</a></code></li>
+<li><code><a title="pywebcopy.core.WebPage.open_in_browser" href="#pywebcopy.core.WebPage.open_in_browser">open_in_browser</a></code></li>
+<li><code><a title="pywebcopy.core.WebPage.refresh" href="#pywebcopy.core.WebPage.refresh">refresh</a></code></li>
+<li><code><a title="pywebcopy.core.WebPage.run" href="#pywebcopy.core.WebPage.run">run</a></code></li>
+<li><code><a title="pywebcopy.core.WebPage.save_assets" href="#pywebcopy.core.WebPage.save_assets">save_assets</a></code></li>
+<li><code><a title="pywebcopy.core.WebPage.save_complete" href="#pywebcopy.core.WebPage.save_complete">save_complete</a></code></li>
+<li><code><a title="pywebcopy.core.WebPage.scrap_html" href="#pywebcopy.core.WebPage.scrap_html">scrap_html</a></code></li>
+<li><code><a title="pywebcopy.core.WebPage.scrap_links" href="#pywebcopy.core.WebPage.scrap_links">scrap_links</a></code></li>
+<li><code><a title="pywebcopy.core.WebPage.set_response" href="#pywebcopy.core.WebPage.set_response">set_response</a></code></li>
+<li><code><a title="pywebcopy.core.WebPage.submit_form" href="#pywebcopy.core.WebPage.submit_form">submit_form</a></code></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</nav>
+</main>
+<footer id="footer">
+<p>Generated by <a href="https://pdoc3.github.io/pdoc" title="pdoc: Python API documentation generator"><cite>pdoc</cite> 0.10.0</a>.</p>
+</footer>
+</body>
+</html>

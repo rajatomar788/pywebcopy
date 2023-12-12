@@ -1,0 +1,520 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, minimum-scale=1" />
+<meta name="generator" content="pdoc 0.10.0" />
+<title>pywebcopy API documentation</title>
+<meta name="description" content="```ascii …" />
+<link rel="preload stylesheet" as="style" href="https://cdnjs.cloudflare.com/ajax/libs/10up-sanitize.css/11.0.1/sanitize.min.css" integrity="sha256-PK9q560IAAa6WVRRh76LtCaI8pjTJ2z11v0miyNNjrs=" crossorigin>
+<link rel="preload stylesheet" as="style" href="https://cdnjs.cloudflare.com/ajax/libs/10up-sanitize.css/11.0.1/typography.min.css" integrity="sha256-7l/o7C8jubJiy74VsKTidCy1yBkRtiUGbVkYBylBqUg=" crossorigin>
+<link rel="stylesheet preload" as="style" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/10.1.1/styles/github.min.css" crossorigin>
+<style>:root{--highlight-color:#fe9}.flex{display:flex !important}body{line-height:1.5em}#content{padding:20px}#sidebar{padding:30px;overflow:hidden}#sidebar > *:last-child{margin-bottom:2cm}.http-server-breadcrumbs{font-size:130%;margin:0 0 15px 0}#footer{font-size:.75em;padding:5px 30px;border-top:1px solid #ddd;text-align:right}#footer p{margin:0 0 0 1em;display:inline-block}#footer p:last-child{margin-right:30px}h1,h2,h3,h4,h5{font-weight:300}h1{font-size:2.5em;line-height:1.1em}h2{font-size:1.75em;margin:1em 0 .50em 0}h3{font-size:1.4em;margin:25px 0 10px 0}h4{margin:0;font-size:105%}h1:target,h2:target,h3:target,h4:target,h5:target,h6:target{background:var(--highlight-color);padding:.2em 0}a{color:#058;text-decoration:none;transition:color .3s ease-in-out}a:hover{color:#e82}.title code{font-weight:bold}h2[id^="header-"]{margin-top:2em}.ident{color:#900}pre code{background:#f8f8f8;font-size:.8em;line-height:1.4em}code{background:#f2f2f1;padding:1px 4px;overflow-wrap:break-word}h1 code{background:transparent}pre{background:#f8f8f8;border:0;border-top:1px solid #ccc;border-bottom:1px solid #ccc;margin:1em 0;padding:1ex}#http-server-module-list{display:flex;flex-flow:column}#http-server-module-list div{display:flex}#http-server-module-list dt{min-width:10%}#http-server-module-list p{margin-top:0}.toc ul,#index{list-style-type:none;margin:0;padding:0}#index code{background:transparent}#index h3{border-bottom:1px solid #ddd}#index ul{padding:0}#index h4{margin-top:.6em;font-weight:bold}@media (min-width:200ex){#index .two-column{column-count:2}}@media (min-width:300ex){#index .two-column{column-count:3}}dl{margin-bottom:2em}dl dl:last-child{margin-bottom:4em}dd{margin:0 0 1em 3em}#header-classes + dl > dd{margin-bottom:3em}dd dd{margin-left:2em}dd p{margin:10px 0}.name{background:#eee;font-weight:bold;font-size:.85em;padding:5px 10px;display:inline-block;min-width:40%}.name:hover{background:#e0e0e0}dt:target .name{background:var(--highlight-color)}.name > span:first-child{white-space:nowrap}.name.class > span:nth-child(2){margin-left:.4em}.inherited{color:#999;border-left:5px solid #eee;padding-left:1em}.inheritance em{font-style:normal;font-weight:bold}.desc h2{font-weight:400;font-size:1.25em}.desc h3{font-size:1em}.desc dt code{background:inherit}.source summary,.git-link-div{color:#666;text-align:right;font-weight:400;font-size:.8em;text-transform:uppercase}.source summary > *{white-space:nowrap;cursor:pointer}.git-link{color:inherit;margin-left:1em}.source pre{max-height:500px;overflow:auto;margin:0}.source pre code{font-size:12px;overflow:visible}.hlist{list-style:none}.hlist li{display:inline}.hlist li:after{content:',\2002'}.hlist li:last-child:after{content:none}.hlist .hlist{display:inline;padding-left:1em}img{max-width:100%}td{padding:0 .5em}.admonition{padding:.1em .5em;margin-bottom:1em}.admonition-title{font-weight:bold}.admonition.note,.admonition.info,.admonition.important{background:#aef}.admonition.todo,.admonition.versionadded,.admonition.tip,.admonition.hint{background:#dfd}.admonition.warning,.admonition.versionchanged,.admonition.deprecated{background:#fd4}.admonition.error,.admonition.danger,.admonition.caution{background:lightpink}</style>
+<style media="screen and (min-width: 700px)">@media screen and (min-width:700px){#sidebar{width:30%;height:100vh;overflow:auto;position:sticky;top:0}#content{width:70%;max-width:100ch;padding:3em 4em;border-left:1px solid #ddd}pre code{font-size:1em}.item .name{font-size:1em}main{display:flex;flex-direction:row-reverse;justify-content:flex-end}.toc ul ul,#index ul{padding-left:1.5em}.toc > ul > li{margin-top:.5em}}</style>
+<style media="print">@media print{#sidebar h1{page-break-before:always}.source{display:none}}@media print{*{background:transparent !important;color:#000 !important;box-shadow:none !important;text-shadow:none !important}a[href]:after{content:" (" attr(href) ")";font-size:90%}a[href][title]:after{content:none}abbr[title]:after{content:" (" attr(title) ")"}.ir a:after,a[href^="javascript:"]:after,a[href^="#"]:after{content:""}pre,blockquote{border:1px solid #999;page-break-inside:avoid}thead{display:table-header-group}tr,img{page-break-inside:avoid}img{max-width:100% !important}@page{margin:0.5cm}p,h2,h3{orphans:3;widows:3}h1,h2,h3,h4,h5,h6{page-break-after:avoid}}</style>
+<script defer src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/10.1.1/highlight.min.js" integrity="sha256-Uv3H6lx7dJmRfRvH8TH6kJD1TSK1aFcwgx+mdg3epi8=" crossorigin></script>
+<script>window.addEventListener('DOMContentLoaded', () => hljs.initHighlighting())</script>
+</head>
+<body>
+<main>
+<article id="content">
+<header>
+<h1 class="title">Package <code>pywebcopy</code></h1>
+</header>
+<section id="section-intro">
+<pre><code class="language-ascii">
+    ____       _       __     __    ______                     _____
+   / __ \__  _| |     / /__  / /_  / ____/___  ____  __  __   /__  /
+  / /_/ / / / / | /| / / _ \/ __ \/ /   / __ \/ __ \/ / / /     / /
+ / ____/ /_/ /| |/ |/ /  __/ /_/ / /___/ /_/ / /_/ / /_/ /     / /
+/_/    \__, / |__/|__/\___/_.___/\____/\____/ .___/\__, /     /_/
+      /____/                               /_/    /____/
+
+</code></pre>
+<p>PyWebCopy is a free tool for copying full or partial websites locally
+onto your hard-disk for offline viewing.</p>
+<p>PyWebCopy will scan the specified website and download its content onto your hard-disk.
+Links to resources such as style-sheets, images, and other pages in the website
+will automatically be remapped to match the local path.
+Using its extensive configuration you can define which parts of a website will be copied and how.</p>
+<h4 id="what-can-pywebcopy-do">What can PyWebCopy do?</h4>
+<p>PyWebCopy will examine the HTML mark-up of a website and attempt to discover all linked resources
+such as other pages, images, videos, file downloads - anything and everything.
+It will download all of theses resources, and continue to search for more.
+In this manner, WebCopy can "crawl" an entire website and download everything it sees
+in an effort to create a reasonable facsimile of the source website.</p>
+<h4 id="what-can-pywebcopy-not-do">What can PyWebCopy not do?</h4>
+<p>PyWebCopy does not include a virtual DOM or any form of JavaScript parsing.
+If a website makes heavy use of JavaScript to operate, it is unlikely PyWebCopy will be able
+to make a true copy if it is unable to discover all of the website due to
+JavaScript being used to dynamically generate links.</p>
+<p>PyWebCopy does not download the raw source code of a web site,
+it can only download what the HTTP server returns.
+While it will do its best to create an offline copy of a website,
+advanced data driven websites may not work as expected once they have been copied.</p>
+<pre><code class="language-text">Copyright 2020; Raja Tomar
+See license for more details
+
+Licensed under the Apache License, Version 2.0 (the &quot;License&quot;);
+you may not use this file except in compliance with the License.
+You may obtain a copy of the License at
+http://www.apache.org/licenses/LICENSE-2.0
+Unless required by applicable law or agreed to in writing, software
+distributed under the License is distributed on an &quot;AS IS&quot; BASIS,
+WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+See the License for the specific language governing permissions and
+limitations under the License.
+</code></pre>
+<div class="admonition fixed">
+<p class="admonition-title">Fixed:&ensp;7.0.2</p>
+<ol>
+<li>Fix parser breaks on empty string.</li>
+<li>Fix WebPage links and files method emptying the response stream.</li>
+<li>Fix meta element in the head of the WebPage.</li>
+<li>Add threading flag in the cmd and api.</li>
+<li>Fix the MultiParser should be sub class of GenericElement.</li>
+<li>Fix concurrent delay b/w requests to be domain specific.</li>
+</ol>
+</div>
+<div class="admonition todo">
+<p class="admonition-title">TODO</p>
+<ol>
+<li>Fix Asynchronous http requests for the sub elements.</li>
+<li>Fix infinite nesting of anchor links requests on a single element.</li>
+</ol>
+</div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">&#34;&#34;&#34;
+```ascii
+
+    ____       _       __     __    ______                     _____
+   / __ \__  _| |     / /__  / /_  / ____/___  ____  __  __   /__  /
+  / /_/ / / / / | /| / / _ \/ __ \/ /   / __ \/ __ \/ / / /     / /
+ / ____/ /_/ /| |/ |/ /  __/ /_/ / /___/ /_/ / /_/ / /_/ /     / /
+/_/    \__, / |__/|__/\___/_.___/\____/\____/ .___/\__, /     /_/
+      /____/                               /_/    /____/
+
+```
+
+PyWebCopy is a free tool for copying full or partial websites locally
+onto your hard-disk for offline viewing.
+
+PyWebCopy will scan the specified website and download its content onto your hard-disk.
+Links to resources such as style-sheets, images, and other pages in the website
+will automatically be remapped to match the local path.
+Using its extensive configuration you can define which parts of a website will be copied and how.
+
+####What can PyWebCopy do?
+
+PyWebCopy will examine the HTML mark-up of a website and attempt to discover all linked resources
+such as other pages, images, videos, file downloads - anything and everything.
+It will download all of theses resources, and continue to search for more.
+In this manner, WebCopy can &#34;crawl&#34; an entire website and download everything it sees
+in an effort to create a reasonable facsimile of the source website.
+
+#### What can PyWebCopy not do?
+
+PyWebCopy does not include a virtual DOM or any form of JavaScript parsing.
+If a website makes heavy use of JavaScript to operate, it is unlikely PyWebCopy will be able
+to make a true copy if it is unable to discover all of the website due to
+JavaScript being used to dynamically generate links.
+
+PyWebCopy does not download the raw source code of a web site,
+it can only download what the HTTP server returns.
+While it will do its best to create an offline copy of a website,
+advanced data driven websites may not work as expected once they have been copied.
+
+
+```text
+Copyright 2020; Raja Tomar
+See license for more details
+
+Licensed under the Apache License, Version 2.0 (the &#34;License&#34;);
+you may not use this file except in compliance with the License.
+You may obtain a copy of the License at
+http://www.apache.org/licenses/LICENSE-2.0
+Unless required by applicable law or agreed to in writing, software
+distributed under the License is distributed on an &#34;AS IS&#34; BASIS,
+WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+See the License for the specific language governing permissions and
+limitations under the License.
+```
+
+
+..fixed::7.0.2
+    1. Fix parser breaks on empty string.
+    2. Fix WebPage links and files method emptying the response stream.
+    3. Fix meta element in the head of the WebPage.
+    4. Add threading flag in the cmd and api.
+    5. Fix the MultiParser should be sub class of GenericElement.
+    6. Fix concurrent delay b/w requests to be domain specific.
+
+..todo::
+    1. Fix Asynchronous http requests for the sub elements.
+    2. Fix infinite nesting of anchor links requests on a single element.
+&#34;&#34;&#34;
+
+import logging
+import warnings
+
+logging.getLogger(__name__).addHandler(logging.NullHandler())
+
+__all__ = [&#39;save_website&#39;, &#39;save_webpage&#39;]
+
+
+def save_page(url,
+              project_folder=None,
+              project_name=None,
+              bypass_robots=None,
+              debug=False,
+              open_in_browser=True,
+              delay=None,
+              threaded=None,):
+    &#34;&#34;&#34;Easiest way to save any single webpage with images, css and js.
+
+    example::
+
+        from pywebcopy import save_webpage
+        save_webpage(
+            url=&#34;https://httpbin.org/&#34;,
+            project_folder=&#34;E://savedpages//&#34;,
+            project_name=&#34;my_site&#34;,
+            bypass_robots=True,
+            debug=True,
+            open_in_browser=True,
+            delay=None,
+            threaded=False,
+        )
+
+    :param url: url of the web page to work with
+    :type url: str
+    :param project_folder: folder in which the files will be downloaded
+    :type project_folder: str
+    :param project_name: name of the project to distinguish it
+    :type project_name: str | None
+    :param bypass_robots: whether to follow the robots.txt rules or not
+    :param debug: whether to print deep logs or not.
+    :param open_in_browser: whether or not to open a new tab after saving the webpage.
+    :type open_in_browser: bool
+    :param delay: amount of delay between two concurrent requests to a same server.
+    :param threaded: whether to use threading or not (it can break some site).
+    &#34;&#34;&#34;
+    from .configs import get_config
+    config = get_config(url, project_folder, project_name, bypass_robots, debug, delay, threaded)
+    page = config.create_page()
+    page.get(url)
+    if threaded:
+        warnings.warn(
+            &#34;Opening in browser is not supported when threading is enabled!&#34;)
+        open_in_browser = False
+    page.save_complete(pop=open_in_browser)
+
+
+save_web_page = save_webpage = save_page
+
+
+def save_website(url,
+                 project_folder=None,
+                 project_name=None,
+                 bypass_robots=None,
+                 debug=False,
+                 open_in_browser=False,
+                 delay=None,
+                 threaded=None):
+    &#34;&#34;&#34;Crawls the entire website for html, images, css and js.
+
+    example::
+
+        from pywebcopy import save_website
+        save_website(
+            url=&#34;https://httpbin.org/&#34;,
+            project_folder=&#34;E://savedpages//&#34;,
+            project_name=&#34;my_site&#34;,
+            bypass_robots=True,
+            debug=False,
+            open_in_browser=True,
+            delay=None,
+            threaded=False,
+        )
+
+    :param url: url of the web page to work with
+    :type url: str
+    :param project_folder: folder in which the files will be downloaded
+    :type project_folder: str
+    :param project_name: name of the project to distinguish it
+    :type project_name: str | None
+    :param bypass_robots: whether to follow the robots.txt rules or not
+    :param debug: whether to print deep logs or not.
+    :param open_in_browser: whether or not to open a new tab after saving the webpage.
+    :type open_in_browser: bool
+    :param delay: amount of delay between two concurrent requests to a same server.
+    :param threaded: whether to use threading or not (it can break some site).
+    &#34;&#34;&#34;
+    from .configs import get_config
+    config = get_config(url, project_folder, project_name, bypass_robots, debug, delay, threaded)
+    crawler = config.create_crawler()
+    crawler.get(url)
+    if threaded:
+        warnings.warn(
+            &#34;Opening in browser is not supported when threading is enabled!&#34;)
+        open_in_browser = False
+    crawler.save_complete(pop=open_in_browser)</code></pre>
+</details>
+</section>
+<section>
+<h2 class="section-title" id="header-submodules">Sub-modules</h2>
+<dl>
+<dt><code class="name"><a title="pywebcopy.configs" href="configs.html">pywebcopy.configs</a></code></dt>
+<dd>
+<div class="desc"></div>
+</dd>
+<dt><code class="name"><a title="pywebcopy.core" href="core.html">pywebcopy.core</a></code></dt>
+<dd>
+<div class="desc"></div>
+</dd>
+<dt><code class="name"><a title="pywebcopy.elements" href="elements.html">pywebcopy.elements</a></code></dt>
+<dd>
+<div class="desc"></div>
+</dd>
+<dt><code class="name"><a title="pywebcopy.helpers" href="helpers.html">pywebcopy.helpers</a></code></dt>
+<dd>
+<div class="desc"></div>
+</dd>
+<dt><code class="name"><a title="pywebcopy.parsers" href="parsers.html">pywebcopy.parsers</a></code></dt>
+<dd>
+<div class="desc"></div>
+</dd>
+<dt><code class="name"><a title="pywebcopy.schedulers" href="schedulers.html">pywebcopy.schedulers</a></code></dt>
+<dd>
+<div class="desc"></div>
+</dd>
+<dt><code class="name"><a title="pywebcopy.session" href="session.html">pywebcopy.session</a></code></dt>
+<dd>
+<div class="desc"><div class="admonition todo">
+<p class="admonition-title">TODO</p>
+<p>…</p>
+</div></div>
+</dd>
+<dt><code class="name"><a title="pywebcopy.tests" href="tests/index.html">pywebcopy.tests</a></code></dt>
+<dd>
+<div class="desc"></div>
+</dd>
+<dt><code class="name"><a title="pywebcopy.urls" href="urls.html">pywebcopy.urls</a></code></dt>
+<dd>
+<div class="desc"></div>
+</dd>
+</dl>
+</section>
+<section>
+</section>
+<section>
+<h2 class="section-title" id="header-functions">Functions</h2>
+<dl>
+<dt id="pywebcopy.save_webpage"><code class="name flex">
+<span>def <span class="ident">save_webpage</span></span>(<span>url, project_folder=None, project_name=None, bypass_robots=None, debug=False, open_in_browser=True, delay=None, threaded=None)</span>
+</code></dt>
+<dd>
+<div class="desc"><p>Easiest way to save any single webpage with images, css and js.</p>
+<p>example::</p>
+<pre><code>from pywebcopy import save_webpage
+save_webpage(
+    url="https://httpbin.org/",
+    project_folder="E://savedpages//",
+    project_name="my_site",
+    bypass_robots=True,
+    debug=True,
+    open_in_browser=True,
+    delay=None,
+    threaded=False,
+)
+</code></pre>
+<p>:param url: url of the web page to work with
+:type url: str
+:param project_folder: folder in which the files will be downloaded
+:type project_folder: str
+:param project_name: name of the project to distinguish it
+:type project_name: str | None
+:param bypass_robots: whether to follow the robots.txt rules or not
+:param debug: whether to print deep logs or not.
+:param open_in_browser: whether or not to open a new tab after saving the webpage.
+:type open_in_browser: bool
+:param delay: amount of delay between two concurrent requests to a same server.
+:param threaded: whether to use threading or not (it can break some site).</p></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def save_page(url,
+              project_folder=None,
+              project_name=None,
+              bypass_robots=None,
+              debug=False,
+              open_in_browser=True,
+              delay=None,
+              threaded=None,):
+    &#34;&#34;&#34;Easiest way to save any single webpage with images, css and js.
+
+    example::
+
+        from pywebcopy import save_webpage
+        save_webpage(
+            url=&#34;https://httpbin.org/&#34;,
+            project_folder=&#34;E://savedpages//&#34;,
+            project_name=&#34;my_site&#34;,
+            bypass_robots=True,
+            debug=True,
+            open_in_browser=True,
+            delay=None,
+            threaded=False,
+        )
+
+    :param url: url of the web page to work with
+    :type url: str
+    :param project_folder: folder in which the files will be downloaded
+    :type project_folder: str
+    :param project_name: name of the project to distinguish it
+    :type project_name: str | None
+    :param bypass_robots: whether to follow the robots.txt rules or not
+    :param debug: whether to print deep logs or not.
+    :param open_in_browser: whether or not to open a new tab after saving the webpage.
+    :type open_in_browser: bool
+    :param delay: amount of delay between two concurrent requests to a same server.
+    :param threaded: whether to use threading or not (it can break some site).
+    &#34;&#34;&#34;
+    from .configs import get_config
+    config = get_config(url, project_folder, project_name, bypass_robots, debug, delay, threaded)
+    page = config.create_page()
+    page.get(url)
+    if threaded:
+        warnings.warn(
+            &#34;Opening in browser is not supported when threading is enabled!&#34;)
+        open_in_browser = False
+    page.save_complete(pop=open_in_browser)</code></pre>
+</details>
+</dd>
+<dt id="pywebcopy.save_website"><code class="name flex">
+<span>def <span class="ident">save_website</span></span>(<span>url, project_folder=None, project_name=None, bypass_robots=None, debug=False, open_in_browser=False, delay=None, threaded=None)</span>
+</code></dt>
+<dd>
+<div class="desc"><p>Crawls the entire website for html, images, css and js.</p>
+<p>example::</p>
+<pre><code>from pywebcopy import save_website
+save_website(
+    url="https://httpbin.org/",
+    project_folder="E://savedpages//",
+    project_name="my_site",
+    bypass_robots=True,
+    debug=False,
+    open_in_browser=True,
+    delay=None,
+    threaded=False,
+)
+</code></pre>
+<p>:param url: url of the web page to work with
+:type url: str
+:param project_folder: folder in which the files will be downloaded
+:type project_folder: str
+:param project_name: name of the project to distinguish it
+:type project_name: str | None
+:param bypass_robots: whether to follow the robots.txt rules or not
+:param debug: whether to print deep logs or not.
+:param open_in_browser: whether or not to open a new tab after saving the webpage.
+:type open_in_browser: bool
+:param delay: amount of delay between two concurrent requests to a same server.
+:param threaded: whether to use threading or not (it can break some site).</p></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def save_website(url,
+                 project_folder=None,
+                 project_name=None,
+                 bypass_robots=None,
+                 debug=False,
+                 open_in_browser=False,
+                 delay=None,
+                 threaded=None):
+    &#34;&#34;&#34;Crawls the entire website for html, images, css and js.
+
+    example::
+
+        from pywebcopy import save_website
+        save_website(
+            url=&#34;https://httpbin.org/&#34;,
+            project_folder=&#34;E://savedpages//&#34;,
+            project_name=&#34;my_site&#34;,
+            bypass_robots=True,
+            debug=False,
+            open_in_browser=True,
+            delay=None,
+            threaded=False,
+        )
+
+    :param url: url of the web page to work with
+    :type url: str
+    :param project_folder: folder in which the files will be downloaded
+    :type project_folder: str
+    :param project_name: name of the project to distinguish it
+    :type project_name: str | None
+    :param bypass_robots: whether to follow the robots.txt rules or not
+    :param debug: whether to print deep logs or not.
+    :param open_in_browser: whether or not to open a new tab after saving the webpage.
+    :type open_in_browser: bool
+    :param delay: amount of delay between two concurrent requests to a same server.
+    :param threaded: whether to use threading or not (it can break some site).
+    &#34;&#34;&#34;
+    from .configs import get_config
+    config = get_config(url, project_folder, project_name, bypass_robots, debug, delay, threaded)
+    crawler = config.create_crawler()
+    crawler.get(url)
+    if threaded:
+        warnings.warn(
+            &#34;Opening in browser is not supported when threading is enabled!&#34;)
+        open_in_browser = False
+    crawler.save_complete(pop=open_in_browser)</code></pre>
+</details>
+</dd>
+</dl>
+</section>
+<section>
+</section>
+</article>
+<nav id="sidebar">
+<h1>Index</h1>
+<div class="toc">
+<ul>
+<li><a href="#what-can-pywebcopy-do">What can PyWebCopy do?</a></li>
+<li><a href="#what-can-pywebcopy-not-do">What can PyWebCopy not do?</a></li>
+</ul>
+</div>
+<ul id="index">
+<li><h3><a href="#header-submodules">Sub-modules</a></h3>
+<ul>
+<li><code><a title="pywebcopy.configs" href="configs.html">pywebcopy.configs</a></code></li>
+<li><code><a title="pywebcopy.core" href="core.html">pywebcopy.core</a></code></li>
+<li><code><a title="pywebcopy.elements" href="elements.html">pywebcopy.elements</a></code></li>
+<li><code><a title="pywebcopy.helpers" href="helpers.html">pywebcopy.helpers</a></code></li>
+<li><code><a title="pywebcopy.parsers" href="parsers.html">pywebcopy.parsers</a></code></li>
+<li><code><a title="pywebcopy.schedulers" href="schedulers.html">pywebcopy.schedulers</a></code></li>
+<li><code><a title="pywebcopy.session" href="session.html">pywebcopy.session</a></code></li>
+<li><code><a title="pywebcopy.tests" href="tests/index.html">pywebcopy.tests</a></code></li>
+<li><code><a title="pywebcopy.urls" href="urls.html">pywebcopy.urls</a></code></li>
+</ul>
+</li>
+<li><h3><a href="#header-functions">Functions</a></h3>
+<ul class="">
+<li><code><a title="pywebcopy.save_webpage" href="#pywebcopy.save_webpage">save_webpage</a></code></li>
+<li><code><a title="pywebcopy.save_website" href="#pywebcopy.save_website">save_website</a></code></li>
+</ul>
+</li>
+</ul>
+</nav>
+</main>
+<footer id="footer">
+<p>Generated by <a href="https://pdoc3.github.io/pdoc" title="pdoc: Python API documentation generator"><cite>pdoc</cite> 0.10.0</a>.</p>
+</footer>
+</body>
+</html>

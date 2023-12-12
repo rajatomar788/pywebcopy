@@ -1,0 +1,850 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, minimum-scale=1" />
+<meta name="generator" content="pdoc 0.10.0" />
+<title>pywebcopy.configs API documentation</title>
+<meta name="description" content="" />
+<link rel="preload stylesheet" as="style" href="https://cdnjs.cloudflare.com/ajax/libs/10up-sanitize.css/11.0.1/sanitize.min.css" integrity="sha256-PK9q560IAAa6WVRRh76LtCaI8pjTJ2z11v0miyNNjrs=" crossorigin>
+<link rel="preload stylesheet" as="style" href="https://cdnjs.cloudflare.com/ajax/libs/10up-sanitize.css/11.0.1/typography.min.css" integrity="sha256-7l/o7C8jubJiy74VsKTidCy1yBkRtiUGbVkYBylBqUg=" crossorigin>
+<link rel="stylesheet preload" as="style" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/10.1.1/styles/github.min.css" crossorigin>
+<style>:root{--highlight-color:#fe9}.flex{display:flex !important}body{line-height:1.5em}#content{padding:20px}#sidebar{padding:30px;overflow:hidden}#sidebar > *:last-child{margin-bottom:2cm}.http-server-breadcrumbs{font-size:130%;margin:0 0 15px 0}#footer{font-size:.75em;padding:5px 30px;border-top:1px solid #ddd;text-align:right}#footer p{margin:0 0 0 1em;display:inline-block}#footer p:last-child{margin-right:30px}h1,h2,h3,h4,h5{font-weight:300}h1{font-size:2.5em;line-height:1.1em}h2{font-size:1.75em;margin:1em 0 .50em 0}h3{font-size:1.4em;margin:25px 0 10px 0}h4{margin:0;font-size:105%}h1:target,h2:target,h3:target,h4:target,h5:target,h6:target{background:var(--highlight-color);padding:.2em 0}a{color:#058;text-decoration:none;transition:color .3s ease-in-out}a:hover{color:#e82}.title code{font-weight:bold}h2[id^="header-"]{margin-top:2em}.ident{color:#900}pre code{background:#f8f8f8;font-size:.8em;line-height:1.4em}code{background:#f2f2f1;padding:1px 4px;overflow-wrap:break-word}h1 code{background:transparent}pre{background:#f8f8f8;border:0;border-top:1px solid #ccc;border-bottom:1px solid #ccc;margin:1em 0;padding:1ex}#http-server-module-list{display:flex;flex-flow:column}#http-server-module-list div{display:flex}#http-server-module-list dt{min-width:10%}#http-server-module-list p{margin-top:0}.toc ul,#index{list-style-type:none;margin:0;padding:0}#index code{background:transparent}#index h3{border-bottom:1px solid #ddd}#index ul{padding:0}#index h4{margin-top:.6em;font-weight:bold}@media (min-width:200ex){#index .two-column{column-count:2}}@media (min-width:300ex){#index .two-column{column-count:3}}dl{margin-bottom:2em}dl dl:last-child{margin-bottom:4em}dd{margin:0 0 1em 3em}#header-classes + dl > dd{margin-bottom:3em}dd dd{margin-left:2em}dd p{margin:10px 0}.name{background:#eee;font-weight:bold;font-size:.85em;padding:5px 10px;display:inline-block;min-width:40%}.name:hover{background:#e0e0e0}dt:target .name{background:var(--highlight-color)}.name > span:first-child{white-space:nowrap}.name.class > span:nth-child(2){margin-left:.4em}.inherited{color:#999;border-left:5px solid #eee;padding-left:1em}.inheritance em{font-style:normal;font-weight:bold}.desc h2{font-weight:400;font-size:1.25em}.desc h3{font-size:1em}.desc dt code{background:inherit}.source summary,.git-link-div{color:#666;text-align:right;font-weight:400;font-size:.8em;text-transform:uppercase}.source summary > *{white-space:nowrap;cursor:pointer}.git-link{color:inherit;margin-left:1em}.source pre{max-height:500px;overflow:auto;margin:0}.source pre code{font-size:12px;overflow:visible}.hlist{list-style:none}.hlist li{display:inline}.hlist li:after{content:',\2002'}.hlist li:last-child:after{content:none}.hlist .hlist{display:inline;padding-left:1em}img{max-width:100%}td{padding:0 .5em}.admonition{padding:.1em .5em;margin-bottom:1em}.admonition-title{font-weight:bold}.admonition.note,.admonition.info,.admonition.important{background:#aef}.admonition.todo,.admonition.versionadded,.admonition.tip,.admonition.hint{background:#dfd}.admonition.warning,.admonition.versionchanged,.admonition.deprecated{background:#fd4}.admonition.error,.admonition.danger,.admonition.caution{background:lightpink}</style>
+<style media="screen and (min-width: 700px)">@media screen and (min-width:700px){#sidebar{width:30%;height:100vh;overflow:auto;position:sticky;top:0}#content{width:70%;max-width:100ch;padding:3em 4em;border-left:1px solid #ddd}pre code{font-size:1em}.item .name{font-size:1em}main{display:flex;flex-direction:row-reverse;justify-content:flex-end}.toc ul ul,#index ul{padding-left:1.5em}.toc > ul > li{margin-top:.5em}}</style>
+<style media="print">@media print{#sidebar h1{page-break-before:always}.source{display:none}}@media print{*{background:transparent !important;color:#000 !important;box-shadow:none !important;text-shadow:none !important}a[href]:after{content:" (" attr(href) ")";font-size:90%}a[href][title]:after{content:none}abbr[title]:after{content:" (" attr(title) ")"}.ir a:after,a[href^="javascript:"]:after,a[href^="#"]:after{content:""}pre,blockquote{border:1px solid #999;page-break-inside:avoid}thead{display:table-header-group}tr,img{page-break-inside:avoid}img{max-width:100% !important}@page{margin:0.5cm}p,h2,h3{orphans:3;widows:3}h1,h2,h3,h4,h5,h6{page-break-after:avoid}}</style>
+<script defer src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/10.1.1/highlight.min.js" integrity="sha256-Uv3H6lx7dJmRfRvH8TH6kJD1TSK1aFcwgx+mdg3epi8=" crossorigin></script>
+<script>window.addEventListener('DOMContentLoaded', () => hljs.initHighlighting())</script>
+</head>
+<body>
+<main>
+<article id="content">
+<header>
+<h1 class="title">Module <code>pywebcopy.configs</code></h1>
+</header>
+<section id="section-intro">
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python"># Copyright 2020; Raja Tomar
+# See license for more details
+import logging
+import os
+import sys
+import tempfile
+from functools import partial
+
+from requests.structures import CaseInsensitiveDict
+from six import text_type
+from six import string_types
+
+from .__version__ import __title__
+from .__version__ import __version__
+from .urls import HIERARCHY
+from .urls import get_host
+from .urls import secure_filename
+from .session import default_headers
+
+__all__ = [
+    &#39;ConfigHandler&#39;,
+    &#39;get_config&#39;,
+    &#39;default_config&#39;,
+    &#39;safe_file_types&#39;,
+    &#39;safe_http_headers&#39;
+]
+
+logger = logging.getLogger(__name__)
+
+
+def add_stderr_logger(name=__title__, level=logging.DEBUG):
+    &#34;&#34;&#34;
+    Helper for quickly adding a StreamHandler to the logger. Useful for
+    debugging.
+
+    Returns the handler after adding it.
+    &#34;&#34;&#34;
+    # This method needs to be in this __init__.py to get the __name__ correct
+    # even if this library is wrapped within another package.
+    root = logging.getLogger(name)
+    #: If there is already a stderr logger then we don&#39;t need to bother.
+    for h in root.handlers:
+        if isinstance(h, logging.StreamHandler):
+            if h.stream == sys.stderr:
+                h.disabled = False
+                h.setLevel(level)
+                return h
+    handler = logging.StreamHandler(sys.stderr)
+    handler.setFormatter(
+        logging.Formatter(
+            &#39;%(levelname)-8s - %(name)s:%(lineno)d - %(message)s&#39;
+        )
+    )
+    root.addHandler(handler)
+    root.setLevel(level)
+    root.debug(&#39;Added a stderr logging handler to logger: %s&#39;, name)
+    return handler
+
+
+# FIXME: Do something about these.
+safe_file_types = [
+    &#39;text/*&#39;,
+    &#39;image/*&#39;,
+    &#39;font/*&#39;,
+    &#39;application/pdf&#39;,
+    &#39;application/json&#39;,
+]
+
+
+safe_http_headers = {
+    &#34;Accept-Language&#34;: &#34;en-US,en;q=0.9&#34;,
+    &#39;User-Agent&#39;:
+        &#34;Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:70.0) &#34;
+        &#34;Gecko/20100101 Firefox/70.0 PyWebCopyBot/%s&#34; % __version__
+}
+
+#: Base configuration with preconfigured values.
+default_config = {
+    &#39;debug&#39;: False,
+    &#39;project_url&#39;: None,
+    &#39;project_name&#39;: None,
+    &#39;project_folder&#39;: None,
+    &#39;threaded&#39;: None,
+    &#39;thread_join_timeout&#39;: None,
+    &#39;tree_type&#39;: HIERARCHY,
+
+    # TODO: Allow a `last-modified-time` overwrite mode
+    &#39;overwrite&#39;: False,
+
+    &#39;bypass_robots&#39;: False,
+    &#39;http_cache&#39;: False,
+    &#39;http_headers&#39;: default_headers(**safe_http_headers),
+    &#39;delay&#39;: None,
+
+    # TODO: Disabled for now until I figure it out.
+    # &#39;allowed_file_types&#39;: safe_file_types,
+}
+
+
+class ConfigError(AttributeError, TypeError):
+    &#34;&#34;&#34;Bad config value or operation.&#34;&#34;&#34;
+
+
+class ConfigHandler(CaseInsensitiveDict):
+    &#34;&#34;&#34;Provides functionality to the config instance which
+    stores and provides configuration values in every module.
+    &#34;&#34;&#34;
+    def __repr__(self):  # pragma: no cover
+        return &#39;&lt;ConfigHandler(%s)&gt;&#39; % self.get(&#39;project_name&#39;, &#39;Not Set&#39;)
+
+    def __getattribute__(self, item):
+        &#34;&#34;&#34;Dynamic method of name `get_(key)` and `set_(key)` generation
+        for all of the keys available.
+        for example to change the `project_url` key
+        instead of using dictionary like operation you would do
+        `.get_project_url()` instead of `[&#39;project_url&#39;]`.
+        `.set_project_url(new)` instead of `[&#39;project_url&#39;] = new`.
+        &#34;&#34;&#34;
+        if isinstance(item, string_types) and item.startswith(&#39;set_&#39;):
+            if item[4:] in self:
+                return partial(self.__setitem__, item[4:])
+        elif isinstance(item, string_types) and item.startswith(&#39;get_&#39;):
+            if item[4:] in self:
+                return partial(self.__getitem__, item[4:])
+        return super(ConfigHandler, self).__getattribute__(item)
+
+    def resolve_url(self):
+        &#34;&#34;&#34;Resolves any redirects in the url and sets the final url as base url.&#34;&#34;&#34;
+        raise NotImplementedError()
+
+    def reset_config(self):
+        &#34;&#34;&#34;Resets all to configuration to default state.&#34;&#34;&#34;
+        self.update(default_config)
+
+    def reset_key(self, key):
+        self.update({key: default_config.get(key)})
+
+    def is_set(self):
+        &#34;&#34;&#34;Checks whether the configuration has required attributes or not.&#34;&#34;&#34;
+        try:
+            assert self.get(&#39;project_folder&#39;) is not None
+            assert self.get(&#39;project_url&#39;) is not None
+            assert self.get(&#39;project_name&#39;) is not None
+        except AssertionError:
+            return False
+        else:
+            return True
+
+    def setup_paths(self, project_folder, project_name):
+        &#34;&#34;&#34;Fills the project_name, project_name and its
+        dependent keys after evaluation.
+
+        .. version changed :: 6.0.0
+            Added string type checks and os based path normalising.
+
+        .. version changed :: 6.1.0
+            FIX: fixed path issue when using relative path for project_folder
+
+        .. version changed :: 6.3.0
+            FIX: Removed file based logging.
+            FIX: Disabled dir change on setup
+
+        :param project_name: new name of the project
+        :param project_folder: folder where to store all the downloaded files
+        &#34;&#34;&#34;
+        if not isinstance(project_name, string_types):
+            raise ConfigError(&#34;project_name value must be a string&#34;)
+
+        if not isinstance(project_folder, string_types):
+            raise ConfigError(&#34;project_folder value must be a string!&#34;)
+
+        if os.altsep:
+            project_folder = project_folder.replace(os.altsep, os.sep)
+        if project_folder.find(os.sep) &lt; 0:  # pragma: no cover
+            raise ConfigError(&#34;Project_folder path doesn&#39;t seem to be a valid path.&#34;)
+
+        project_folder = os.path.abspath(project_folder)
+
+        norm_p = os.path.join(
+            os.path.normpath(project_folder),
+            os.path.normpath(project_name)
+        )
+        self.set_project_name(project_name)
+        self.set_project_folder(norm_p)
+
+        if not os.path.exists(norm_p):
+            os.makedirs(norm_p)
+
+    def setup_config(self,
+                     project_url=None,
+                     project_folder=None,
+                     project_name=None,
+                     overwrite=False,
+                     bypass_robots=False,
+                     debug=False,
+                     delay=None,
+                     threaded=None):
+        &#34;&#34;&#34;Sets up the complete config parts which requires a project_url to be present.
+
+        Complete configuration is done here and subject to change according to application structure
+        You are advised to use only the .setup_path() method if you get any unusual behaviour
+        &#34;&#34;&#34;
+        self.set_overwrite(overwrite)
+        self.set_bypass_robots(bypass_robots)
+        self.set_debug(debug)
+        self.set_delay(delay)
+        self.set_threaded(threaded)
+        self.set_project_url(project_url)
+        self.setup_paths(project_folder, project_name)
+
+        #: Add a stderr logger to this library.
+        if debug:
+            add_stderr_logger(level=logging.DEBUG)
+
+        #: Log this new configuration to the log file for debug purposes
+        logger.debug(str(dict(self)))
+
+    def create_context(self):
+        if not self.is_set():
+            raise ConfigError(&#34;Config is missing required attributes!&#34;)
+        from .urls import Context
+        return Context.from_config(self)
+
+    def create_session(self):
+        if not self.is_set():
+            raise ConfigError(&#34;Config is missing required attributes!&#34;)
+        from .session import Session
+        return Session.from_config(self)
+
+    def create_crawler(self):
+        if not self.is_set():
+            raise ConfigError(&#34;Config is missing required attributes!&#34;)
+        from .core import Crawler
+        return Crawler.from_config(self)
+
+    def create_page(self):
+        if not self.is_set():
+            raise ConfigError(&#34;Config is missing required attributes!&#34;)
+        from .core import WebPage
+        return WebPage.from_config(self)
+
+
+def get_config(project_url,
+               project_folder=None,
+               project_name=None,
+               bypass_robots=False,
+               debug=False,
+               delay=None,
+               threaded=None):
+    &#34;&#34;&#34;Create a ConfigHandler instance and return it.
+    If the project_folder is not supplied it will use the users Tempdir.
+
+    :param project_url: project_url of the web page to work with
+    :type project_url: str
+    :param project_folder: folder in which the files will be downloaded
+    :type project_folder: str
+    :param project_name: name of the project to distinguish it
+    :type project_name: str | None
+    :param bypass_robots: whether to follow the robots.txt rules or not
+    :param debug: whether to print deep logs or not.
+    :param delay: amount of delay between two concurrent requests to a same server.
+    :param threaded: whether to use threading or not (it can break some site).
+    &#34;&#34;&#34;
+    if not isinstance(project_url, string_types):
+        raise ConfigError(&#34;Expected string type, got %r&#34; % project_url)
+    if project_folder and not isinstance(project_folder, string_types):
+        raise ConfigError(&#34;Expected string type, got %r&#34; % project_folder)
+
+    if not project_folder:
+        logger.debug(&#39;No project folder provided, %temp% dir will be used instead.&#39;)
+        project_folder = tempfile.gettempdir()
+
+    if not project_name:
+        project_name = &#39;_&#39;.join(
+            map(secure_filename,
+                map(lambda x: text_type(x),
+                    filter(None, get_host(project_url)))))
+        logger.debug(&#39;No project name provided, generated from url: %s&#39; % project_name)
+
+    ans = ConfigHandler(default_config)
+    ans.setup_config(
+        project_url=project_url,
+        project_folder=project_folder,
+        project_name=project_name,
+        bypass_robots=bypass_robots,
+        debug=debug,
+        delay=delay,
+        threaded=threaded,
+    )
+    return ans</code></pre>
+</details>
+</section>
+<section>
+</section>
+<section>
+<h2 class="section-title" id="header-variables">Global variables</h2>
+<dl>
+<dt id="pywebcopy.configs.default_config"><code class="name">var <span class="ident">default_config</span></code></dt>
+<dd>
+<div class="desc"><p>Base configuration with preconfigured values.</p></div>
+</dd>
+</dl>
+</section>
+<section>
+<h2 class="section-title" id="header-functions">Functions</h2>
+<dl>
+<dt id="pywebcopy.configs.get_config"><code class="name flex">
+<span>def <span class="ident">get_config</span></span>(<span>project_url, project_folder=None, project_name=None, bypass_robots=False, debug=False, delay=None, threaded=None)</span>
+</code></dt>
+<dd>
+<div class="desc"><p>Create a ConfigHandler instance and return it.
+If the project_folder is not supplied it will use the users Tempdir.</p>
+<p>:param project_url: project_url of the web page to work with
+:type project_url: str
+:param project_folder: folder in which the files will be downloaded
+:type project_folder: str
+:param project_name: name of the project to distinguish it
+:type project_name: str | None
+:param bypass_robots: whether to follow the robots.txt rules or not
+:param debug: whether to print deep logs or not.
+:param delay: amount of delay between two concurrent requests to a same server.
+:param threaded: whether to use threading or not (it can break some site).</p></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def get_config(project_url,
+               project_folder=None,
+               project_name=None,
+               bypass_robots=False,
+               debug=False,
+               delay=None,
+               threaded=None):
+    &#34;&#34;&#34;Create a ConfigHandler instance and return it.
+    If the project_folder is not supplied it will use the users Tempdir.
+
+    :param project_url: project_url of the web page to work with
+    :type project_url: str
+    :param project_folder: folder in which the files will be downloaded
+    :type project_folder: str
+    :param project_name: name of the project to distinguish it
+    :type project_name: str | None
+    :param bypass_robots: whether to follow the robots.txt rules or not
+    :param debug: whether to print deep logs or not.
+    :param delay: amount of delay between two concurrent requests to a same server.
+    :param threaded: whether to use threading or not (it can break some site).
+    &#34;&#34;&#34;
+    if not isinstance(project_url, string_types):
+        raise ConfigError(&#34;Expected string type, got %r&#34; % project_url)
+    if project_folder and not isinstance(project_folder, string_types):
+        raise ConfigError(&#34;Expected string type, got %r&#34; % project_folder)
+
+    if not project_folder:
+        logger.debug(&#39;No project folder provided, %temp% dir will be used instead.&#39;)
+        project_folder = tempfile.gettempdir()
+
+    if not project_name:
+        project_name = &#39;_&#39;.join(
+            map(secure_filename,
+                map(lambda x: text_type(x),
+                    filter(None, get_host(project_url)))))
+        logger.debug(&#39;No project name provided, generated from url: %s&#39; % project_name)
+
+    ans = ConfigHandler(default_config)
+    ans.setup_config(
+        project_url=project_url,
+        project_folder=project_folder,
+        project_name=project_name,
+        bypass_robots=bypass_robots,
+        debug=debug,
+        delay=delay,
+        threaded=threaded,
+    )
+    return ans</code></pre>
+</details>
+</dd>
+</dl>
+</section>
+<section>
+<h2 class="section-title" id="header-classes">Classes</h2>
+<dl>
+<dt id="pywebcopy.configs.ConfigHandler"><code class="flex name class">
+<span>class <span class="ident">ConfigHandler</span></span>
+<span>(</span><span>data=None, **kwargs)</span>
+</code></dt>
+<dd>
+<div class="desc"><p>Provides functionality to the config instance which
+stores and provides configuration values in every module.</p></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">class ConfigHandler(CaseInsensitiveDict):
+    &#34;&#34;&#34;Provides functionality to the config instance which
+    stores and provides configuration values in every module.
+    &#34;&#34;&#34;
+    def __repr__(self):  # pragma: no cover
+        return &#39;&lt;ConfigHandler(%s)&gt;&#39; % self.get(&#39;project_name&#39;, &#39;Not Set&#39;)
+
+    def __getattribute__(self, item):
+        &#34;&#34;&#34;Dynamic method of name `get_(key)` and `set_(key)` generation
+        for all of the keys available.
+        for example to change the `project_url` key
+        instead of using dictionary like operation you would do
+        `.get_project_url()` instead of `[&#39;project_url&#39;]`.
+        `.set_project_url(new)` instead of `[&#39;project_url&#39;] = new`.
+        &#34;&#34;&#34;
+        if isinstance(item, string_types) and item.startswith(&#39;set_&#39;):
+            if item[4:] in self:
+                return partial(self.__setitem__, item[4:])
+        elif isinstance(item, string_types) and item.startswith(&#39;get_&#39;):
+            if item[4:] in self:
+                return partial(self.__getitem__, item[4:])
+        return super(ConfigHandler, self).__getattribute__(item)
+
+    def resolve_url(self):
+        &#34;&#34;&#34;Resolves any redirects in the url and sets the final url as base url.&#34;&#34;&#34;
+        raise NotImplementedError()
+
+    def reset_config(self):
+        &#34;&#34;&#34;Resets all to configuration to default state.&#34;&#34;&#34;
+        self.update(default_config)
+
+    def reset_key(self, key):
+        self.update({key: default_config.get(key)})
+
+    def is_set(self):
+        &#34;&#34;&#34;Checks whether the configuration has required attributes or not.&#34;&#34;&#34;
+        try:
+            assert self.get(&#39;project_folder&#39;) is not None
+            assert self.get(&#39;project_url&#39;) is not None
+            assert self.get(&#39;project_name&#39;) is not None
+        except AssertionError:
+            return False
+        else:
+            return True
+
+    def setup_paths(self, project_folder, project_name):
+        &#34;&#34;&#34;Fills the project_name, project_name and its
+        dependent keys after evaluation.
+
+        .. version changed :: 6.0.0
+            Added string type checks and os based path normalising.
+
+        .. version changed :: 6.1.0
+            FIX: fixed path issue when using relative path for project_folder
+
+        .. version changed :: 6.3.0
+            FIX: Removed file based logging.
+            FIX: Disabled dir change on setup
+
+        :param project_name: new name of the project
+        :param project_folder: folder where to store all the downloaded files
+        &#34;&#34;&#34;
+        if not isinstance(project_name, string_types):
+            raise ConfigError(&#34;project_name value must be a string&#34;)
+
+        if not isinstance(project_folder, string_types):
+            raise ConfigError(&#34;project_folder value must be a string!&#34;)
+
+        if os.altsep:
+            project_folder = project_folder.replace(os.altsep, os.sep)
+        if project_folder.find(os.sep) &lt; 0:  # pragma: no cover
+            raise ConfigError(&#34;Project_folder path doesn&#39;t seem to be a valid path.&#34;)
+
+        project_folder = os.path.abspath(project_folder)
+
+        norm_p = os.path.join(
+            os.path.normpath(project_folder),
+            os.path.normpath(project_name)
+        )
+        self.set_project_name(project_name)
+        self.set_project_folder(norm_p)
+
+        if not os.path.exists(norm_p):
+            os.makedirs(norm_p)
+
+    def setup_config(self,
+                     project_url=None,
+                     project_folder=None,
+                     project_name=None,
+                     overwrite=False,
+                     bypass_robots=False,
+                     debug=False,
+                     delay=None,
+                     threaded=None):
+        &#34;&#34;&#34;Sets up the complete config parts which requires a project_url to be present.
+
+        Complete configuration is done here and subject to change according to application structure
+        You are advised to use only the .setup_path() method if you get any unusual behaviour
+        &#34;&#34;&#34;
+        self.set_overwrite(overwrite)
+        self.set_bypass_robots(bypass_robots)
+        self.set_debug(debug)
+        self.set_delay(delay)
+        self.set_threaded(threaded)
+        self.set_project_url(project_url)
+        self.setup_paths(project_folder, project_name)
+
+        #: Add a stderr logger to this library.
+        if debug:
+            add_stderr_logger(level=logging.DEBUG)
+
+        #: Log this new configuration to the log file for debug purposes
+        logger.debug(str(dict(self)))
+
+    def create_context(self):
+        if not self.is_set():
+            raise ConfigError(&#34;Config is missing required attributes!&#34;)
+        from .urls import Context
+        return Context.from_config(self)
+
+    def create_session(self):
+        if not self.is_set():
+            raise ConfigError(&#34;Config is missing required attributes!&#34;)
+        from .session import Session
+        return Session.from_config(self)
+
+    def create_crawler(self):
+        if not self.is_set():
+            raise ConfigError(&#34;Config is missing required attributes!&#34;)
+        from .core import Crawler
+        return Crawler.from_config(self)
+
+    def create_page(self):
+        if not self.is_set():
+            raise ConfigError(&#34;Config is missing required attributes!&#34;)
+        from .core import WebPage
+        return WebPage.from_config(self)</code></pre>
+</details>
+<h3>Ancestors</h3>
+<ul class="hlist">
+<li>requests.structures.CaseInsensitiveDict</li>
+<li>collections.abc.MutableMapping</li>
+<li>collections.abc.Mapping</li>
+<li>collections.abc.Collection</li>
+<li>collections.abc.Sized</li>
+<li>collections.abc.Iterable</li>
+<li>collections.abc.Container</li>
+</ul>
+<h3>Methods</h3>
+<dl>
+<dt id="pywebcopy.configs.ConfigHandler.create_context"><code class="name flex">
+<span>def <span class="ident">create_context</span></span>(<span>self)</span>
+</code></dt>
+<dd>
+<div class="desc"></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def create_context(self):
+    if not self.is_set():
+        raise ConfigError(&#34;Config is missing required attributes!&#34;)
+    from .urls import Context
+    return Context.from_config(self)</code></pre>
+</details>
+</dd>
+<dt id="pywebcopy.configs.ConfigHandler.create_crawler"><code class="name flex">
+<span>def <span class="ident">create_crawler</span></span>(<span>self)</span>
+</code></dt>
+<dd>
+<div class="desc"></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def create_crawler(self):
+    if not self.is_set():
+        raise ConfigError(&#34;Config is missing required attributes!&#34;)
+    from .core import Crawler
+    return Crawler.from_config(self)</code></pre>
+</details>
+</dd>
+<dt id="pywebcopy.configs.ConfigHandler.create_page"><code class="name flex">
+<span>def <span class="ident">create_page</span></span>(<span>self)</span>
+</code></dt>
+<dd>
+<div class="desc"></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def create_page(self):
+    if not self.is_set():
+        raise ConfigError(&#34;Config is missing required attributes!&#34;)
+    from .core import WebPage
+    return WebPage.from_config(self)</code></pre>
+</details>
+</dd>
+<dt id="pywebcopy.configs.ConfigHandler.create_session"><code class="name flex">
+<span>def <span class="ident">create_session</span></span>(<span>self)</span>
+</code></dt>
+<dd>
+<div class="desc"></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def create_session(self):
+    if not self.is_set():
+        raise ConfigError(&#34;Config is missing required attributes!&#34;)
+    from .session import Session
+    return Session.from_config(self)</code></pre>
+</details>
+</dd>
+<dt id="pywebcopy.configs.ConfigHandler.is_set"><code class="name flex">
+<span>def <span class="ident">is_set</span></span>(<span>self)</span>
+</code></dt>
+<dd>
+<div class="desc"><p>Checks whether the configuration has required attributes or not.</p></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def is_set(self):
+    &#34;&#34;&#34;Checks whether the configuration has required attributes or not.&#34;&#34;&#34;
+    try:
+        assert self.get(&#39;project_folder&#39;) is not None
+        assert self.get(&#39;project_url&#39;) is not None
+        assert self.get(&#39;project_name&#39;) is not None
+    except AssertionError:
+        return False
+    else:
+        return True</code></pre>
+</details>
+</dd>
+<dt id="pywebcopy.configs.ConfigHandler.reset_config"><code class="name flex">
+<span>def <span class="ident">reset_config</span></span>(<span>self)</span>
+</code></dt>
+<dd>
+<div class="desc"><p>Resets all to configuration to default state.</p></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def reset_config(self):
+    &#34;&#34;&#34;Resets all to configuration to default state.&#34;&#34;&#34;
+    self.update(default_config)</code></pre>
+</details>
+</dd>
+<dt id="pywebcopy.configs.ConfigHandler.reset_key"><code class="name flex">
+<span>def <span class="ident">reset_key</span></span>(<span>self, key)</span>
+</code></dt>
+<dd>
+<div class="desc"></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def reset_key(self, key):
+    self.update({key: default_config.get(key)})</code></pre>
+</details>
+</dd>
+<dt id="pywebcopy.configs.ConfigHandler.resolve_url"><code class="name flex">
+<span>def <span class="ident">resolve_url</span></span>(<span>self)</span>
+</code></dt>
+<dd>
+<div class="desc"><p>Resolves any redirects in the url and sets the final url as base url.</p></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def resolve_url(self):
+    &#34;&#34;&#34;Resolves any redirects in the url and sets the final url as base url.&#34;&#34;&#34;
+    raise NotImplementedError()</code></pre>
+</details>
+</dd>
+<dt id="pywebcopy.configs.ConfigHandler.setup_config"><code class="name flex">
+<span>def <span class="ident">setup_config</span></span>(<span>self, project_url=None, project_folder=None, project_name=None, overwrite=False, bypass_robots=False, debug=False, delay=None, threaded=None)</span>
+</code></dt>
+<dd>
+<div class="desc"><p>Sets up the complete config parts which requires a project_url to be present.</p>
+<p>Complete configuration is done here and subject to change according to application structure
+You are advised to use only the .setup_path() method if you get any unusual behaviour</p></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def setup_config(self,
+                 project_url=None,
+                 project_folder=None,
+                 project_name=None,
+                 overwrite=False,
+                 bypass_robots=False,
+                 debug=False,
+                 delay=None,
+                 threaded=None):
+    &#34;&#34;&#34;Sets up the complete config parts which requires a project_url to be present.
+
+    Complete configuration is done here and subject to change according to application structure
+    You are advised to use only the .setup_path() method if you get any unusual behaviour
+    &#34;&#34;&#34;
+    self.set_overwrite(overwrite)
+    self.set_bypass_robots(bypass_robots)
+    self.set_debug(debug)
+    self.set_delay(delay)
+    self.set_threaded(threaded)
+    self.set_project_url(project_url)
+    self.setup_paths(project_folder, project_name)
+
+    #: Add a stderr logger to this library.
+    if debug:
+        add_stderr_logger(level=logging.DEBUG)
+
+    #: Log this new configuration to the log file for debug purposes
+    logger.debug(str(dict(self)))</code></pre>
+</details>
+</dd>
+<dt id="pywebcopy.configs.ConfigHandler.setup_paths"><code class="name flex">
+<span>def <span class="ident">setup_paths</span></span>(<span>self, project_folder, project_name)</span>
+</code></dt>
+<dd>
+<div class="desc"><p>Fills the project_name, project_name and its
+dependent keys after evaluation.</p>
+<p>.. version changed :: 6.0.0
+Added string type checks and os based path normalising.</p>
+<p>.. version changed :: 6.1.0
+FIX: fixed path issue when using relative path for project_folder</p>
+<p>.. version changed :: 6.3.0
+FIX: Removed file based logging.
+FIX: Disabled dir change on setup</p>
+<p>:param project_name: new name of the project
+:param project_folder: folder where to store all the downloaded files</p></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def setup_paths(self, project_folder, project_name):
+    &#34;&#34;&#34;Fills the project_name, project_name and its
+    dependent keys after evaluation.
+
+    .. version changed :: 6.0.0
+        Added string type checks and os based path normalising.
+
+    .. version changed :: 6.1.0
+        FIX: fixed path issue when using relative path for project_folder
+
+    .. version changed :: 6.3.0
+        FIX: Removed file based logging.
+        FIX: Disabled dir change on setup
+
+    :param project_name: new name of the project
+    :param project_folder: folder where to store all the downloaded files
+    &#34;&#34;&#34;
+    if not isinstance(project_name, string_types):
+        raise ConfigError(&#34;project_name value must be a string&#34;)
+
+    if not isinstance(project_folder, string_types):
+        raise ConfigError(&#34;project_folder value must be a string!&#34;)
+
+    if os.altsep:
+        project_folder = project_folder.replace(os.altsep, os.sep)
+    if project_folder.find(os.sep) &lt; 0:  # pragma: no cover
+        raise ConfigError(&#34;Project_folder path doesn&#39;t seem to be a valid path.&#34;)
+
+    project_folder = os.path.abspath(project_folder)
+
+    norm_p = os.path.join(
+        os.path.normpath(project_folder),
+        os.path.normpath(project_name)
+    )
+    self.set_project_name(project_name)
+    self.set_project_folder(norm_p)
+
+    if not os.path.exists(norm_p):
+        os.makedirs(norm_p)</code></pre>
+</details>
+</dd>
+</dl>
+</dd>
+</dl>
+</section>
+</article>
+<nav id="sidebar">
+<h1>Index</h1>
+<div class="toc">
+<ul></ul>
+</div>
+<ul id="index">
+<li><h3>Super-module</h3>
+<ul>
+<li><code><a title="pywebcopy" href="index.html">pywebcopy</a></code></li>
+</ul>
+</li>
+<li><h3><a href="#header-variables">Global variables</a></h3>
+<ul class="">
+<li><code><a title="pywebcopy.configs.default_config" href="#pywebcopy.configs.default_config">default_config</a></code></li>
+</ul>
+</li>
+<li><h3><a href="#header-functions">Functions</a></h3>
+<ul class="">
+<li><code><a title="pywebcopy.configs.get_config" href="#pywebcopy.configs.get_config">get_config</a></code></li>
+</ul>
+</li>
+<li><h3><a href="#header-classes">Classes</a></h3>
+<ul>
+<li>
+<h4><code><a title="pywebcopy.configs.ConfigHandler" href="#pywebcopy.configs.ConfigHandler">ConfigHandler</a></code></h4>
+<ul class="two-column">
+<li><code><a title="pywebcopy.configs.ConfigHandler.create_context" href="#pywebcopy.configs.ConfigHandler.create_context">create_context</a></code></li>
+<li><code><a title="pywebcopy.configs.ConfigHandler.create_crawler" href="#pywebcopy.configs.ConfigHandler.create_crawler">create_crawler</a></code></li>
+<li><code><a title="pywebcopy.configs.ConfigHandler.create_page" href="#pywebcopy.configs.ConfigHandler.create_page">create_page</a></code></li>
+<li><code><a title="pywebcopy.configs.ConfigHandler.create_session" href="#pywebcopy.configs.ConfigHandler.create_session">create_session</a></code></li>
+<li><code><a title="pywebcopy.configs.ConfigHandler.is_set" href="#pywebcopy.configs.ConfigHandler.is_set">is_set</a></code></li>
+<li><code><a title="pywebcopy.configs.ConfigHandler.reset_config" href="#pywebcopy.configs.ConfigHandler.reset_config">reset_config</a></code></li>
+<li><code><a title="pywebcopy.configs.ConfigHandler.reset_key" href="#pywebcopy.configs.ConfigHandler.reset_key">reset_key</a></code></li>
+<li><code><a title="pywebcopy.configs.ConfigHandler.resolve_url" href="#pywebcopy.configs.ConfigHandler.resolve_url">resolve_url</a></code></li>
+<li><code><a title="pywebcopy.configs.ConfigHandler.setup_config" href="#pywebcopy.configs.ConfigHandler.setup_config">setup_config</a></code></li>
+<li><code><a title="pywebcopy.configs.ConfigHandler.setup_paths" href="#pywebcopy.configs.ConfigHandler.setup_paths">setup_paths</a></code></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</nav>
+</main>
+<footer id="footer">
+<p>Generated by <a href="https://pdoc3.github.io/pdoc" title="pdoc: Python API documentation generator"><cite>pdoc</cite> 0.10.0</a>.</p>
+</footer>
+</body>
+</html>
