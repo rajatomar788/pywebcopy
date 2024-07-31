@@ -1,5 +1,5 @@
 setuptools
 six
 requests
-lxml
+lxml-html-clean
 cachecontrol
