@@ -37,8 +37,8 @@
 
 import os
 import re
-from cgi import parse_header
 from collections import namedtuple
+from email.message import Message
 from hashlib import md5
 from zlib import adler32
 
@@ -53,7 +53,7 @@ from .helpers import lru_cache
 
 __all__ = [
     &#39;url2path&#39;, &#39;filename_present&#39;, &#39;relate&#39;, &#39;get_etag&#39;, &#39;HIERARCHY&#39;, &#39;LINEAR&#39;,
-    &#39;parse_url&#39;, &#39;parse_header&#39;, &#39;get_host&#39;, &#39;get_prefix&#39;, &#39;get_suffix&#39;,
+    &#39;parse_url&#39;, &#39;Message&#39;, &#39;get_host&#39;, &#39;get_prefix&#39;, &#39;get_suffix&#39;,
     &#39;Url&#39;, &#39;LocationParseError&#39;, &#39;secure_filename&#39;, &#39;split_first&#39;,
     &#39;common_prefix_map&#39;, &#39;common_suffix_map&#39;, &#39;get_content_type_from_headers&#39;,
     &#39;Context&#39;, &#39;ContextError&#39;,
@@ -296,11 +296,17 @@ def get_etag(string):
     return md5(string).hexdigest()
 
 
+def parse_separated_header(value: str):
+    m = Message()
+    m[&#39;content-type&#39;] = value
+    return dict(m.get_params())
+
+
 def get_content_type_from_headers(headers, default=None):
     content_type = headers.get(&#39;Content-Type&#39;, default)
     if not content_type:
         return default
-    content_type, params = parse_header(content_type)
+    content_type, params = parse_separated_header(content_type)
     return content_type
 
 
@@ -769,6 +775,21 @@ class Context(namedtuple(&#39;Context&#39;, context_attrs)):
     return bool(_filter_and_group_segments(url, remove_query=True, remove_frag=True)[1])</code></pre>
 </details>
 </dd>
+<dt id="pywebcopy.urls.parse_separated_header"><code class="name flex">
+    <span>def <span class="ident">parse_separated_header</span></span>(<span>value: str)</span>
+    </code></dt>
+    <dd>
+    <div class="desc"></div>
+    <details class="source">
+    <summary>
+    <span>Expand source code</span>
+    </summary>
+    <pre><code class="python">def parse_separated_header(value: str):
+        m = Message()
+        m[&#39;content-type&#39;] = value
+        return dict(m.get_params())</code></pre>
+    </details>
+    </dd>
 <dt id="pywebcopy.urls.get_content_type_from_headers"><code class="name flex">
 <span>def <span class="ident">get_content_type_from_headers</span></span>(<span>headers, default=None)</span>
 </code></dt>
@@ -782,7 +803,7 @@ class Context(namedtuple(&#39;Context&#39;, context_attrs)):
     content_type = headers.get(&#39;Content-Type&#39;, default)
     if not content_type:
         return default
-    content_type, params = parse_header(content_type)
+    content_type, params = parse_separated_header(content_type)
     return content_type</code></pre>
 </details>
 </dd>
@@ -842,37 +863,6 @@ class Context(namedtuple(&#39;Context&#39;, context_attrs)):
 </summary>
 <pre><code class="python">def get_suffix(content_type):
     return common_suffix_map.get(content_type)</code></pre>
-</details>
-</dd>
-<dt id="pywebcopy.urls.parse_header"><code class="name flex">
-<span>def <span class="ident">parse_header</span></span>(<span>line)</span>
-</code></dt>
-<dd>
-<div class="desc"><p>Parse a Content-type like header.</p>
-<p>Return the main content-type and a dictionary of options.</p></div>
-<details class="source">
-<summary>
-<span>Expand source code</span>
-</summary>
-<pre><code class="python">def parse_header(line):
-    &#34;&#34;&#34;Parse a Content-type like header.
-
-    Return the main content-type and a dictionary of options.
-
-    &#34;&#34;&#34;
-    parts = _parseparam(&#39;;&#39; + line)
-    key = parts.__next__()
-    pdict = {}
-    for p in parts:
-        i = p.find(&#39;=&#39;)
-        if i &gt;= 0:
-            name = p[:i].strip().lower()
-            value = p[i+1:].strip()
-            if len(value) &gt;= 2 and value[0] == value[-1] == &#39;&#34;&#39;:
-                value = value[1:-1]
-                value = value.replace(&#39;\\\\&#39;, &#39;\\&#39;).replace(&#39;\\&#34;&#39;, &#39;&#34;&#39;)
-            pdict[name] = value
-    return key, pdict</code></pre>
 </details>
 </dd>
 <dt id="pywebcopy.urls.parse_url"><code class="name flex">
@@ -1649,7 +1639,7 @@ def url(self):
 <li><code><a title="pywebcopy.urls.get_host" href="#pywebcopy.urls.get_host">get_host</a></code></li>
 <li><code><a title="pywebcopy.urls.get_prefix" href="#pywebcopy.urls.get_prefix">get_prefix</a></code></li>
 <li><code><a title="pywebcopy.urls.get_suffix" href="#pywebcopy.urls.get_suffix">get_suffix</a></code></li>
-<li><code><a title="pywebcopy.urls.parse_header" href="#pywebcopy.urls.parse_header">parse_header</a></code></li>
+<li><code><a title="pywebcopy.urls.parse_separated_header" href="#pywebcopy.urls.parse_separated_header">parse_separated_header</a></code></li>
 <li><code><a title="pywebcopy.urls.parse_url" href="#pywebcopy.urls.parse_url">parse_url</a></code></li>
 <li><code><a title="pywebcopy.urls.relate" href="#pywebcopy.urls.relate">relate</a></code></li>
 <li><code><a title="pywebcopy.urls.secure_filename" href="#pywebcopy.urls.secure_filename">secure_filename</a></code></li>
