@@ -10,7 +10,7 @@
 import os
 import re
 from collections import namedtuple
-from email.message import Message
+from email.message import EmailMessage
 from hashlib import md5
 from zlib import adler32
 
@@ -273,10 +273,10 @@ def get_etag(string):
 
 
 def parse_separated_header(value: str):
-    # Adapted from https://peps.python.org/pep-0594/#cgi
-    m = Message()
-    m['content-type'] = value
-    return dict(m.get_params())
+    msg = EmailMessage()
+    msg['content-type'] = 'application/json; charset="utf8"'
+    main, params = msg.get_content_type(), msg['content-type'].params
+    return main, params
 
 
 def get_content_type_from_headers(headers, default=None):

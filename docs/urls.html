@@ -785,9 +785,10 @@ class Context(namedtuple(&#39;Context&#39;, context_attrs)):
     <span>Expand source code</span>
     </summary>
     <pre><code class="python">def parse_separated_header(value: str):
-        m = Message()
-        m[&#39;content-type&#39;] = value
-        return dict(m.get_params())</code></pre>
+        msg = EmailMessage()
+        msg[&#39;content-type&#39;] = &#39;application/json; charset=&#39;utf8&#39;&#39;
+        main, params = msg.get_content_type(), msg[&#39;content-type&#39;].params
+        return main, params</code></pre>
     </details>
     </dd>
 <dt id="pywebcopy.urls.get_content_type_from_headers"><code class="name flex">
