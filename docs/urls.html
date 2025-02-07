@@ -297,16 +297,17 @@ def get_etag(string):
 
 
 def parse_separated_header(value: str):
-    m = Message()
-    m[&#39;content-type&#39;] = value
-    return dict(m.get_params())
+    msg = EmailMessage()
+    msg['content-type'] = 'application/json; charset="utf8"'
+    main, params = msg.get_content_type(), msg['content-type'].params
+    return main, params
 
 
 def get_content_type_from_headers(headers, default=None):
     content_type = headers.get(&#39;Content-Type&#39;, default)
     if not content_type:
         return default
-    content_type, params = parse_separated_header(content_type)
+    content_type = parse_separated_header(content_type)
     return content_type
 
 
@@ -804,7 +805,7 @@ class Context(namedtuple(&#39;Context&#39;, context_attrs)):
     content_type = headers.get(&#39;Content-Type&#39;, default)
     if not content_type:
         return default
-    content_type, params = parse_separated_header(content_type)
+    content_type = parse_separated_header(content_type)
     return content_type</code></pre>
 </details>
 </dd>
