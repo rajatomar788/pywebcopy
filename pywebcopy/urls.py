@@ -9,8 +9,8 @@
 
 import os
 import re
-from cgi import parse_header
 from collections import namedtuple
+from email.message import EmailMessage
 from hashlib import md5
 from zlib import adler32
 
@@ -25,7 +25,7 @@ from .helpers import lru_cache
 
 __all__ = [
     'url2path', 'filename_present', 'relate', 'get_etag', 'HIERARCHY', 'LINEAR',
-    'parse_url', 'parse_header', 'get_host', 'get_prefix', 'get_suffix',
+    'parse_url', 'Message', 'get_host', 'get_prefix', 'get_suffix',
     'Url', 'LocationParseError', 'secure_filename', 'split_first',
     'common_prefix_map', 'common_suffix_map', 'get_content_type_from_headers',
     'Context', 'ContextError',
@@ -272,11 +272,18 @@ def get_etag(string):
     return md5(string).hexdigest()
 
 
+def parse_separated_header(value: str):
+    msg = EmailMessage()
+    msg['content-type'] = 'application/json; charset="utf8"'
+    main, params = msg.get_content_type(), msg['content-type'].params
+    return main, params
+
+
 def get_content_type_from_headers(headers, default=None):
     content_type = headers.get('Content-Type', default)
     if not content_type:
         return default
-    content_type, params = parse_header(content_type)
+    content_type = parse_separated_header(content_type)
     return content_type
 
 
