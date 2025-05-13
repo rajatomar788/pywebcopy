@@ -197,6 +197,7 @@ class Session(requests.Session):
             time.sleep(delay)
         #: Update the access time value
         access_rules.modified()
+        return True
 
     def send(self, request, **kwargs):
         if not isinstance(request, requests.PreparedRequest):
@@ -211,7 +212,7 @@ class Session(requests.Session):
 
     @classmethod
     def from_config(cls, config):
-        """Creates a new instance of Session object using the config object."""
+        """Creates a new instance of a Session object using the config object."""
         ans = cls()
         ans.headers = config.get('http_headers', default_headers())
         ans.follow_robots_txt = not config.get('bypass_robots')

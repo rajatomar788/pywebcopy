@@ -1,176 +1,42 @@
 # Copyright 2020; Raja Tomar
 # See license for more details
-import errno
 import logging
 import os
 import re
 import warnings
 from base64 import b64encode
-from contextlib import closing
 from datetime import datetime
 from functools import partial
 from io import BytesIO
-from shutil import copyfileobj
 from textwrap import dedent
 
 from lxml.html import HtmlComment
 from lxml.html import tostring
+from lxml.html import HTMLParser
+from lxml.html import XHTML_NAMESPACE
+from lxml.html import parse
+from requests.models import Response
 from six import binary_type
 from six import string_types
 from six.moves.urllib.request import pathname2url
 
 from .__version__ import __version__
+from .helpers import RewindableResponse
 from .helpers import cached_property
 from .parsers import iterparse
 from .parsers import unquote_match
 from .urls import get_content_type_from_headers
 from .urls import relate
+from .urls import retrieve_resource
 
 logger = logging.getLogger(__name__)
 
-#: Binary file permission mode
-fd_mode = 0o777
-#: Binary file flags for kernel based io
-fd_flags = os.O_CREAT | os.O_WRONLY
-if hasattr(os, 'O_BINARY'):
-    fd_flags |= os.O_BINARY
-if hasattr(os, 'O_NOFOLLOW'):
-    fd_flags |= os.O_NOFOLLOW
 
-
-def make_fd(location, url=None, overwrite=False):
-    """Creates a kernel based file descriptor which should be used
-    to write binary data onto the files.
-
-    :rtype: int
-    """
-    location = os.path.normpath(location)
-    # Sub-directories creation which suppresses exceptions
-    base_dir = os.path.dirname(location)
-    try:
-        os.makedirs(base_dir)
-    except (OSError, IOError) as e:
-        if e.errno == errno.EEXIST or ((os.name == 'nt' and os.path.isdir(
-                base_dir) and os.access(base_dir, os.W_OK))):
-            logger.debug(
-                "[FILE] Sub-directories exists for: <%r>" % location)
-        # dead on arrival
-        else:
-            logger.error(
-                "[File] Failed to create target location <%r> "
-                "for the file <%r> on the disk." % (location, url))
-            return -1
-    else:
-        logger.debug(
-            "[File] Sub-directories created for: <%r>" % location)
-    try:
-
-        # sys.audit("%s.resource" % __title__, location)
-        # sys.audit("os.open", location)
-        if overwrite:
-            fd = os.open(location, fd_flags | os.O_TRUNC, fd_mode)
-        else:
-            # raises FileExistsError if file exists
-            fd = os.open(location, fd_flags | os.O_EXCL, fd_mode)
-
-    except (OSError, IOError) as e:
-        if e.errno == errno.EEXIST:
-            logger.debug(
-                "[FILE] <%s> already exists at: <%s>" % (url, location))
-        elif e.errno == errno.ENAMETOOLONG:
-            logger.debug(
-                "[FILE] Path too long for <%s> at: <%s>" % (url, location))
-        else:
-            logger.error(
-                "[File] Cannot write <%s> to <%s>! %r" % (url, location, e))
-        return -1
-    else:
-        return fd
-
-
-def retrieve_resource(content, location, url=None, overwrite=False):
-    """Retrieves the readable resource to a local file.
-
-    ..todo::
-        Add overwrite modes: Overwrite or True, Update, Ignore or False
-
-    :param BytesIO content: file like object with read method
-    :param location: file name where this content has to be saved.
-    :param url: (optional) url of the resource used for logging purposes.
-    :param overwrite: (optional) whether to overwrite an existing file.
-    :return: rendered location or False if failed.
-    :rtype: string_types
-    """
-    if content is None:
-        raise ValueError("Content can't be of NoneType.")
-    if location is None:
-        raise ValueError("Location can't be of NoneType or empty str.")
-    if url is None:
-        raise ValueError("Url can't be of NoneType.")
-
-    logger.debug(
-        "[File] Preparing to write file from <%r> to the disk at <%r>."
-        % (url, location))
-
-    fd = make_fd(location, url, overwrite)
-    if fd == -1:
-        return location
-
-    with closing(os.fdopen(fd, 'w+b')) as dst:
-        copyfileobj(content, dst)
-
-    logger.info(
-        "[File] Written the file from <%s> to <%s>" % (url, location))
-    return location
-
-
-def urlretrieve(url, location, **params):
-    """
-    A extra rewrite of a basic `urllib` function using the
-    tweaks and perks of this library.
-
-    :param url: url of the resource to be retrieved.
-    :param location: destination for the resource.
-    :param params: parameters for the :func:`requests.get`.
-    :return: location of the file retrieved.
-    :rtype: string_types
-    """
-    if not isinstance(url, string_types):
-        raise TypeError("Expected string type, got %r" % url)
-    if not isinstance(location, string_types):
-        raise TypeError("Expected string type, got %r" % location)
-
-    import requests
-    with closing(requests.get(url, **params)) as src:
-        return retrieve_resource(
-            src.raw, location, url, overwrite=True)
-
-
-class GenericResource(object):
-    def __init__(self, session, config, scheduler, context, response=None):
-        """
-        Generic internet resource which processes a server response based on responses
-        content-type. Downloadable file if allowed in config would be downloaded. Css
-        file would be parsed using suitable parser. Html will also be parsed using
-        suitable html parser.
-
-        :param session: http client used for networking.
-        :param config: project configuration handler.
-        :param response: http response from the server.
-        :param scheduler: response processor scheduler.
-        :param context: context of this response; should contain base-location, base-url etc.
-        """
-        self.session = session
-        self.config = config
-        self.scheduler = scheduler
-        self.context = context
-        self.response = None
-        if response:
-            self.set_response(response)
-        self.logger = logger.getChild(self.__class__.__name__)
-
-    def __repr__(self):
-        return '<%s(url=%s)>' % (self.__class__.__name__, self.context.url)
+class ResponseWrapper(object):
+    session = None
+    config = None
+    context = None
+    response = None
 
     def __del__(self):
         self.close()
@@ -183,22 +49,6 @@ class GenericResource(object):
                 if hasattr(self.response.raw, 'release_conn'):
                     getattr(self.response, 'raw').release_conn()
             del self.response
-
-    @cached_property
-    def filepath(self):
-        """Returns if available a valid filepath
-         where this file should be written."""
-        if self.context is None:
-            raise AttributeError("Context attribute is not set.")
-        if self.response is not None:
-            ctypes = get_content_type_from_headers(self.response.headers)
-            self.context = self.context.with_values(content_type=ctypes)
-        return self.context.resolve()
-
-    @cached_property
-    def filename(self):
-        """Returns a valid filename of this resource if available."""
-        return os.path.basename(self.filepath or '')
 
     @cached_property
     def content_type(self):
@@ -315,7 +165,7 @@ class GenericResource(object):
 
         Example:
             wp = WebPage()
-            wp.get('http://www.example.com/')
+            wp.get('https://www.example.com/')
             wp.retrieve()
         """
         return self.request('GET', url, **params)
@@ -328,7 +178,7 @@ class GenericResource(object):
 
         Example:
             wp = WebPage()
-            wp.post('http://www.example.com/', data={'key': 'value'})
+            wp.post('https://www.example.com/', data={'key': 'value'})
             wp.retrieve()
         """
         return self.request('POST', url, **params)
@@ -371,6 +221,50 @@ class GenericResource(object):
         if buffered:
             return self.response.raw, self.encoding
         return self.response.content, self.encoding
+
+
+
+class GenericResource(ResponseWrapper):
+    def __init__(self, session, config, scheduler, context, response=None):
+        """
+        Generic internet resource which processes a server response based on responses
+        content-type. Downloadable file if allowed in config would be downloaded. Css
+        file would be parsed using a suitable parser. Html will also be parsed using
+        suitable html parser.
+
+        :param session: http client used for networking.
+        :param config: project configuration handler.
+        :param response: http response from the server.
+        :param scheduler: response processor scheduler.
+        :param context: context of this response; should contain base-location, base-url etc.
+        """
+        self.session = session
+        self.config = config
+        self.scheduler = scheduler
+        self.context = context
+        self.response = None
+        if response:
+            self.set_response(response)
+        self.logger = logger.getChild(self.__class__.__name__)
+
+    def __repr__(self):
+        return '<%s(url=%s)>' % (self.__class__.__name__, self.context.url)
+
+    @cached_property
+    def filepath(self):
+        """Returns if available a valid filepath
+         where this file should be written."""
+        if self.context is None:
+            raise AttributeError("Context attribute is not set.")
+        if self.response is not None:
+            ctypes = get_content_type_from_headers(self.response.headers)
+            self.context = self.context.with_values(content_type=ctypes)
+        return self.context.resolve()
+
+    @cached_property
+    def filename(self):
+        """Returns a valid filename of this resource if available."""
+        return os.path.basename(self.filepath or '')
 
     def retrieve(self):
         """Retrieves the readable resource to the local disk."""
@@ -484,13 +378,175 @@ class HTMLResource(GenericResource):
         return self.filepath
 
     def _get_watermark(self):
-        # comment text should be in unicode
+        # comment text should be in Unicode
         return dedent("""
         * PyWebCopy Engine [version %s]
         * Copyright 2020; Raja Tomar
         * File mirrored from [%s]
         * At UTC datetime: [%s]
         """) % (__version__, self.response.url, datetime.utcnow())
+
+
+class WebElement(HTMLResource):
+    """
+    WebPage built upon HTMLResource element.
+    It provides various utilities like form-filling,
+    external response processing, getting list of links,
+    dumping html and opening the html in the browser.
+    """
+
+    def __repr__(self):
+        """Short representation of this instance."""
+        return '<{}: {}>'.format(self.__class__.__name__, self.url)
+
+    def set_response(self, response):
+        """
+        Set an explicit `requests.Response` object directly.
+        It accepts a `requests.Response` object and wraps it in a `RewindableResponse` object.
+        It also enables decoding in the original `urllib3` response object.
+
+        You can use it like this
+            import requests
+            resp = requests.get('https://www.httpbin.org/')
+            wp = WebPage()
+            wp.set_response(resp)
+            wp.get_forms()
+        """
+        if not isinstance(response, Response):
+            raise ValueError("Expected %r, got %r" % (Response, response))
+        response.raw.decode_content = True
+        response.raw = RewindableResponse(response.raw)
+        return super(WebElement, self).set_response(response)
+
+    def get_source(self, buffered=False):
+        """Returns the `requests.Response` object
+        in a rewindable io wrapper. Contents can be consumed then
+        the `.rewind()` method should be called to restore the contents
+        of the original response.
+
+            wp = WebPage()
+            wp.get('http://httpbin.org/forms/')
+            src = WebPage.get_source(buffered=True)
+            contents = src.read()
+            src.rewind()
+
+        :param buffered: whether to return an Readable file-like object
+            or just a plain string.
+        :rtype: RewindableResponse
+        """
+        raw = getattr(self.response, 'raw', None)
+        if raw is None:
+            raise ValueError(
+                "HTTP Response is not set at the `.response` attribute!"
+                "Use the `.get()` method or `.set_response()` methods to set it.")
+
+        # if raw.closed:
+        #     raise ValueError(
+        #         "I/O operations are closed for the raw source.")
+
+        # Return the raw object which will decode the
+        # buffer while reading otherwise errors will follow
+        raw.decode_content = True
+
+        # fp = getattr(raw, '_fp', None)
+        # assert fp is not None, "Raw source wrapper is missing!"
+        # assert isinstance(fp, CallbackFileWrapper), \
+        #     "Raw source wrapper is missing!"
+        raw.rewind()
+        if buffered:
+            return raw, self.encoding
+        return raw.read(), self.encoding
+
+    def refresh(self):
+        """Re-fetches the resource from the internet using the session."""
+        self.set_response(self.session.get(self.url, stream=True))
+
+    def get_forms(self):
+        """Returns a list of form elements available on the page."""
+        if not self.viewing_html():
+            raise TypeError(
+                "Not viewing a html page. Please check the link!")
+
+        source, encoding = self.get_source(buffered=True)
+        return parse(
+            source, parser=HTMLParser(encoding=encoding, collect_ids=False)
+        ).xpath(
+            "descendant-or-self::form|descendant-or-self::x:form",
+            namespaces={'x': XHTML_NAMESPACE}
+        )
+
+    def submit_form(self, form, **extra_values):
+        """
+        Helper function to submit a `lxml` form.
+
+        Example:
+
+            wp = WebPage()
+            wp.get('http://httpbin.org/forms/')
+            form = wp.get_forms()[0]
+            form.inputs['email'].value = 'bar' # etc
+            form.inputs['password'].value = 'baz' # etc
+            wp.submit_form(form)
+            wp.get_links()
+
+        The action is one of 'GET' or 'POST', the URL is the target URL as a
+        string, and the values are a sequence of ``(name, value)`` tuples
+        with the form data.
+        """
+        values = form.form_values()
+        if extra_values:
+            if hasattr(extra_values, 'items'):
+                extra_values = extra_values.items()
+            values.extend(extra_values)
+
+        if form.action:
+            url = form.action
+        elif form.base_url:
+            url = form.base_url
+        else:
+            url = self.url
+        return self.request(form.method, url, data=values)
+
+    def get_files(self):
+        """
+        Returns a list of urls, css, js, images etc.
+        """
+        return (e[2] for e in self.parse())
+
+    def get_links(self):
+        """
+        Returns a list of urls in the anchor tags only.
+        """
+        return (e[2] for e in self.parse() if e[0].tag == 'a')
+
+    def scrap_html(self, url):
+        """Returns the html of the given url.
+
+        :param url: address of the target page.
+        """
+        response = self.session.get(url)
+        response.raise_for_status()
+        return response.content
+
+    def scrap_links(self, url):
+        """Returns all the links from a given url.
+
+        :param url: address of the target page.
+        """
+        response = self.session.get(url)
+        response.raise_for_status()
+        return response.links()
+
+    def dump_html(self, filename=None):
+        """Saves the html of the page to a default or specified file.
+
+        :param filename: path of the file to write the contents to
+        """
+        filename = filename or self.filepath
+        with open(filename, 'w+b') as fh:
+            source, enc = self.get_source()
+            fh.write(source)
+        return filename
 
 
 class CSSResource(GenericResource):

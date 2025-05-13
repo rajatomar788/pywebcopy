@@ -9,10 +9,14 @@
 
 import os
 import re
+import logging
+import errno
 from cgi import parse_header
 from collections import namedtuple
 from hashlib import md5
 from zlib import adler32
+from shutil import copyfileobj
+from contextlib import closing
 
 from six import PY2
 from six import text_type
@@ -28,8 +32,10 @@ __all__ = [
     'parse_url', 'parse_header', 'get_host', 'get_prefix', 'get_suffix',
     'Url', 'LocationParseError', 'secure_filename', 'split_first',
     'common_prefix_map', 'common_suffix_map', 'get_content_type_from_headers',
-    'Context', 'ContextError',
+    'Context', 'ContextError', 'retrieve_resource', 'urlretrieve'
 ]
+
+logger = logging.getLogger(__name__)
 
 url_attrs = ['scheme', 'auth', 'host', 'port', 'path', 'query', 'fragment']
 
@@ -194,10 +200,6 @@ def parse_url(url):
     path = None
     fragment = None
     query = None
-
-    # workaround for ignoring <a href="tel:+17035713343"/>
-    if 'tel:' in url:
-        return Url(scheme, auth, host, port, path, query, fragment)
 
     # Scheme
     if '://' in url:
@@ -640,7 +642,7 @@ def relate(target_file, start_file):
     start_dir = os.path.dirname(start_file)
 
     # Calculate the relative path using the standard module and then concatenate
-    # the file names if  they were previously present.
+    # the file names if they were previously present.
     return os.path.join(os.path.relpath(target_dir, start_dir), target_base)
 
 
@@ -651,6 +653,124 @@ def filename_present(url):
     :return boolean: True if present, else False
     """
     return bool(_filter_and_group_segments(url, remove_query=True, remove_frag=True)[1])
+
+
+#: Binary file permission mode
+fd_mode = 0o777
+#: Binary file flags for kernel based io
+fd_flags = os.O_CREAT | os.O_WRONLY
+if hasattr(os, 'O_BINARY'):
+    fd_flags |= os.O_BINARY
+if hasattr(os, 'O_NOFOLLOW'):
+    fd_flags |= os.O_NOFOLLOW
+
+
+def make_fd(location, url=None, overwrite=False):
+    """Creates a kernel based file descriptor which should be used
+    to write binary data onto the files.
+
+    :rtype: int
+    """
+    location = os.path.normpath(location)
+    # Subdirectories creation which suppresses exceptions
+    base_dir = os.path.dirname(location)
+    try:
+        os.makedirs(base_dir)
+    except (OSError, IOError) as e:
+        if e.errno == errno.EEXIST or ((os.name == 'nt' and os.path.isdir(
+                base_dir) and os.access(base_dir, os.W_OK))):
+            logger.debug(
+                "[FILE] Sub-directories exists for: <%r>" % location)
+        # dead on arrival
+        else:
+            logger.error(
+                "[File] Failed to create target location <%r> "
+                "for the file <%r> on the disk." % (location, url))
+            return -1
+    else:
+        logger.debug(
+            "[File] Sub-directories created for: <%r>" % location)
+    try:
+
+        # sys.audit("%s.resource" % __title__, location)
+        # sys.audit("os.open", location)
+        if overwrite:
+            fd = os.open(location, fd_flags | os.O_TRUNC, fd_mode)
+        else:
+            # raises FileExistsError if file exists
+            fd = os.open(location, fd_flags | os.O_EXCL, fd_mode)
+
+    except (OSError, IOError) as e:
+        if e.errno == errno.EEXIST:
+            logger.debug(
+                "[FILE] <%s> already exists at: <%s>" % (url, location))
+        elif e.errno == errno.ENAMETOOLONG:
+            logger.debug(
+                "[FILE] Path too long for <%s> at: <%s>" % (url, location))
+        else:
+            logger.error(
+                "[File] Cannot write <%s> to <%s>! %r" % (url, location, e))
+        return -1
+    else:
+        return fd
+
+
+def retrieve_resource(content, location, url=None, overwrite=False):
+    """Retrieves the readable resource to a local file.
+
+    ..todo::
+        Add overwrite modes: Overwrite or True, Update, Ignore or False
+
+    :param BytesIO content: file like object with read method
+    :param location: file name where this content has to be saved.
+    :param url: (optional) url of the resource used for logging purposes.
+    :param overwrite: (optional) whether to overwrite an existing file.
+    :return: rendered location or False if failed.
+    :rtype: string_types
+    """
+    if content is None:
+        raise ValueError("Content can't be of NoneType.")
+    if location is None:
+        raise ValueError("Location can't be of NoneType or empty str.")
+    if url is None:
+        raise ValueError("Url can't be of NoneType.")
+
+    logger.debug(
+        "[File] Preparing to write file from <%r> to the disk at <%r>."
+        % (url, location))
+
+    fd = make_fd(location, url, overwrite)
+    if fd == -1:
+        return location
+
+    with closing(os.fdopen(fd, 'w+b')) as dst:
+        copyfileobj(content, dst)
+
+    logger.info(
+        "[File] Written the file from <%s> to <%s>" % (url, location))
+    return location
+
+
+def urlretrieve(url, location, **params):
+    """
+    A extra rewrite of a basic `urllib` function using the
+    tweaks and perks of this library.
+
+    :param url: url of the resource to be retrieved.
+    :param location: destination for the resource.
+    :param params: parameters for the :func:`requests.get`.
+    :return: location of the file retrieved.
+    :rtype: string_types
+    """
+    if not isinstance(url, string_types):
+        raise TypeError("Expected string type, got %r" % url)
+    if not isinstance(location, string_types):
+        raise TypeError("Expected string type, got %r" % location)
+
+    import requests
+    with closing(requests.get(url, **params)) as src:
+        return retrieve_resource(
+            src.raw, location, url, overwrite=True)
 
 
 context_attrs = [
@@ -708,11 +828,19 @@ class Context(namedtuple('Context', context_attrs)):
             prefix = get_prefix(self.content_type)
             suffix = get_suffix(self.content_type)
 
-        return url2path(
-            url=self.url,
-            base_url=self.base_url,
-            base_path=self.base_path,
-            tree_type=self.tree_type,
-            prefix=prefix, suffix=suffix,
-            suffix_errors='append'
-        )
+        # NOTE: This shouldn't break on errors as it causes the entire
+        # processes to crash out in not threaded scenarios.
+        path = self.url
+        try:
+            path = url2path(
+                url=self.url,
+                base_url=self.base_url,
+                base_path=self.base_path,
+                tree_type=self.tree_type,
+                prefix=prefix, suffix=suffix,
+                suffix_errors='append'
+            )
+        except:
+            pass
+        finally:
+            return path

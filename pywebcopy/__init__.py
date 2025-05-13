@@ -97,7 +97,7 @@ def save_page(url,
     :type project_name: str | None
     :param bypass_robots: whether to follow the robots.txt rules or not
     :param debug: whether to print deep logs or not.
-    :param open_in_browser: whether or not to open a new tab after saving the webpage.
+    :param open_in_browser: whether to open a new tab after saving the webpage.
     :type open_in_browser: bool
     :param delay: amount of delay between two concurrent requests to a same server.
     :param threaded: whether to use threading or not (it can break some site).
@@ -148,7 +148,7 @@ def save_website(url,
     :type project_name: str | None
     :param bypass_robots: whether to follow the robots.txt rules or not
     :param debug: whether to print deep logs or not.
-    :param open_in_browser: whether or not to open a new tab after saving the webpage.
+    :param open_in_browser: whether to open a new tab after saving the webpage.
     :type open_in_browser: bool
     :param delay: amount of delay between two concurrent requests to a same server.
     :param threaded: whether to use threading or not (it can break some site).

@@ -5,7 +5,7 @@ import shutil
 import unittest
 import tempfile
 
-from pywebcopy.elements import make_fd
+from pywebcopy.urls import make_fd
 
 
 class TestFileDescriptorMaking(unittest.TestCase):

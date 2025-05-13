@@ -100,6 +100,11 @@ class SchedulerBase(object):
         'data', 'javascript', 'mailto', 'tel',
     ])
 
+    # Session object can only handle these types of urls.
+    valid_schemas = frozenset([
+        'http', 'https', ''
+    ])
+
     def validate_url(self, url):
         if not isinstance(url, string_types):
             self.logger.error(
@@ -107,6 +112,11 @@ class SchedulerBase(object):
             return False
         scheme, host, port, path, query, frag = urlparse(url)
         if scheme in self.invalid_schemas:
+            self.logger.error(
+                "Invalid url schema: [%s] for url: [%s]"
+                % (scheme, url))
+            return False
+        if scheme not in self.valid_schemas:
             self.logger.error(
                 "Invalid url schema: [%s] for url: [%s]"
                 % (scheme, url))
@@ -146,15 +156,16 @@ class SchedulerBase(object):
             # modify the resources path resolution mechanism.
             return resource.__dict__.__setitem__('filepath', indexed)
 
-        #: Update the index before doing any processing so that later calls
-        #: in index finds this entry without going in infinite recursion
-        #: Response could have been already present on disk
+        # Update the index before doing any processing so that later calls
+        # to index find this entry without going in infinite recursion
+        # Response could have been already present on disk
         self.index.add_entry(resource.context.url, resource.filepath)
 
         if self.validate_resource(resource):
             self.logger.debug("Processing valid resource: %r" % resource)
             return self._handle_resource(resource)
         self.logger.error("Discarding invalid resource: %r" % resource)
+        return resource.filepath
 
     def _handle_resource(self, resource):
         raise NotImplementedError()
@@ -219,7 +230,7 @@ class ThreadingScheduler(Scheduler):
                 self.logger.debug('Scheduler running handler for: [%s]' % r.url)
                 r.retrieve()
             except Exception as e:
-                self.logger.debug(f'Exception encountered in retrieval: {e}')
+                self.logger.debug('Exception encountered in retrieval: [%s]',  e)
             finally:
                 return r.context.url, r.filepath
         thread = threading.Thread(target=run, args=(resource,))

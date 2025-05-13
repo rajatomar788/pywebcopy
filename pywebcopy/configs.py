@@ -112,7 +112,7 @@ class ConfigHandler(CaseInsensitiveDict):
 
     def __getattribute__(self, item):
         """Dynamic method of name `get_(key)` and `set_(key)` generation
-        for all of the keys available.
+        for all the keys available.
         for example to change the `project_url` key
         instead of using dictionary like operation you would do
         `.get_project_url()` instead of `['project_url']`.
